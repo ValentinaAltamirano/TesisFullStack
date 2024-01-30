@@ -10,18 +10,25 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit {
 
   isAuthenticated: boolean = false;
-
-  ngOnInit(): void {
-  }
+ 
+  
 
   constructor(public authService: AuthService, 
     private router: Router) {
-      // this.isAuthenticated = this.authService.getAuthenticationStatus();
-      this.isAuthenticated = false;
     }
 
     
-    
+    ngOnInit() {
+      // Verificar la autenticación al inicializar el componente
+      if (this.authService.estaAutenticado()) {
+        // El usuario está autenticado, realizar acciones adicionales si es necesario
+        this.isAuthenticated = true;
+        console.log('Esta autenticado')
+      } else {
+        this.isAuthenticated = false
+        console.log('No esta autenticado')
+      }
+    }
 
     
   redirectToLogin() {
@@ -30,12 +37,8 @@ export class NavbarComponent implements OnInit {
 
   
   logout(): void {
-    // Eliminar el token al cerrar sesión
-    localStorage.removeItem('token');
-    this.isAuthenticated = false;
-    // Obten la ruta actual
-    window.location.reload()
-    this.router.navigate(['/']);
+    // Llama al método de logout en el servicio de autenticación
+    this.authService.logout();
   }
   
 }

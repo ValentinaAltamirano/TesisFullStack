@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EmpresarioModel } from '../interfaces/Empresario'
-import { UsuarioModel } from '../interfaces/Usuario';
-
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,9 @@ export class AuthService {
   
   private url: string = 'http://127.0.0.1:8000/api/'
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, 
+    private cookieService: CookieService,
+    private router: Router) {
   }
 
   // agregar nuevo usuario
@@ -31,6 +32,21 @@ export class AuthService {
   iniciarSesion(credentials: any): Observable<any> {
     const url = `${this.url}inicioSesion/`; 
     return this.http.post(url, credentials);
+  }
+
+  // Verificar si el usuario está autenticado
+  estaAutenticado(): boolean {
+    const token = this.cookieService.get('token');
+    return !!token;  // Devuelve true si el token existe, de lo contrario, false
+  }
+
+  // Método para realizar el logout
+  logout(): void {
+    // Eliminar el token de sesión 
+    this.cookieService.delete('token');
+
+    // Redirigir al usuario a la página de inicio o a donde desees después del logout
+    this.router.navigate(['/']);
   }
 
 }

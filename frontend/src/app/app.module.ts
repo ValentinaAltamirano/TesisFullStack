@@ -21,6 +21,8 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { RegistroAlojamientoComponent } from './registro-alojamiento/registro-alojamiento.component';
 import { RegistroGastronomiaComponent } from './registro-gastronomia/registro-gastronomia.component';
 import { RegistroComercioComponent } from './registro-comercio/registro-comercio.component';
+import { CookieService } from 'ngx-cookie-service';
+
 
 const appRoutes: Routes=[];
 
@@ -51,7 +53,7 @@ const appRoutes: Routes=[];
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

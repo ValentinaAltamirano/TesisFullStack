@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
-
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-inicio-sesion',
   templateUrl: './inicio-sesion.component.html',
@@ -17,7 +17,8 @@ export class InicioSesionComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,  // Ajusta el nombre del servicio según tu estructura
-    private router: Router
+    private router: Router,
+    private cookie: CookieService, 
   ) {
     this.inicioSesionForm = this.fb.group({
       username: ['', Validators.required],
@@ -35,6 +36,8 @@ export class InicioSesionComponent {
       this.authService.iniciarSesion(credentials).subscribe(
         response => {
           // Realizar acciones adicionales después del inicio de sesión exitoso
+          // Almacenar el token en una cookie
+          this.cookie.set('token', response.token);
           Swal.fire({
             title: "Inicio de sesión exitoso",
             icon: "success",
