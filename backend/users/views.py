@@ -1,14 +1,13 @@
-from django.http import  Http404, HttpResponse
+from django.http import  Http404, JsonResponse
 from .models import Empresario, Rol, Usuario
 from .serializer import EmpresarioSerializer, RolSerializer, UsuarioSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import authenticate, login
 from rest_framework.decorators import authentication_classes, permission_classes
+import secrets
 
 @api_view(['POST'])
 def registrar_usuario(request):
@@ -52,8 +51,12 @@ def inicioSesion(request):
         print(usuario.clave == password)
         # Verificar la contraseña sin hashing (no recomendado)
         if usuario.clave == password:
+            # Generar un token simple
+            token = secrets.token_urlsafe(32)
             # Autenticación exitosa
-            return Response({'mensaje': 'Inicio de sesión exitoso'}, status=status.HTTP_200_OK)
+            response = JsonResponse({'token': token})
+            response.set_cookie('token', token)  # Almacena el token en una cookie
+            return response
         else:
             # Credenciales inválidas
             return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
