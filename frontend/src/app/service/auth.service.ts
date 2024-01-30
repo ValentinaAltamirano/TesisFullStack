@@ -16,12 +16,7 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
 
-  // agregar nuevo empresario
-  crearEmpresario(usuarioId: number, datos: any): Observable<any> {
-    const registrarUrl = this.url + `empresario/usuario/${usuarioId}/`;
-    return this.http.post(registrarUrl, datos);
-  }
-
+  // agregar nuevo usuario
   registrarUsuario(datosUsuario: any): Observable<any> {
     const url = `${this.url}empresario/registrarUsuario/`;
     return this.http.post(url, { usuario: datosUsuario });
@@ -32,4 +27,10 @@ export class AuthService {
     const url = `${this.url}empresario/usuario/${idUsuario}/`;
     return this.http.post(url, { empresario: datosEmpresario });
   }
+
+  iniciarSesion(credentials: any): Observable<any> {
+    const url = `${this.url}inicioSesion/`; 
+    return this.http.post(url, credentials);
+  }
+
 }
