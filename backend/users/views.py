@@ -1,4 +1,4 @@
-from django.http import  JsonResponse, HttpResponse
+from django.http import  Http404, HttpResponse
 from .models import Empresario, Rol, Usuario
 from .serializer import EmpresarioSerializer, RolSerializer, UsuarioSerializer
 from rest_framework import generics, status
@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import authenticate, login
+from rest_framework.decorators import authentication_classes, permission_classes
 
 @api_view(['POST'])
 def registrar_usuario(request):
@@ -28,8 +30,6 @@ def registrar_usuario_empresario(request, id_usuario):
         # Existe un usuario con el ID proporcionado, ahora puedes continuar con la lógica de registro
         empresario_data = {'usuario': usuario.idUsuario, **request.data.get('empresario', {})}
         empresario_serializer = EmpresarioSerializer(data=empresario_data)
-        print(empresario_serializer)
-        print(empresario_serializer.is_valid())
         if empresario_serializer.is_valid():
             empresario_serializer.save()
             return Response({'mensaje': 'Empresario registrado exitosamente'}, status=status.HTTP_201_CREATED)
@@ -38,6 +38,38 @@ def registrar_usuario_empresario(request, id_usuario):
     else:
         return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
+def inicioSesion(request):
+    username = request.data.get('username', None)
+    password = request.data.get('password', None)
+
+    try:
+        # Buscar al usuario en la base de datos utilizando nombreUsuario como username
+        usuario = get_object_or_404(Usuario, nombreUsuario=username)
+        print(usuario)
+        print(usuario.clave == password)
+        # Verificar la contraseña sin hashing (no recomendado)
+        if usuario.clave == password:
+            # Autenticación exitosa
+            return Response({'mensaje': 'Inicio de sesión exitoso'}, status=status.HTTP_200_OK)
+        else:
+            # Credenciales inválidas
+            return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    except Usuario.DoesNotExist:
+        # El usuario no existe
+        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_401_UNAUTHORIZED)
+    except Http404:
+        # Otra manera de manejar la falta de coincidencias en la consulta
+        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        # Registra detalles del error en el sistema de registro
+        import logging
+        logging.error(f'Error en inicioSesion: {str(e)}')
+        return Response({'error': 'Error interno del servidor'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class getEmpresario(generics.RetrieveAPIView):
     queryset = Empresario.objects.all()
     serializer_class = EmpresarioSerializer
@@ -50,7 +82,7 @@ class deleteEmpresario(generics.DestroyAPIView):
     queryset = Empresario.objects.all()
     serializer_class = EmpresarioSerializer
     
-class setRol(generics.CreateAPIView):
+class CrearRol(generics.CreateAPIView):
     queryset = Rol.objects.all()
     serializer_class = RolSerializer
     
@@ -68,15 +100,12 @@ class deleteRol(generics.DestroyAPIView):
 
 @api_view(['GET'])
 def listEmpresarios(request):
-    if request.method == 'GET':
-        empresarios = Empresario.objects.all()
-        serializer = EmpresarioSerializer(empresarios, many=True)
-        print(serializer.data)  # Agrega esta línea para imprimir los datos serializados
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    empresarios = Empresario.objects.all()
+    serializer = EmpresarioSerializer(empresarios, many=True) # Agrega esta línea para imprimir los datos serializados
+    return Response(serializer.data, status=status.HTTP_200_OK)
     
 @api_view(['GET'])
 def listUsuarios(request):
-    if request.method == 'GET':
-        usuarios = Usuario.objects.all()
-        serializer = UsuarioSerializer(usuarios, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    usuarios = Usuario.objects.all()
+    serializer = UsuarioSerializer(usuarios, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

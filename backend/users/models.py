@@ -11,7 +11,7 @@ class Usuario(models.Model):
     idUsuario = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
     apellido = models.CharField(max_length=255)
-    nombreUsuario = models.CharField(max_length=255, default='name')
+    nombreUsuario = models.CharField(max_length=255, default='username', unique=True)
     email = models.EmailField(unique=True)
     clave = models.CharField(max_length=255)
     codRol = models.ForeignKey(Rol, on_delete=models.CASCADE)
