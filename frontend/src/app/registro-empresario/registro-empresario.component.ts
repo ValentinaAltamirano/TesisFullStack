@@ -18,6 +18,7 @@ export class RegistroEmpresarioComponent {
   usuarioId: number = 0;
   mensajeError: string = '';
 
+<<<<<<< Updated upstream
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router,) {
     this.empresarioForm = this.fb.group({
       // Campos del usuario
@@ -34,11 +35,92 @@ export class RegistroEmpresarioComponent {
     });
   }
 
+=======
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private route: ActivatedRoute) {
+      this.empresarioForm = this.fb.group({
+        // Campos del usuario
+        username: ['', Validators.required],
+        password: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        first_name: ['', Validators.required],
+        last_name: ['', Validators.required],
+
+        // Campos del Empresario
+        razonSocial: ['', Validators.required],
+        descripcion: ['', Validators.required],
+        telefono: ['', Validators.required]
+      });
+}
+
+  // registrarEmpresario() {
+  //   if (this.empresarioForm.valid) {
+  //     const datosUsuario = {
+  //       nombre: this.empresarioForm.value.nombre,
+  //       apellido: this.empresarioForm.value.apellido,
+  //       nombreUsuario: this.empresarioForm.value.nombreUsuario,
+  //       email: this.empresarioForm.value.email,
+  //       clave: this.empresarioForm.value.clave,
+  //       codRol: this.empresarioForm.value.codigoRol
+  //     };
+  
+  //     const datosEmpresario = {
+  //       razonSocial: this.empresarioForm.value.razonSocial,
+  //       descripcion: this.empresarioForm.value.descripcion,
+  //       telefono: this.empresarioForm.value.telefono
+  //     };
+  
+  //     const datosParaEnviar = {
+  //       usuario: datosUsuario,
+  //       empresario: datosEmpresario
+  //     };
+
+  //     this.empresarioService.registrarUsuario(datosUsuario).subscribe(
+  //       response => {
+  //         // El usuario se registró con éxito, ahora obtén el ID del usuario
+  //         const idUsuario = response.idUsuario;
+      
+  //         // Llamas a la función para registrar el empresario con el ID del usuario
+  //         this.empresarioService.registrarEmpresarioUsuario(idUsuario, datosEmpresario).subscribe(
+  //           responseEmpresario => {
+  //             console.log('Empresario registrado exitosamente', response);
+  //             Swal.fire({
+  //               title: "Empresario registrado con éxito!",
+  //               icon: "success",
+  //               confirmButtonText: "OK"
+  //             }).then((result) => {
+  //               if (result.isConfirmed) {
+  //                 // Redirigir al usuario al login
+  //                 window.location.href = "/inicioSesion";
+  //               }
+  //             });
+  //             // Maneja el éxito según tus necesidades
+  //           },
+  //           errorEmpresario => {
+  //             console.error('Error al registrar empresario', errorEmpresario);
+      
+  //             // Maneja el error según tus necesidades
+  //           }
+  //         );
+  //       },
+  //       errorUsuario => {
+  //         console.error('Error al registrar usuario', errorUsuario);
+      
+  //         // Maneja el error según tus necesidades
+  //       }
+  //     );
+  //   }
+  // }
+
+>>>>>>> Stashed changes
   submitForm() {
     if (this.empresarioForm.valid) {
       // Enviar datos al servicio de autenticación
       this.authService.registrarEmpresario(this.empresarioForm.value).subscribe(
         (response: any) => {
+<<<<<<< Updated upstream
           Swal.fire({
             title: "Inicio de sesión exitoso",
             icon: "success",
@@ -50,10 +132,31 @@ export class RegistroEmpresarioComponent {
         (error) => {
           console.error(error);
           // Manejar errores
+=======
+          console.log(response);
+          Swal.fire({
+                           title: "Empresario registrado con éxito!",
+                           icon: "success",
+                           confirmButtonText: "OK"
+                         }).then((result) => {
+                           if (result.isConfirmed) {
+                             // Redirigir al usuario al login
+                             window.location.href = "/inicioSesion";
+                         }
+                         });
+        },
+        (error: any) => {
+          console.error(error);
+          
+>>>>>>> Stashed changes
         }
       );
     }
   }
 
+<<<<<<< Updated upstream
   ngOnInit(): void {}
+=======
+
+>>>>>>> Stashed changes
 }
