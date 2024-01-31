@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 class Rol(models.Model):
     idRol = models.AutoField(primary_key=True)
@@ -28,3 +29,4 @@ class Empresario(models.Model):
 
     def __str__(self):
         return self.RazonSocial
+

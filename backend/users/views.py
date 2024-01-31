@@ -4,9 +4,12 @@ from .serializer import EmpresarioSerializer, RolSerializer, UsuarioSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.db import transaction
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
 import secrets
 
 @api_view(['POST'])
@@ -47,15 +50,24 @@ def inicioSesion(request):
     try:
         # Buscar al usuario en la base de datos utilizando nombreUsuario como username
         usuario = get_object_or_404(Usuario, nombreUsuario=username)
-        print(usuario)
-        print(usuario.clave == password)
         # Verificar la contraseña sin hashing (no recomendado)
         if usuario.clave == password:
             # Generar un token simple
             token = secrets.token_urlsafe(32)
             # Autenticación exitosa
-            response = JsonResponse({'token': token})
-            response.set_cookie('token', token)  # Almacena el token en una cookie
+             # Datos a incluir en la respuesta
+            respuesta_data = {
+                'token': token,
+                'nombreUsuario': usuario.nombreUsuario,
+                'email': usuario.email,
+            }
+
+            # Autenticación exitosa
+            response = JsonResponse(respuesta_data)
+
+            # Almacena el token en una cookie
+            response.set_cookie('token', token)
+
             return response
         else:
             # Credenciales inválidas
@@ -72,19 +84,66 @@ def inicioSesion(request):
         import logging
         logging.error(f'Error en inicioSesion: {str(e)}')
         return Response({'error': 'Error interno del servidor'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-class getEmpresario(generics.RetrieveAPIView):
-    queryset = Empresario.objects.all()
-    serializer_class = EmpresarioSerializer
-
-class updateEmpresario(generics.UpdateAPIView):
-    queryset = Empresario.objects.all()
-    serializer_class = EmpresarioSerializer
-
-class deleteEmpresario(generics.DestroyAPIView):
-    queryset = Empresario.objects.all()
-    serializer_class = EmpresarioSerializer
     
+# @csrf_exempt
+# @api_view(['POST'])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
+# def obtenerDatosEmpresario(request):
+#     if request.method == 'POST':
+#         # Obtén el nombre de usuario desde los datos enviados por el frontend
+#         username = request.POST.get('username', None)
+
+#         try:
+#             # El usuario autenticado estará disponible en request.user
+#             usuario = request.user
+#             # Buscar al usuario en la base de datos utilizando el nombre de usuario
+#             usuario =  Usuario.objects.get(nombreUsuario=username)
+#             print(usuario)
+#             # Buscar al empresario relacionado con el usuario
+#             empresario = Empresario.objects.get(usuario=usuario.idUsuario)
+#             # Datos a incluir en la respuesta
+#             respuesta_data = {
+#                 'username': usuario.nombreUsuario,
+#                 'nombre': usuario.nombre,
+#                 'apellido ': usuario.apellido ,
+#                 'email': usuario.email,
+#                 'razonSocial': empresario.razonSocial,
+#                 'telefono': empresario.telefono,
+#             }
+
+#             # Devolver los datos del usuario en formato JSON
+#             return JsonResponse(respuesta_data)
+
+#         except Usuario.DoesNotExist:
+#             # El usuario no existe
+#             return JsonResponse({'error': 'Usuario no encontrado'}, status=401)
+
+#         except Exception as e:
+#             # Registra detalles del error en el sistema de registro
+#             import logging
+#             logging.error(f'Error en obtener_datos_usuario: {str(e)}')
+#             return JsonResponse({'error': 'Error interno del servidor'}, status=500)
+
+#     else:
+#         # Método de solicitud no permitido
+#         return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def obtenerDatosEmpresario(request):
+    usuario = request.user
+
+    # Datos del usuario que deseas devolver
+    datos_usuario = {
+        'nombreUsuario': usuario.username,
+        'email': usuario.email,
+        # Otros campos que desees incluir
+    }
+
+    return Response(datos_usuario)
+   
 class CrearRol(generics.CreateAPIView):
     queryset = Rol.objects.all()
     serializer_class = RolSerializer

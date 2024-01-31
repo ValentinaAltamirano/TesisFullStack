@@ -8,10 +8,29 @@ import { Router } from '@angular/router';
   styleUrls: ['./perfil.component.css']
 })
 export class PerfilComponent  {
+  nombreUsuario: any ;
+  userData: any = {};
 
-
-
-  constructor(private userService: AuthService, 
+  constructor(private authService: AuthService, 
     private router: Router) {}
-    
+  
+    ngOnInit(): void {
+      this.nombreUsuario = this.authService.obtenerNombreUsuarioDesdeCookie();
+      this.datosUsuario(this.nombreUsuario);
+      
+    }
+  
+  datosUsuario(username: string): void {
+    this.authService.obtenerDatosUsuario()
+    .subscribe(
+      datosUsuario => {
+        console.log(datosUsuario);
+        // Maneja los datos del usuario como desees
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  }
+
 }

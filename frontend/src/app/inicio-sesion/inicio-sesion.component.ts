@@ -35,9 +35,9 @@ export class InicioSesionComponent {
   
       this.authService.iniciarSesion(credentials).subscribe(
         response => {
-          // Realizar acciones adicionales después del inicio de sesión exitoso
-          // Almacenar el token en una cookie
-          this.cookie.set('token', response.token);
+          
+          // Almacenar la información en las cookies
+          this.authService.guardarDatosUsuarioEnCookies(response.token, response.nombreUsuario, response.email);
           Swal.fire({
             title: "Inicio de sesión exitoso",
             icon: "success",
