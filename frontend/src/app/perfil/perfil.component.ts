@@ -8,22 +8,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./perfil.component.css']
 })
 export class PerfilComponent  {
-<<<<<<< Updated upstream
   apellido: any;
   nombre: any;
   email: any;
   telefono: any;
   username: any;
   razonSocial: any;
-=======
-  datosEmpresario: any;
->>>>>>> Stashed changes
 
   constructor(private authService: AuthService, 
     private router: Router) {}
   
     ngOnInit() {
-<<<<<<< Updated upstream
       this.obtenerDatosUsuario()
     }
 
@@ -47,21 +42,3 @@ export class PerfilComponent  {
     }
   }
 
-=======
-      const token = this.authService.getTokenFromCookie(); // Asume que tienes una función getToken en tu servicio de autenticación
-  
-      if (token) {
-        this.authService.obtenerDatosEmpresario(token).subscribe(
-          (response: any) => {
-            this.datosEmpresario = response;
-            console.log(this.datosEmpresario)
-          },
-          (error) => {
-            console.error(error);
-            // Manejar errores
-          }
-        );
-      }
-    }
-  }
->>>>>>> Stashed changes
