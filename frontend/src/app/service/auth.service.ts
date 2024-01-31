@@ -12,14 +12,31 @@ export class AuthService {
 
   
   private url: string = 'http://127.0.0.1:8000/api/'
+  tokenCookieName = 'access_token';
 
   constructor(private http: HttpClient, 
     private cookieService: CookieService,
     private router: Router) {
   }
 
+  registrarEmpresario(data: any): Observable<any> {
+    return this.http.post(this.url + 'crear_empresario/', data);
+  }
+
+  login(credentials: { username: string; password: string }): Observable<any> {
+    return this.http.post(`${this.url}token/`, credentials);
+  }
+
+  setTokenInCookie(token: string): void {
+    this.cookieService.set(this.tokenCookieName, token);
+  }
+
+  getTokenFromCookie(): string | undefined {
+    return this.cookieService.get(this.tokenCookieName);
+  }
+
   canActivate(): boolean {
-    if (this.estaAutenticado()) {
+    if (this.isAuthenticated()) {
       return true;  // Permitir el acceso si el usuario está autenticado
     } else {
       // Redirigir a la página de inicio de sesión si el usuario no está autenticado
@@ -28,62 +45,28 @@ export class AuthService {
     }
   }
 
-  // agregar nuevo usuario
-  registrarUsuario(datosUsuario: any): Observable<any> {
-    const url = `${this.url}empresario/registrarUsuario/`;
-    return this.http.post(url, { usuario: datosUsuario });
-  }
+  isAuthenticated(): boolean {
+  // Verifica si el token existe y no ha expirado
+  const token = this.getTokenFromCookie();
+  return token !== undefined && token !== null && token.length > 0;
+}
 
-  // Función para registrar un empresario relacionado con un usuario
-  registrarEmpresarioUsuario(idUsuario: number, datosEmpresario: any): Observable<any> {
-    const url = `${this.url}empresario/usuario/${idUsuario}/`;
-    return this.http.post(url, { empresario: datosEmpresario });
-  }
-
-  iniciarSesion(credentials: any): Observable<any> {
-    const url = `${this.url}inicioSesion/`; 
-    return this.http.post(url, credentials);
-  }
-
-  // Verificar si el usuario está autenticado
-  estaAutenticado(): boolean {
-    const token = this.cookieService.get('token');
-    return !!token;  // Devuelve true si el token existe, de lo contrario, false
-  }
-
-  guardarDatosUsuarioEnCookies(token: string, nombreUsuario: string, email: string): void {
-    this.cookieService.set('token', token);
-    this.cookieService.set('nombreUsuario', nombreUsuario);
-    this.cookieService.set('email', email);
-  }
-
-  obtenerNombreUsuarioDesdeCookie(): string {
-    return this.cookieService.get('nombreUsuario');
-  }
-
-  obtenerEmailDesdeCookie(): string {
-    return this.cookieService.get('email');
-  }
-
-  obtenerDatosUsuario(): Observable<any> {
-    const token = this.cookieService.get('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-    const url = `${this.url}empresarioDatos/`;
-    return this.http.get(`${url}`, { headers });
-  }
-
-  // Método para realizar el logout
   logout(): void {
-    // Eliminar el token de sesión 
-    this.cookieService.delete('token');
-
-    // Redirigir al usuario a la página de inicio o a donde desees después del logout
+    this.cookieService.delete(this.tokenCookieName);
     this.router.navigate(['/']);
   }
 
+  obtenerDatosEmpresario(): Observable<any> {
+    const userInfoUrl = `${this.url}obtener_datos_empresario/`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+
+    console.log(userInfoUrl, { headers, withCredentials: true, 'Authorization': `Bearer ${this.getTokenFromCookie()}` });
   
+    return this.http.get(userInfoUrl, { headers });
+  }
+
 
 }

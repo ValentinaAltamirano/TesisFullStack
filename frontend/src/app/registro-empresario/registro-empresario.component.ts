@@ -18,87 +18,42 @@ export class RegistroEmpresarioComponent {
   usuarioId: number = 0;
   mensajeError: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private empresarioService: AuthService,
-    private route: ActivatedRoute) {
-        const usuarioIdParam = this.route.snapshot.paramMap.get('usuarioId');
-        this.usuarioId = usuarioIdParam ? +usuarioIdParam : 0;
-}
-
-  ngOnInit(): void {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router,) {
     this.empresarioForm = this.fb.group({
-      nombreUsuario: ['', Validators.required],
+      // Campos del usuario
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      clave: ['', Validators.required],
+
+      // Campos del Empresario
       razonSocial: ['', Validators.required],
       descripcion: ['', Validators.required],
       telefono: ['', Validators.required],
-      codigoRol: [2]
     });
   }
 
-  registrarEmpresario() {
+  submitForm() {
     if (this.empresarioForm.valid) {
-      const datosUsuario = {
-        nombre: this.empresarioForm.value.nombre,
-        apellido: this.empresarioForm.value.apellido,
-        nombreUsuario: this.empresarioForm.value.nombreUsuario,
-        email: this.empresarioForm.value.email,
-        clave: this.empresarioForm.value.clave,
-        codRol: this.empresarioForm.value.codigoRol
-      };
-  
-      const datosEmpresario = {
-        razonSocial: this.empresarioForm.value.razonSocial,
-        descripcion: this.empresarioForm.value.descripcion,
-        telefono: this.empresarioForm.value.telefono
-      };
-  
-      const datosParaEnviar = {
-        usuario: datosUsuario,
-        empresario: datosEmpresario
-      };
-
-      this.empresarioService.registrarUsuario(datosUsuario).subscribe(
-        response => {
-          // El usuario se registró con éxito, ahora obtén el ID del usuario
-          const idUsuario = response.idUsuario;
-      
-          // Llamas a la función para registrar el empresario con el ID del usuario
-          this.empresarioService.registrarEmpresarioUsuario(idUsuario, datosEmpresario).subscribe(
-            responseEmpresario => {
-              console.log('Empresario registrado exitosamente', response);
-              Swal.fire({
-                title: "Empresario registrado con éxito!",
-                icon: "success",
-                confirmButtonText: "OK"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  // Redirigir al usuario al login
-                  window.location.href = "/inicioSesion";
-                }
-              });
-              // Maneja el éxito según tus necesidades
-            },
-            errorEmpresario => {
-              console.error('Error al registrar empresario', errorEmpresario);
-      
-              // Maneja el error según tus necesidades
-            }
-          );
+      // Enviar datos al servicio de autenticación
+      this.authService.registrarEmpresario(this.empresarioForm.value).subscribe(
+        (response: any) => {
+          Swal.fire({
+            title: "Inicio de sesión exitoso",
+            icon: "success",
+            confirmButtonText: "OK"
+          }).then((result) => {
+            this.router.navigate(['/inicioSesion']);
+          });
         },
-        errorUsuario => {
-          console.error('Error al registrar usuario', errorUsuario);
-      
-          // Maneja el error según tus necesidades
+        (error) => {
+          console.error(error);
+          // Manejar errores
         }
       );
     }
   }
 
-
-
+  ngOnInit(): void {}
 }

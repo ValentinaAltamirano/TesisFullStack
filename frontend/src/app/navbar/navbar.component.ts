@@ -17,25 +17,34 @@ export class NavbarComponent implements OnInit {
     private router: Router) {
     }
 
-    
     ngOnInit() {
       // Verificar la autenticación al inicializar el componente
-      if (this.authService.estaAutenticado()) {
+      if (this.authService.isAuthenticated()) {
         // El usuario está autenticado, realizar acciones adicionales si es necesario
         this.isAuthenticated = true;
-        this.actualizarNombreUsuarioEmail()
-        console.log('Esta autenticado')
+        this.obtenerDatosUsuario()
+        
       } else {
         this.isAuthenticated = false
-        console.log('No esta autenticado')
       }
+      
     }
+  
 
-  actualizarNombreUsuarioEmail(): void {
-    this.nombreUsuario = this.authService.obtenerNombreUsuarioDesdeCookie();
-    this.email = this.authService.obtenerEmailDesdeCookie();
-    console.log(this.nombreUsuario, this.email)
-  }  
+    obtenerDatosUsuario() {
+      this.authService.obtenerDatosEmpresario().subscribe(
+        (userInfo: any) => {
+          console.log('Información del usuario:', userInfo);
+          this.nombreUsuario = userInfo.username;
+          this.email = userInfo.email;
+
+
+        },
+        error => {
+          console.error('Error al obtener la información del usuario:', error);
+        }
+      );
+    }
 
   redirectToLogin() {
     this.router.navigate(['/']);
@@ -43,7 +52,6 @@ export class NavbarComponent implements OnInit {
 
   
   logout(): void {
-    // Llama al método de logout en el servicio de autenticación
     this.authService.logout();
   }
   

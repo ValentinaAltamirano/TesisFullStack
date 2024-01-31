@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { CookieService } from 'ngx-cookie-service';
+import { timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 @Component({
   selector: 'app-inicio-sesion',
   templateUrl: './inicio-sesion.component.html',
@@ -14,11 +17,12 @@ export class InicioSesionComponent {
 
   inicioSesionForm: FormGroup;
   mensajeError: string = '';
+  tokenCookieName = '';
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,  // Ajusta el nombre del servicio según tu estructura
     private router: Router,
-    private cookie: CookieService, 
+    private cookieService: CookieService, 
   ) {
     this.inicioSesionForm = this.fb.group({
       username: ['', Validators.required],
@@ -28,23 +32,21 @@ export class InicioSesionComponent {
 
   iniciarSesion() {
     if (this.inicioSesionForm.valid) {
-      const credentials = {
-        username: this.inicioSesionForm.value.username,
-        password: this.inicioSesionForm.value.password
-      };
-  
-      this.authService.iniciarSesion(credentials).subscribe(
-        response => {
-          
-          // Almacenar la información en las cookies
-          this.authService.guardarDatosUsuarioEnCookies(response.token, response.nombreUsuario, response.email);
+      this.authService.login(this.inicioSesionForm.value).subscribe(
+        (response: any) => {
+          // Almacenar el token en el almacenamiento local o de sesión
+          this.authService.setTokenInCookie(response.access);
+          // Realizar acciones después del éxito
           Swal.fire({
             title: "Inicio de sesión exitoso",
             icon: "success",
             confirmButtonText: "OK"
           }).then((result) => {
-            this.router.navigate(['/']);
+            this.router.navigate(['/']).then(() => {
+              location.reload();
+            });
           });
+        
         },
         error => {
   

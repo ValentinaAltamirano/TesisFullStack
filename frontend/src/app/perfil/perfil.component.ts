@@ -8,29 +8,37 @@ import { Router } from '@angular/router';
   styleUrls: ['./perfil.component.css']
 })
 export class PerfilComponent  {
-  nombreUsuario: any ;
-  userData: any = {};
+  apellido: any;
+  nombre: any;
+  email: any;
+  telefono: any;
+  username: any;
+  razonSocial: any;
 
   constructor(private authService: AuthService, 
     private router: Router) {}
   
-    ngOnInit(): void {
-      this.nombreUsuario = this.authService.obtenerNombreUsuarioDesdeCookie();
-      this.datosUsuario(this.nombreUsuario);
-      
+    ngOnInit() {
+      this.obtenerDatosUsuario()
     }
-  
-  datosUsuario(username: string): void {
-    this.authService.obtenerDatosUsuario()
-    .subscribe(
-      datosUsuario => {
-        console.log(datosUsuario);
-        // Maneja los datos del usuario como desees
-      },
-      error => {
-        console.error(error);
-      }
-    );
+
+    obtenerDatosUsuario() {
+      this.authService.obtenerDatosEmpresario().subscribe(
+        (userInfo: any) => {
+          console.log('Información del usuario:', userInfo);
+          this.apellido = userInfo.apellido;
+          this.nombre = userInfo.nombre;
+          this.email = userInfo.email;
+          this.telefono = userInfo.telefono;
+          this.username = userInfo.username;
+          this.razonSocial = userInfo.razonSocial;
+
+
+        },
+        error => {
+          console.error('Error al obtener la información del usuario:', error);
+        }
+      );
+    }
   }
 
-}
