@@ -22,7 +22,15 @@ def crear_empresario(request):
         razon_social = data.get('razonSocial', '')
         descripcion = data.get('descripcion', '')
         telefono = data.get('telefono', '')
-
+        
+        # Verificar si el nombre de usuario ya existe
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'error': 'El nombre de usuario ya está en uso'}, status=400)
+        
+        # Verificar si el correo electrónico ya está en uso
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'error': 'El correo electrónico ya está en uso'}, status=400)
+        
         # Crear el usuario
         user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
 
@@ -90,10 +98,6 @@ def actualizar_datos_empresario(request):
     
     return JsonResponse({'message': 'Método no permitido'}, status=405)
 
-
-class empresario_detail(generics.RetrieveAPIView):
-    queryset = Empresario.objects.all()
-    serializer_class = EmpresarioSerializer
 
 #Get empresario
 
