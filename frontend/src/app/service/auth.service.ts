@@ -62,11 +62,20 @@ export class AuthService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.getTokenFromCookie()}`
     });
-
-    console.log(userInfoUrl, { headers, withCredentials: true, 'Authorization': `Bearer ${this.getTokenFromCookie()}` });
   
     return this.http.get(userInfoUrl, { headers });
   }
+
+  actualizarDatosEmpresario(datos: any): Observable<any> {
+    const url = `${this.url}actualizar-datos-empresario/`;
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+    console.log(datos)
+
+    return this.http.put(url, datos, { headers });
+}
 
 
 }

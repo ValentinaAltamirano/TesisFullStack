@@ -23,12 +23,8 @@ export class NavbarComponent implements OnInit {
       if (this.authService.isAuthenticated()) {
         // El usuario está autenticado, realizar acciones adicionales si es necesario
         this.isAuthenticated = true;
-<<<<<<< Updated upstream
         this.obtenerDatosUsuario()
         
-=======
-        console.log('Esta autenticado')
->>>>>>> Stashed changes
       } else {
         this.isAuthenticated = false
       }
@@ -36,11 +32,9 @@ export class NavbarComponent implements OnInit {
     }
   
 
-<<<<<<< Updated upstream
     obtenerDatosUsuario() {
       this.authService.obtenerDatosEmpresario().subscribe(
         (userInfo: any) => {
-          console.log('Información del usuario:', userInfo);
           this.nombreUsuario = userInfo.username;
           this.email = userInfo.email;
 
@@ -51,10 +45,6 @@ export class NavbarComponent implements OnInit {
         }
       );
     }
-=======
-  actualizarNombreUsuarioEmail(): void {
-  }  
->>>>>>> Stashed changes
 
   redirectToLogin() {
     this.router.navigate(['/']);

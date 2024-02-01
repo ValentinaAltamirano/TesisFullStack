@@ -3,7 +3,7 @@
 <div class="bg-gray-50 px-6 py-14">
     
   <div class="container max-w-screen-sm mx-auto shadow dark:border p-10">
-        <form>
+        <form [formGroup]="perfilForm">
             <div class="space-y-12">
               <div class="border-b border-gray-900/10 pb-12">
                 <h2 class="text-base font-semibold leading-7 text-gray-900">Mi Perfil</h2>
@@ -13,42 +13,42 @@
                   <div class="sm:col-span-4">
                     <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Nombre de usuario</label>
                     <div class="mt-2">
-                      <input type="text" name="username" id="username" autocomplete="username" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" [value]="username" readonly  >
+                      <input type="text" name="username" id="username" autocomplete="username" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="username" formControlName="username" [readonly]="!editando"  >
                     </div>
                   </div>
 
                   <div class="sm:col-span-4">
                     <label for="nombre" class="block text-sm font-medium leading-6 text-gray-900">Nombre Responsable</label>
                     <div class="mt-2">
-                      <input type="text" name="nombre" id="nombre" autocomplete="nombre" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" [value]="nombre" readonly>
+                      <input type="text" name="nombre" id="nombre" autocomplete="nombre" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="nombre" formControlName="nombre" [readonly]="!editando">
                     </div>
                   </div>
           
                   <div class="sm:col-span-4">
                     <label for="apellido" class="block text-sm font-medium leading-6 text-gray-900">Apellido Responsable</label>
                     <div class="mt-2">
-                      <input type="text" name="apellido" id="apellido" autocomplete="apellido" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" [value]="apellido" readonly  >
+                      <input type="text" name="apellido" id="apellido" autocomplete="apellido" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="apellido" formControlName="apellido" [readonly]="!editando"  >
                     </div>
                   </div>
           
                   <div class="sm:col-span-4">
                     <label for="razonSocial" class="block text-sm font-medium leading-6 text-gray-900">Razón Social</label>
                     <div class="mt-2">
-                      <input type="text" name="razonSocial" id="razonSocial" autocomplete="razonSocial" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" [value]="razonSocial" readonly  >
+                      <input type="text" name="razonSocial" id="razonSocial" autocomplete="razonSocial" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="razonSocial" formControlName="razonSocial" [readonly]="!editando"  >
                     </div>
                   </div>
           
                   <div class="sm:col-span-4">
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
                     <div class="mt-2">
-                      <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" [value]="email" readonly  >
+                      <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="email" formControlName="email" [readonly]="!editando"  >
                     </div>
                   </div>
           
                   <div class="sm:col-span-4">
                     <label for="telefono" class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                     <div class="mt-2">
-                        <input type="text" name="telefono" id="telefono" autocomplete="telefono" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" [value]="nombre" readonly >
+                        <input type="text" name="telefono" id="telefono" autocomplete="telefono" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1"  autocomplete="telefono" formControlName="telefono"  [readonly]="!editando" >
                       </div>
                   </div>
                   
@@ -59,8 +59,11 @@
             </div>
           
             <div class="mt-6 flex items-center justify-end gap-x-6">
-              <button type="button" class="text-sm font-semibold leading-6 text-gray-900" >Volver</button>
-            </div>
+              <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="volverAlInicio()">Volver</button>
+              <button *ngIf="!editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="toggleEdicion()">Editar</button>
+              <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="guardarCambios()">Guardar</button>
+              <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="cancelarEdicion()">Cancelar</button>        
+    </div>
           </form>
   </div>
     

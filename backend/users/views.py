@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .models import Empresario
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -6,9 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 import json
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from rest_framework_simplejwt.tokens import AccessToken
+from django.views.decorators.csrf import csrf_exempt
 
 @api_view(['POST'])
 def crear_empresario(request):
@@ -55,3 +53,37 @@ def obtener_datos_empresario(request):
     return Response(data)
     
     
+@api_view(['POST', 'PUT'])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def actualizar_datos_empresario(request):
+    if request.method == 'POST' or request.method == 'PUT':
+        data = json.loads(request.body.decode('utf-8'))
+        
+        # Obtén el empresario actual
+        empresario = Empresario.objects.get(user=request.user)
+
+        # Actualiza los campos editables
+        empresario.razonSocial = data.get('razonSocial', empresario.razonSocial)
+        empresario.descripcion = data.get('descripcion', empresario.descripcion)
+        empresario.telefono = data.get('telefono', empresario.telefono)
+
+        # Guarda los cambios en el empresario
+        empresario.save()
+        
+        # Obtén el usuario actual
+        usuario = User.objects.get(username=request.user)
+        print(data)
+        # Actualiza los campos editables del usuario
+        print("Nombre antes de la actualización:", usuario.first_name)
+        usuario.first_name = data.get('nombre', usuario.first_name)
+        print("Nombre después de la actualización:", usuario.first_name)
+        usuario.last_name = data.get('apellido', usuario.last_name)
+        usuario.email = data.get('email', usuario.email)
+        
+        # Guarda los cambios en el usuario
+        usuario.save()
+
+        return JsonResponse({'message': 'Datos actualizados exitosamente'})
+    
+    return JsonResponse({'message': 'Método no permitido'}, status=405)
