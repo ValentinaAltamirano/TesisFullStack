@@ -72,7 +72,6 @@ export class AuthService {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.getTokenFromCookie()}`
     });
-    console.log(datos)
 
     return this.http.put(url, datos, { headers });
 }

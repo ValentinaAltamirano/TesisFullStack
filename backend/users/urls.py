@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .views import *
+
+from .users_views import *
 
 urlpatterns = [
     path('crear_empresario/', crear_empresario, name='crear_empresario'),

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .serializer_users import EmpresarioSerializer
 from .models import Empresario
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -7,6 +8,7 @@ import json
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import generics
 
 @api_view(['POST'])
 def crear_empresario(request):
@@ -87,3 +89,14 @@ def actualizar_datos_empresario(request):
         return JsonResponse({'message': 'Datos actualizados exitosamente'})
     
     return JsonResponse({'message': 'Método no permitido'}, status=405)
+
+
+class empresario_detail(generics.RetrieveAPIView):
+    queryset = Empresario.objects.all()
+    serializer_class = EmpresarioSerializer
+
+#Get empresario
+
+class empresario_Lista(generics.ListCreateAPIView):
+    queryset = Empresario.objects.all()
+    serializer_class = EmpresarioSerializer

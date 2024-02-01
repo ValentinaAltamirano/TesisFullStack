@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Empresario, Rol, Usuario
+from .models import Empresario
 
 class EmpresarioSerializer(serializers.ModelSerializer):
     class Meta:
