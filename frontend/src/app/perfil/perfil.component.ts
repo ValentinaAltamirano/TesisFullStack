@@ -26,12 +26,12 @@ export class PerfilComponent  {
   ngOnInit() {
     // Inicializar FormGroup y asignar FormControls
     this.perfilForm = this.fb.group({
-      apellido: this.apellido,
-      nombre: this.nombre,
-      email: this.email,
-      telefono: this.telefono,
-      username: this.username,
-      razonSocial: this.razonSocial
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      telefono: ['', Validators.required],
+      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      razonSocial: ['', Validators.required],
     });
 
     // Obtener y asignar los datos del usuario
@@ -68,11 +68,19 @@ export class PerfilComponent  {
         // Actualizar datos originales con los nuevos valores
         this.datosOriginales = { ...nuevosDatos };
       },
-      error => {
-        console.error('Error al actualizar los datos del empresario', error);
+      (error) => {
+        // Manejar el error, mostrar mensajes de error apropiados al usuario
+        console.error(error);
+        // Ejemplo de cómo manejar un error específico
+        if (error.error && error.error.error === 'El nombre de usuario ya está en uso') {
+          this.perfilForm.get('username')?.setErrors({ duplicateUsername: true });
+        } else if (error.error && error.error.error === 'El correo electrónico ya está en uso') {
+          this.perfilForm.get('email')?.setErrors({ duplicateEmail: true });
+        }
       }
     );
   }
+
 
   cancelarEdicion() {
     this.editando = false;

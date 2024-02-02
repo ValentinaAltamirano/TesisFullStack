@@ -17,8 +17,8 @@ def crear_empresario(request):
         username = data.get('username', '')
         password = data.get('password', '')
         email = data.get('email', '')
-        first_name = data.get('first_name', '')
-        last_name = data.get('last_name', '')
+        first_name = data.get('nombre', '')
+        last_name = data.get('apellido', '')
         razon_social = data.get('razonSocial', '')
         descripcion = data.get('descripcion', '')
         telefono = data.get('telefono', '')
@@ -83,11 +83,20 @@ def actualizar_datos_empresario(request):
         
         # Obtén el usuario actual
         usuario = User.objects.get(username=request.user)
-        print(data)
+        
+        # Verifica si el nuevo nombre de usuario ya está en uso por otro usuario
+        nuevo_username = data.get('username', usuario.username)
+        if User.objects.exclude(pk=usuario.pk).filter(username=nuevo_username).exists():
+            return JsonResponse({'error': 'El nombre de usuario ya está en uso'}, status=400)
+
+        # Verifica si el nuevo correo electrónico ya está en uso por otro usuario
+        nuevo_email = data.get('email', usuario.email)
+        if User.objects.exclude(pk=usuario.pk).filter(email=nuevo_email).exists():
+            return JsonResponse({'error': 'El correo electrónico ya está en uso'}, status=400)
+        
         # Actualiza los campos editables del usuario
-        print("Nombre antes de la actualización:", usuario.first_name)
+        
         usuario.first_name = data.get('nombre', usuario.first_name)
-        print("Nombre después de la actualización:", usuario.first_name)
         usuario.last_name = data.get('apellido', usuario.last_name)
         usuario.email = data.get('email', usuario.email)
         

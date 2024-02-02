@@ -14,6 +14,15 @@
                     <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Nombre de usuario</label>
                     <div class="mt-2">
                       <input type="text" name="username" id="username" autocomplete="username" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="username" formControlName="username" [readonly]="!editando"  >
+                      <div *ngIf="perfilForm.get('username')?.hasError('required') && perfilForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre de usuario es obligatorio.
+                      </div>
+                      <div *ngIf="perfilForm.get('username')?.hasError('pattern') && perfilForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre de usuario no puede contener espacios ni símbolos.
+                      </div>
+                      <div *ngIf="perfilForm.get('username')?.hasError('duplicateUsername')"  class="text-red-500 text-sm">
+                        El nombre de usuario ya está en uso.
+                      </div>
                     </div>
                   </div>
 
@@ -21,6 +30,12 @@
                     <label for="nombre" class="block text-sm font-medium leading-6 text-gray-900">Nombre Responsable</label>
                     <div class="mt-2">
                       <input type="text" name="nombre" id="nombre" autocomplete="nombre" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="nombre" formControlName="nombre" [readonly]="!editando">
+                      <div *ngIf="perfilForm.get('nombre')?.hasError('required') && perfilForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre del reponsable es obligatorio.
+                    </div>
+                    <div *ngIf="perfilForm.get('nombre')?.hasError('pattern') && perfilForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre del reponsable no puede contener símbolos.
+                     </div>
                     </div>
                   </div>
           
@@ -28,6 +43,12 @@
                     <label for="apellido" class="block text-sm font-medium leading-6 text-gray-900">Apellido Responsable</label>
                     <div class="mt-2">
                       <input type="text" name="apellido" id="apellido" autocomplete="apellido" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="apellido" formControlName="apellido" [readonly]="!editando"  >
+                      <div *ngIf="perfilForm.get('apellido')?.hasError('required') && perfilForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El apellido del reponsable es obligatorio.
+                      </div>
+                      <div *ngIf="perfilForm.get('apellido')?.hasError('pattern') && perfilForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
+                          El apellido del reponsable no puede contener símbolos.
+                      </div>
                     </div>
                   </div>
           
@@ -35,6 +56,9 @@
                     <label for="razonSocial" class="block text-sm font-medium leading-6 text-gray-900">Razón Social</label>
                     <div class="mt-2">
                       <input type="text" name="razonSocial" id="razonSocial" autocomplete="razonSocial" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="razonSocial" formControlName="razonSocial" [readonly]="!editando"  >
+                      <div *ngIf="perfilForm.get('razonSocial')?.hasError('required') && perfilForm.get('razonSocial')?.touched" class="error-message" class="text-red-500 text-sm">
+                        La razon social es obligatoria.
+                      </div>
                     </div>
                   </div>
           
@@ -42,6 +66,15 @@
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
                     <div class="mt-2">
                       <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="email" formControlName="email" [readonly]="!editando"  >
+                      <div *ngIf="perfilForm.get('email')?.hasError('required') && perfilForm.get('email')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El email es obligatorio.
+                      </div>
+                      <div *ngIf="perfilForm.get('email')?.hasError('email') && perfilForm.get('email')?.touched" class="error-message"  class="text-red-500 text-sm">
+                          El formato del correo electrónico no es válido.
+                      </div>
+                      <div *ngIf="perfilForm.get('email')?.hasError('duplicateEmail')" class="text-red-500 text-sm">
+                          El correo electrónico ya está en uso.
+                        </div>
                     </div>
                   </div>
           
@@ -49,6 +82,9 @@
                     <label for="telefono" class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                     <div class="mt-2">
                         <input type="text" name="telefono" id="telefono" autocomplete="telefono" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1"  autocomplete="telefono" formControlName="telefono"  [readonly]="!editando" >
+                        <div *ngIf="perfilForm.get('telefono')?.hasError('required') && perfilForm.get('telefono')?.touched" class="error-message" class="text-red-500 text-sm">
+                          El telefono es obligatorio.
+                        </div>
                       </div>
                   </div>
                   

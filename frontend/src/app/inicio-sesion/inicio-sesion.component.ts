@@ -54,7 +54,7 @@ export class InicioSesionComponent {
             // Manejar el error según el tipo de error o mostrar un mensaje al usuario
             if (error.status === 401) {
               // Credenciales inválidas o usuario no encontrado
-              this.mensajeError = 'Credenciales inválidas o usuario no encontrado';
+              this.mensajeError = 'Credenciales inválidas.';
              
             } else {
               // Otro tipo de error, puedes mostrar un mensaje genérico
