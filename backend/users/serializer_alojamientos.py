@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Alojamiento, AlojamientoXTipoServicio, TipoAlojamiento,  TipoServicio,  TipoServicio
+from .models import *
 
 class TipoServicioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,4 +22,9 @@ class AlojamientoSerializer(serializers.ModelSerializer):
 class AlojamientoXTipoServicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = AlojamientoXTipoServicio
+        fields = '__all__'
+
+class Categoria(serializers.ModelSerializer):
+    class Meta:
+        model = Categoria
         fields = '__all__'

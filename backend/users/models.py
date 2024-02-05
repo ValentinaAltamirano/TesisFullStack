@@ -21,8 +21,7 @@ class Telefono(models.Model):
 
 class TipoEstablecimiento(models.Model):
     codTipoEstablecimiento = models.AutoField(primary_key=True)
-    descripcion = models.TextField()
-    calificacionPromedio = models.FloatField()
+    nombre = models.CharField(max_length=255)
     
 class Horario(models.Model):
     codHorario = models.AutoField(primary_key=True)
@@ -73,12 +72,17 @@ class TipoServicio(models.Model):
 class TipoAlojamiento(models.Model):
     codTipoAlojamiento = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+    
+class Categoria(models.Model):
+    codCategoria = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
 
 class Alojamiento(models.Model):
     codAlojamiento = models.AutoField(primary_key=True)
     codTipoAlojamiento = models.ForeignKey(TipoAlojamiento, on_delete=models.CASCADE)
     codEstablecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)
     codTipoServicio = models.ForeignKey(TipoServicio, on_delete=models.CASCADE)
+    codCategoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
 
 class AlojamientoXTipoServicio(models.Model):
     codAlojamiento = models.ForeignKey(Alojamiento, on_delete=models.CASCADE)
