@@ -22,3 +22,9 @@ admin.site.register(TipoServicio)
 #Alojamientos y servicios:
 admin.site.register(Alojamiento)
 admin.site.register(AlojamientoXTipoServicio)
+
+#Pais, Provincia y Ciudad:
+
+admin.site.register(Pais)
+admin.site.register(Provincia)
+admin.site.register(Ciudad)

@@ -1,6 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+class Pais(models.Model):
+    codPais = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255, blank= False)
+
+class Provincia(models.Model):
+    codProvincia = models.AutoField(primary_key=True)
+    codPais = models.ForeignKey(Pais, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=255, blank= False)
+
+class Ciudad (models.Model):
+    codCiudad = models.AutoField(primary_key=True)
+    codProvincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=255, blank= False)
+
+
+
 class Empresario(models.Model):
     idEmpresario = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
@@ -30,6 +47,7 @@ class Horario(models.Model):
     
 class Establecimiento(models.Model):
     codEstablecimiento = models.AutoField(primary_key=True)
+    codCiudad = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=255)
     calle = models.CharField(max_length=255)
     altura = models.IntegerField()

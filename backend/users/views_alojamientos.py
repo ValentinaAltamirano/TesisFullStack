@@ -1,59 +1,48 @@
-from rest_framework import generics
+from rest_framework import viewsets, generics
 
 from .serializer_alojamientos import *
 from .serializer_establecimientos import *
 from .models import *
 
-#TipoEstablecimiento
-class TipoEstablecimientoListCreateView(generics.ListCreateAPIView):
+class TipoEstablecimientoViewSet(viewsets.ModelViewSet):
     queryset = TipoEstablecimiento.objects.all()
     serializer_class = TipoEstablecimientoSerializer
 
-class TipoEstablecimientoDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = TipoEstablecimiento.objects.all()
-    serializer_class = TipoEstablecimientoSerializer
-
-#Establecimiento
-class EstablecimientoListCreateView(generics.ListCreateAPIView):
+class EstablecimientoViewSet(viewsets.ModelViewSet):
     queryset = Establecimiento.objects.all()
     serializer_class = EstablecimientoSerializer
 
-class EstablecimientoDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Establecimiento.objects.all()
-    serializer_class = EstablecimientoSerializer
-
-#MetodoDePago
-class MetodoDePagoListCreateView(generics.ListCreateAPIView):
+class MetodoDePagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoDePago.objects.all()
     serializer_class = MetodoDePagoSerializer
 
-class MetodoDePagoDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = MetodoDePago.objects.all()
-    serializer_class = MetodoDePagoSerializer
-    
-#RedSocial
-class RedSocialListCreateView(generics.ListCreateAPIView):
+class RedSocialViewSet(viewsets.ModelViewSet):
     queryset = RedSocial.objects.all()
     serializer_class = RedSocialSerializer
 
-class RedSocialDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = RedSocial.objects.all()
-    serializer_class = RedSocialSerializer
-
-#TipoServicio
-class TipoServicioListCreateView(generics.ListCreateAPIView):
+class TipoServicioViewSet(viewsets.ModelViewSet):
     queryset = TipoServicio.objects.all()
     serializer_class = TipoServicioSerializer
 
-class TipoServicioDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = TipoServicio.objects.all()
-    serializer_class = TipoServicioSerializer
-
-#TipoAlojamiento
-class TipoAlojamientoListCreateView(generics.ListCreateAPIView):
+class TipoAlojamientoViewSet(viewsets.ModelViewSet):
     queryset = TipoAlojamiento.objects.all()
     serializer_class = TipoAlojamientoSerializer
 
-class TipoAlojamientoDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = TipoAlojamiento.objects.all()
-    serializer_class = TipoAlojamientoSerializer
+# Alojamiento
+class AlojamientoViewSet(viewsets.ModelViewSet):
+    queryset = Alojamiento.objects.all()
+    serializer_class = AlojamientoSerializer
+
+#Localizacion
+
+class PaisViewSet(viewsets.ModelViewSet):
+    queryset = Pais.objects.all()
+    serializer_class = PaisSerializer
+
+class ProvinciaViewSet(viewsets.ModelViewSet):
+    queryset = Provincia.objects.all()
+    serializer_class = ProvinciaSerializer
+
+class CiudadViewSet(viewsets.ModelViewSet):
+    queryset = Ciudad.objects.all()
+    serializer_class = CiudadSerializer

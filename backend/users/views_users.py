@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .serializer_users import EmpresarioSerializer
-from .models import Empresario
+from .models import *
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes

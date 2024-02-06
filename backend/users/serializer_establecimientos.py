@@ -2,10 +2,13 @@ from rest_framework import serializers
 from .models import *
 from .serializer_users import EmpresarioSerializer
 
+
+# Serializer Establecimientos
+        
 class TipoEstablecimientoSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoEstablecimiento
-        fields = '__all__'
+        fields = '__all__'  
 
 
 class EstablecimientoSerializer(serializers.ModelSerializer):
