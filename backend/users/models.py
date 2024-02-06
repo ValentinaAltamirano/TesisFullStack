@@ -16,7 +16,10 @@ class Provincia(models.Model):
     def _str_(self):
         return self.nombre
 
-class Ciudad (models.Model):
+    def __str__(self):
+        return self.nombre
+
+class Ciudad(models.Model):
     codCiudad = models.AutoField(primary_key=True)
     codProvincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=255, blank= False)
@@ -93,6 +96,9 @@ class RedSocial(models.Model):
     def _str_(self):
         return self.nombre
 
+    def __str__(self):
+        return self.nombre
+
 class EstablecimientoXRedSocial(models.Model):
     codEstablecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)
     codRedSocial = models.ForeignKey(RedSocial, on_delete=models.CASCADE)
@@ -103,6 +109,9 @@ class TipoServicio(models.Model):
     codTipoServicio = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
     def _str_(self):
+        return self.nombre
+
+    def __str__(self):
         return self.nombre
 
 class TipoAlojamiento(models.Model):
