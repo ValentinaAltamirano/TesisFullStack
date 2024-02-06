@@ -4,17 +4,26 @@ from django.contrib.auth.models import User
 
 class Pais(models.Model):
     codPais = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=255, blank= False)
+    nombre = models.CharField(max_length=255, blank=False)
+
+    def __str__(self):
+        return self.nombre
 
 class Provincia(models.Model):
     codProvincia = models.AutoField(primary_key=True)
     codPais = models.ForeignKey(Pais, on_delete=models.CASCADE)
-    nombre = models.CharField(max_length=255, blank= False)
+    nombre = models.CharField(max_length=255, blank=False)
 
-class Ciudad (models.Model):
+    def __str__(self):
+        return self.nombre
+
+class Ciudad(models.Model):
     codCiudad = models.AutoField(primary_key=True)
     codProvincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
-    nombre = models.CharField(max_length=255, blank= False)
+    nombre = models.CharField(max_length=255, blank=False)
+
+    def __str__(self):
+        return self.nombre
 
 
 
@@ -39,6 +48,9 @@ class Telefono(models.Model):
 class TipoEstablecimiento(models.Model):
     codTipoEstablecimiento = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre   
     
 class Horario(models.Model):
     codHorario = models.AutoField(primary_key=True)
@@ -77,6 +89,9 @@ class RedSocial(models.Model):
     codRedSocial = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.nombre
+
 class EstablecimientoXRedSocial(models.Model):
     codEstablecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)
     codRedSocial = models.ForeignKey(RedSocial, on_delete=models.CASCADE)
@@ -87,13 +102,22 @@ class TipoServicio(models.Model):
     codTipoServicio = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.nombre
+
 class TipoAlojamiento(models.Model):
     codTipoAlojamiento = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre
     
 class Categoria(models.Model):
     codCategoria = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre
 
 class Alojamiento(models.Model):
     codAlojamiento = models.AutoField(primary_key=True)
