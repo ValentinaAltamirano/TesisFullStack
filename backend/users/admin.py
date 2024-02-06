@@ -20,7 +20,7 @@ admin.site.register(TipoAlojamiento)
 admin.site.register(TipoServicio)
 
 #Alojamientos y servicios:
-admin.site.register(Alojamiento)
+admin.site.register(Alojamientos)
 admin.site.register(AlojamientoXTipoServicio)
 
 #Pais, Provincia y Ciudad:

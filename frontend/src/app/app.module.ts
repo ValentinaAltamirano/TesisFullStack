@@ -23,7 +23,6 @@ import { RegistroGastronomiaComponent } from './registro-gastronomia/registro-ga
 import { RegistroComercioComponent } from './registro-comercio/registro-comercio.component';
 import { CookieService } from 'ngx-cookie-service';
 
-
 const appRoutes: Routes=[];
 
 @NgModule({
@@ -42,7 +41,7 @@ const appRoutes: Routes=[];
     PerfilComponent,
     RegistroAlojamientoComponent,
     RegistroGastronomiaComponent,
-    RegistroComercioComponent,
+    RegistroComercioComponent
   ],
   imports: [
     BrowserModule,

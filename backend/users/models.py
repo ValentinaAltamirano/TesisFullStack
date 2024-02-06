@@ -5,18 +5,23 @@ from django.contrib.auth.models import User
 class Pais(models.Model):
     codPais = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255, blank= False)
+    def _str_(self):
+        return self.nombre
+
 
 class Provincia(models.Model):
     codProvincia = models.AutoField(primary_key=True)
     codPais = models.ForeignKey(Pais, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=255, blank= False)
+    def _str_(self):
+        return self.nombre
 
 class Ciudad (models.Model):
     codCiudad = models.AutoField(primary_key=True)
     codProvincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=255, blank= False)
-
-
+    def _str_(self):
+        return self.nombre
 
 class Empresario(models.Model):
     idEmpresario = models.AutoField(primary_key=True)
@@ -39,6 +44,9 @@ class Telefono(models.Model):
 class TipoEstablecimiento(models.Model):
     codTipoEstablecimiento = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+    def _str_(self):
+        return self.nombre
+
     
 class Horario(models.Model):
     codHorario = models.AutoField(primary_key=True)
@@ -55,11 +63,15 @@ class Establecimiento(models.Model):
     empresario = models.ForeignKey(Empresario, on_delete=models.CASCADE)
     codTelefono = models.ForeignKey(Telefono, on_delete=models.CASCADE)
     codHorario = models.ForeignKey(Horario, on_delete=models.CASCADE)
+    def _str_(self):
+        return self.nombre
 
 
 class Imagen(models.Model):
     codImagen = models.AutoField(primary_key=True)
     url = models.URLField()
+    def _str_(self):
+        return self.url
 
 class ImagenXEstablecimiento(models.Model):
     codEstablecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)
@@ -68,6 +80,8 @@ class ImagenXEstablecimiento(models.Model):
 class MetodoDePago(models.Model):
     codMetodoDePago = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+    def _str_(self):
+        return self.nombre
 
 class EstablecimientoXMetodoPago(models.Model):
     codEstablecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)
@@ -76,32 +90,39 @@ class EstablecimientoXMetodoPago(models.Model):
 class RedSocial(models.Model):
     codRedSocial = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+    def _str_(self):
+        return self.nombre
 
 class EstablecimientoXRedSocial(models.Model):
     codEstablecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)
     codRedSocial = models.ForeignKey(RedSocial, on_delete=models.CASCADE)
-
+    
 # Modelos de alojamientos
 
 class TipoServicio(models.Model):
     codTipoServicio = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+    def _str_(self):
+        return self.nombre
 
 class TipoAlojamiento(models.Model):
     codTipoAlojamiento = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+    def _str_(self):
+        return self.nombre
     
 class Categoria(models.Model):
     codCategoria = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
+    def _str_(self):
+        return self.nombre
 
-class Alojamiento(models.Model):
+class Alojamientos(Establecimiento):
     codAlojamiento = models.AutoField(primary_key=True)
     codTipoAlojamiento = models.ForeignKey(TipoAlojamiento, on_delete=models.CASCADE)
-    codEstablecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)
     codTipoServicio = models.ForeignKey(TipoServicio, on_delete=models.CASCADE)
     codCategoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
 
 class AlojamientoXTipoServicio(models.Model):
-    codAlojamiento = models.ForeignKey(Alojamiento, on_delete=models.CASCADE)
+    codAlojamiento = models.ForeignKey(Alojamientos, on_delete=models.CASCADE)
     codTipoServicio = models.ForeignKey(TipoServicio, on_delete=models.CASCADE)

@@ -14,11 +14,8 @@ class TipoAlojamientoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AlojamientoSerializer(serializers.ModelSerializer):
-    codTipoAlojamiento = TipoAlojamientoSerializer()
-    codTipoServicio = TipoServicioSerializer()
-
     class Meta:
-        model = Alojamiento
+        model = Alojamientos
         fields = '__all__'
 
 class AlojamientoXTipoServicioSerializer(serializers.ModelSerializer):
@@ -26,7 +23,7 @@ class AlojamientoXTipoServicioSerializer(serializers.ModelSerializer):
         model = AlojamientoXTipoServicio
         fields = '__all__'
 
-class Categoria(serializers.ModelSerializer):
+class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
         fields = '__all__'

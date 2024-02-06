@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../service/auth.service';  // Ajusta la ruta según tu estructura
+import { AuthService } from '../service/auth.service'; 
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router'
-import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-registro-empresario',
