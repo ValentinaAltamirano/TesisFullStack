@@ -15,6 +15,7 @@ router.register(r'alojamientos', views_alojamientos.AlojamientoViewSet)
 router.register(r'pais',views_alojamientos.PaisViewSet)
 router.register(r'provincia',views_alojamientos.ProvinciaViewSet)
 router.register(r'ciudad',views_alojamientos.CiudadViewSet)
+router.register(r'categoria',views_alojamientos.CategoriaViewSet)
 
 urlpatterns = [
     path('crear_empresario/', crear_empresario, name='crear_empresario'),

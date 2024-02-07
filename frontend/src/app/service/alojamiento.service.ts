@@ -24,5 +24,13 @@ export class AlojamientoService {
     return this.http.get<AlojamientoService[]>(this.url + 'alojamientos/categoria/');
   }
 
+  obtenerServicios(): Observable<AlojamientoService[]> {
+    return this.http.get<AlojamientoService[]>(this.url + 'alojamientos/tiposervicios/');
+  }
+
+  obtenerMetodosDePago(): Observable<AlojamientoService[]> {
+    return this.http.get<AlojamientoService[]>(this.url + 'alojamientos/metodospago/');
+  }
+
 
 }

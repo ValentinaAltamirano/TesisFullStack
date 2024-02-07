@@ -22,6 +22,7 @@ import { RegistroAlojamientoComponent } from './registro-alojamiento/registro-al
 import { RegistroGastronomiaComponent } from './registro-gastronomia/registro-gastronomia.component';
 import { RegistroComercioComponent } from './registro-comercio/registro-comercio.component';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 const appRoutes: Routes=[];
 
@@ -50,7 +51,8 @@ const appRoutes: Routes=[];
     GoogleMapsModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxDropzoneModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]
