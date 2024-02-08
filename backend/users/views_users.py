@@ -47,6 +47,7 @@ def crear_empresario(request):
 def obtener_datos_empresario(request):
     empresario = Empresario.objects.get(user=request.user)
     data_empresario = {
+        'id': empresario.idEmpresario,
         'razonSocial': empresario.razonSocial,
         'descripcion': empresario.descripcion,
         'telefono': empresario.telefono
@@ -107,9 +108,3 @@ def actualizar_datos_empresario(request):
     
     return JsonResponse({'message': 'Método no permitido'}, status=405)
 
-
-#Get empresario
-
-class empresario_Lista(generics.ListCreateAPIView):
-    queryset = Empresario.objects.all()
-    serializer_class = EmpresarioSerializer

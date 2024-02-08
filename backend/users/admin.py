@@ -3,16 +3,11 @@ from .models import *
 
 # Register your models here.
 admin.site.register(Empresario)
-admin.site.register(Establecimiento)
 admin.site.register(MetodoDePago)
-admin.site.register(RedSocial)
 
 
 #imagenes y Relaciones:
-admin.site.register(Imagen)
-admin.site.register(ImagenXEstablecimiento)
-admin.site.register(EstablecimientoXMetodoPago)
-admin.site.register(EstablecimientoXRedSocial)
+admin.site.register(Imagenes)
 
 #tipos y Servicios:
 admin.site.register(TipoEstablecimiento)
@@ -21,7 +16,6 @@ admin.site.register(TipoServicio)
 
 #Alojamientos y servicios:
 admin.site.register(Alojamientos)
-admin.site.register(AlojamientoXTipoServicio)
 
 #Pais, Provincia y Ciudad:
 

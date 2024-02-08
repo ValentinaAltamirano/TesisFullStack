@@ -1,42 +1,19 @@
 from rest_framework import serializers
 from .models import *
-from .serializer_users import EmpresarioSerializer
 
-
-# Serializer Establecimientos
-        
-class TipoEstablecimientoSerializer(serializers.ModelSerializer):
+class PaisSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TipoEstablecimiento
-        fields = '__all__'  
-
-
-class EstablecimientoSerializer(serializers.ModelSerializer):
-    tipoEstablecimiento = TipoEstablecimientoSerializer()
-    empresario = EmpresarioSerializer()
-
-    class Meta:
-        model = Establecimiento
+        model = Pais
         fields = '__all__'
 
-class ImagenSerializer(serializers.ModelSerializer):
+class ProvinciaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Imagen
+        model = Provincia
         fields = '__all__'
 
-class MetodoDePagoSerializer(serializers.ModelSerializer):
+class CiudadSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MetodoDePago
-        fields = '__all__'
-
-class EstablecimientoXMetodoPagoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EstablecimientoXMetodoPago
-        fields = '__all__'
-
-class ImagenXEstablecimientoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ImagenXEstablecimiento
+        model = Ciudad
         fields = '__all__'
 
 class TelefonoSerializer(serializers.ModelSerializer):
@@ -44,17 +21,29 @@ class TelefonoSerializer(serializers.ModelSerializer):
         model = Telefono
         fields = '__all__'
 
+class TipoEstablecimientoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoEstablecimiento
+        fields = '__all__'
+
 class HorarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Horario
         fields = '__all__'
 
-class RedSocialSerializer(serializers.ModelSerializer):
+class MetodoDePagoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RedSocial
+        model = MetodoDePago
         fields = '__all__'
 
-class EstablecimientoXRedSocialSerializer(serializers.ModelSerializer):
+class EstablecimientoSerializer(serializers.ModelSerializer):
+    metodos_de_pago = MetodoDePagoSerializer(many=True)
+    
     class Meta:
-        model = EstablecimientoXRedSocial
+        model = Establecimiento
+        fields = '__all__'
+
+class ImagenesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Imagenes
         fields = '__all__'
