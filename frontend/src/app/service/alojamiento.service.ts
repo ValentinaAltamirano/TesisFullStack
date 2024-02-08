@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class AlojamientoService {
 
   constructor(private http: HttpClient, 
     private cookieService: CookieService,
-    private router: Router) {
+    private router: Router,
+    private auth: AuthService,) {
   }
 
   obtenerTiposAlojamiento(): Observable<AlojamientoService[]> {
@@ -33,4 +35,15 @@ export class AlojamientoService {
   }
 
 
-}
+  registrarAlojamiento(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
+    });
+    return this.http.post(this.url + 'alojamientos/alojamientos/', data, { headers });
+  }
+    
+
+  }
+
+

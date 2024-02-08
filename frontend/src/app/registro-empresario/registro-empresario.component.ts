@@ -74,7 +74,7 @@ export class RegistroEmpresarioComponent {
       this.authService.registrarEmpresario(this.empresarioForm.value).subscribe(
         (response: any) => {
           Swal.fire({
-            title: "Inicio de sesión exitoso",
+            title: "Registro de empresario exitoso",
             icon: "success",
             confirmButtonText: "OK"
           }).then((result) => {

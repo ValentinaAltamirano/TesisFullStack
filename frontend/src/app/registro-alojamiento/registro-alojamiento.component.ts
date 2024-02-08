@@ -20,9 +20,10 @@ export class RegistroAlojamientoComponent {
   tiposmetodosPago: any[] = [];
   imagenes: File[] = [];
   vistasPrevias: string[] = [];
+  idEmpresario: any;
 
   obtenerTiposAlojamiento(): void {
-    this.alojamientoSerice.obtenerTiposAlojamiento().subscribe(
+    this.alojamientoService.obtenerTiposAlojamiento().subscribe(
       (data) => {
         this.tiposAlojamiento = data;
       },
@@ -34,7 +35,7 @@ export class RegistroAlojamientoComponent {
   }
 
   obtenerCategoria(): void {
-    this.alojamientoSerice.obtenerCategoria().subscribe(
+    this.alojamientoService.obtenerCategoria().subscribe(
       (data) => {
         this.tiposCategoria = data;
       },
@@ -46,7 +47,7 @@ export class RegistroAlojamientoComponent {
   }
 
   obtenerServicio(): void {
-    this.alojamientoSerice.obtenerServicios().subscribe(
+    this.alojamientoService.obtenerServicios().subscribe(
       (data) => {
         this.tiposServicio = data;
       },
@@ -58,10 +59,9 @@ export class RegistroAlojamientoComponent {
   }
 
   obtenerMetodosPago(): void {
-    this.alojamientoSerice.obtenerMetodosDePago().subscribe(
+    this.alojamientoService.obtenerMetodosDePago().subscribe(
       (data) => {
         this.tiposmetodosPago = data;
-        console.log(this.tiposmetodosPago)
       },
       (error) => {
         console.error('Error al obtener tipos de categoria', error);
@@ -70,45 +70,66 @@ export class RegistroAlojamientoComponent {
     );
   }
 
+  obtenerIdEmpresario() {
+    this.authService.obtenerDatosEmpresario().subscribe(
+      (userInfo: any) => {
+        // Asignar los datos del usuario a los FormControls
+        this.idEmpresario = userInfo.id;
+        
+        
+  
+        // Puedes agregar idEmpresario directamente en la inicialización del formulario
+        this.alojamientoForm.get('idEmpresario')?.setValue(this.idEmpresario);
+      },
+      error => {
+        console.error('Error al obtener la información del usuario:', error);
+      }
+    );
+  }
+  
   ngOnInit() {
     this.obtenerTiposAlojamiento();
     this.obtenerCategoria();
     this.obtenerServicio();
     this.obtenerMetodosPago();
+    this.obtenerIdEmpresario(); 
     this.initForm();
   }
+
+  
 
   initForm(): void {
     this.alojamientoForm = this.fb.group({
       // Campos del establecimiento
-      nombreAlojamiento: ['', [Validators.required]],
-      tipoEstablecimiento: ['Alojamento'],
-      ciudad: ['Villa Carlos Paz'],
-      provincia: ['Córdoba'],
+      idEmpresario: [''],
+      nombre: ['', [Validators.required]],
+      tipoEstablecimiento: [1],
+      codCiudad: [1],
       calle: ['', Validators.required],
       altura: ['', Validators.required],
       telefono: ['', [
         Validators.required,
-        Validators.pattern('^[0-9]*$'),
-        Validators.maxLength(9),
-        Validators.minLength(9)
+        Validators.pattern('^[0-9]*$')
       ]],
       web: ['', Validators.required],
       descripcion: ['', Validators.required],
       imagenes: this.fb.array([]),
+      horaApertura: ['', Validators.required],
+      horaCierre: ['', Validators.required],
 
       // Campos del alojamiento
       categoria: ['', Validators.required],
-      tipoAlojamiento: ['', Validators.required],
+      tipoAlojamiento: [null, Validators.required],
       servicioSeleccionados: this.fb.array([]),
-      metodosPagoSeleccionados: this.fb.array([])
+      metodosPagoSeleccionados: this.fb.array([]),
     });
   }
 
   constructor(
     private fb: FormBuilder,
-    private alojamientoSerice: AlojamientoService,
+    private alojamientoService: AlojamientoService,
     private router: Router,
+    private authService: AuthService,
   ) {}
 
   getFormControl(formPath: string): FormControl {
@@ -124,18 +145,15 @@ export class RegistroAlojamientoComponent {
       control.setValue(!isChecked);
   
       const formArrayName = controlName.includes('servicioSeleccionados') ? 'servicioSeleccionados' : 'metodosPagoSeleccionados';
+      console.log(formArrayName)
       const formArray = this.alojamientoForm.get(formArrayName) as FormArray;
-  
+      console.log(formArray)
       if (isChecked) {
         formArray.removeAt(formArray.controls.findIndex(item => item.value === controlName.split('.')[1]));
       } else {
         formArray.push(this.fb.control(controlName.split('.')[1]));
       }
-  
-      console.log('FormArray:', formArray.value);
     }
-  
-    console.log('Form value after:', this.alojamientoForm.value);
   }
 
   onFileChange(event: any): void {
@@ -189,7 +207,43 @@ export class RegistroAlojamientoComponent {
   submitForm() {
     // Accede a las imágenes directamente desde el FormGroup
     const imagenes = this.alojamientoForm.get('imagenes')?.value;
-    console.log('Imágenes:', imagenes);
-    console.log('Form values:', this.alojamientoForm.value);
+
+    // console.log('¿nombreAlojamiento es válido?', this.alojamientoForm.get('nombreAlojamiento')?.valid);
+    // console.log('tipoEstablecimiento es válido?', this.alojamientoForm.get('tipoEstablecimiento')?.valid);
+    // console.log('ciudad es válido?', this.alojamientoForm.get('ciudad')?.valid);
+    // console.log('provincia es válido?', this.alojamientoForm.get('provincia')?.valid);
+    // console.log('¿calle es válido?', this.alojamientoForm.get('calle')?.valid);
+    // console.log('¿telefono es válido?', this.alojamientoForm.get('telefono')?.valid);
+    // console.log('altura es válido?', this.alojamientoForm.get('altura')?.valid);
+    // console.log('web es válido?', this.alojamientoForm.get('web')?.valid);
+    // console.log('descripcion es válido?', this.alojamientoForm.get('descripcion')?.valid);
+    // console.log('imagenes es válido?', this.alojamientoForm.get('imagenes')?.valid);
+    // console.log('horaApertura es válido?', this.alojamientoForm.get('horaApertura')?.valid);
+    // console.log('horaCierre es válido?', this.alojamientoForm.get('horaCierre')?.valid);
+    // console.log('categoria es válido?', this.alojamientoForm.get('categoria')?.valid);
+    // console.log('tipoAlojamiento es válido?', this.alojamientoForm.get('tipoAlojamiento')?.valid);
+    // console.log('servicioSeleccionados es válido?', this.alojamientoForm.get('servicioSeleccionados')?.valid);
+    // console.log('metodosPagoSeleccionados es válido?', this.alojamientoForm.get('metodosPagoSeleccionados')?.valid);
+
+    console.log(this.alojamientoForm.value)
+    if (this.alojamientoForm.valid) {
+      // Enviar datos al servicio de autenticación
+      this.alojamientoService.registrarAlojamiento(this.alojamientoForm.value).subscribe(
+        (response: any) => {
+          // Swal.fire({
+          //   title: "Registro de alojamiento exitoso",
+          //   icon: "success",
+          //   confirmButtonText: "OK"
+          // }).then((result) => {
+          //   this.router.navigate(['/inicioSesion']);
+          // });
+        },
+        (error) => {
+          // Manejar el error, mostrar mensajes de error apropiados al usuario
+          console.error(error);
+        }
+      );
+    }
   }
+
 }

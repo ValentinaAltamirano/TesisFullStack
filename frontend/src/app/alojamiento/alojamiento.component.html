@@ -1,18 +1,183 @@
 <app-navbar></app-navbar>
 
 <div class="relative inline-block center">
-    <img class="w-screen" src="../../assets/carlosPaz3.jpg" />
+    <img class="w-screen h-1/2" src="../../assets/carlosPaz3.jpg" />
     <div class="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 text-white text-center text-5xl font-bold uppercase">
-        Alojamiento
+      Alojamiento en Villa Carlos Paz
     </div>
-  </div>
+</div>
 
-  <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-xl xl:p-0 ">
-    <div class="search-container">
-        <input type="text" placeholder="Buscar..." class="search-input">
-        <button class="search-button">
-          <!-- Puedes poner un ícono de búsqueda aquí -->
-          Buscar
-        </button>
-      </div>
+<div class="bg-white">
+  <div>
+    <!-- Phone https://tailwindui.com/components/ecommerce/components/category-filters -->
+
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-5"></div>
+
+      <section aria-labelledby="products-heading" class="pb-24 pt-6">
+        <h2 id="products-heading" class="sr-only">Products</h2>
+
+        <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+          <!-- Filters -->
+          <form class="hidden lg:block">
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Tipo de Alojamiento</span>
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-0">
+                
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposAlojamiento" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Servicios</span>
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-1">
+
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposServicio" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Categoría</span>
+                  
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-2">
+                
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposCategoria" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Servicios</span>
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-1">
+
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposServicio" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Métodos de Pago</span>
+                  
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-2">
+                
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposmetodosPago" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            
+          </form>
+
+          <!-- Product grid -->
+          <div class="lg:col-span-3">
+            <!-- Your content -->
+
+            <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+              <div class="group relative">
+                <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                  <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg" alt="Front of men&#039;s Basic Tee in black." class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+                </div>
+                <div class="mt-4 flex justify-between">
+                  <div>
+                    <h3 class="text-sm text-gray-700">
+                      <a href="#">
+                        <span aria-hidden="true" class="absolute inset-0"></span>
+                        Basic Tee
+                      </a>
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500">Black</p>
+                  </div>
+                  <p class="text-sm font-medium text-gray-900">$35</p>
+                </div>
+              </div>
+        
+              <!-- More products... -->
+            </div>
+
+          </div>
+        </div>
+        
+      </section>
+      
+    </main>
   </div>
+</div>
+
+<app-footer></app-footer>

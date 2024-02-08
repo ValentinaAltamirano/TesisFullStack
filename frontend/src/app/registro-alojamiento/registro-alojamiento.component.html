@@ -15,7 +15,7 @@
             <form [formGroup]="alojamientoForm" class="space-y-4 md:space-y-6" (ngSubmit)="submitForm()">
                 <div>
                     <label for="nombreAlojamiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Alojamiento*</label>
-                    <input formControlName="nombreAlojamiento" type="nombreAlojamiento" name="nombreAlojamiento" id="nombreAlojamiento" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Alojamiento" required>
+                    <input formControlName="nombre" type="nombreAlojamiento" name="nombreAlojamiento" id="nombreAlojamiento" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Alojamiento" required>
                 </div>
                 <div>
                     <label for="tipoAlojamiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Alojamiento*</label>
@@ -28,11 +28,11 @@
                 </div>
                 <div>
                     <label for="ciudad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ciudad</label>
-                    <input formControlName="ciudad"  type="ciudad" name="ciudad" id="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Villa Carlos Paz" readonly>
+                    <input  type="ciudad" name="ciudad" id="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Villa Carlos Paz" readonly>
                 </div>
                 <div>
                     <label for="provincia" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Provincia</label>
-                    <input formControlName="provincia"  type="provincia" name="provincia" id="provincia" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Córdoba" readonly>
+                    <input  type="provincia" name="provincia" id="provincia" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Córdoba" readonly>
                 </div>
                 <div>
                     <label for="calle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Calle*</label>
@@ -42,19 +42,32 @@
                     <label for="altura" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Altura*</label>
                     <input formControlName="altura" type="altura" name="altura" id="altura" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Altura" required>
                 </div>
+
+                <div>
+                  <label for="categoria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría*</label>
+                  <div class="relative">
+                      <select formControlName="categoria" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                          <option value="" disabled selected>Selecciona una categoría</option>
+                          <option *ngFor="let tipo of tiposCategoria" [value]="tipo">{{ tipo }}</option>
+                      </select>
+                    </div>
+                </div>
+
                 <div>
                     <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono*</label>
                     <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Teléfono" required>
                 </div>
+
                 <div>
-                    <label for="categoria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría*</label>
-                    <div class="relative">
-                        <select formControlName="categoria" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                            <option value="" disabled selected>Selecciona una categoría</option>
-                            <option *ngFor="let tipo of tiposCategoria" [value]="tipo">{{ tipo }}</option>
-                        </select>
-                      </div>
-                </div>
+                  <label for="horaApertura" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Horario de apertura</label>
+                  <input formControlName="horaApertura" type="time" name="horaApertura" id="horaApertura" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Teléfono" required>
+              </div>
+
+              <div>
+                <label for="horaCierre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Horario de cierre</label>
+                <input formControlName="horaCierre" type="time" name="horaCierre" id="horaCierre" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Teléfono" required>
+            </div>
+                
 
                 <div>
                     <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicios*</label>
