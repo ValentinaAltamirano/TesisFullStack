@@ -109,7 +109,6 @@ export class RegistroAlojamientoComponent {
       altura: ['', Validators.required],
       telefono: ['', [
         Validators.required,
-        Validators.pattern('^[0-9]*$')
       ]],
       web: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -226,17 +225,18 @@ export class RegistroAlojamientoComponent {
     // console.log('metodosPagoSeleccionados es válido?', this.alojamientoForm.get('metodosPagoSeleccionados')?.valid);
 
     console.log(this.alojamientoForm.value)
+    console.log(this.alojamientoForm.valid)
     if (this.alojamientoForm.valid) {
       // Enviar datos al servicio de autenticación
       this.alojamientoService.registrarAlojamiento(this.alojamientoForm.value).subscribe(
         (response: any) => {
-          // Swal.fire({
-          //   title: "Registro de alojamiento exitoso",
-          //   icon: "success",
-          //   confirmButtonText: "OK"
-          // }).then((result) => {
-          //   this.router.navigate(['/inicioSesion']);
-          // });
+          Swal.fire({
+          title: "Registro de alojamiento exitoso",
+             icon: "success",
+             confirmButtonText: "OK"
+           }).then((result) => {
+             this.router.navigate(['/']);
+           });
         },
         (error) => {
           // Manejar el error, mostrar mensajes de error apropiados al usuario

@@ -8,6 +8,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework import status
 from django.http import JsonResponse
 import json
+from PIL import Image
 
 class TipoEstablecimientoViewSet(viewsets.ModelViewSet):
     queryset = TipoEstablecimiento.objects.all()
@@ -118,6 +119,24 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
             alojamiento.metodos_de_pago.set(ids_metodos_pago)
             alojamiento.servicios.set(ids_servicios)
             
+            #Cargar imágenes
+            imagenes = request.FILES.getlist('imagenes')
+            
+            for imagen in imagenes:
+                ruta_guardado = f'media/imagenes_establecimiento/{imagen.name}'
+                with open(ruta_guardado, 'wb+') as destino:
+                    for chunk in imagen.chunks():
+                        destino.write(chunk)
+
+                # Redimensionar la imagen si es necesario
+                # Aquí, Pillow (PIL) se utiliza para redimensionar la imagen a 800x600
+                try:
+                    img = Image.open(ruta_guardado)
+                    img.thumbnail((800, 600))
+                    img.save(ruta_guardado)
+                except Exception as e:
+                    print(f"Error al redimensionar la imagen: {e}")
+
             print('Alojamiento creado exitosamente')
             
             
