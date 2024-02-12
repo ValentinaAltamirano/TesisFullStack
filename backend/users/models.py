@@ -36,11 +36,6 @@ class Ciudad(models.Model):
     def __str__(self):
         return self.nombre
 
-class Telefono(models.Model):
-    codTelefono = models.AutoField(primary_key=True)
-    horaApertura = models.TimeField()
-    horaCierre = models.TimeField()
-
 
 class TipoEstablecimiento(models.Model):
     codTipoEstablecimiento = models.AutoField(primary_key=True)
@@ -50,8 +45,8 @@ class TipoEstablecimiento(models.Model):
     
 class Horario(models.Model):
     codHorario = models.AutoField(primary_key=True)
-    horaApertura = models.TimeField()
-    horaCierre = models.TimeField()
+    horaApertura = models.CharField(max_length=255)
+    horaCierre = models.CharField(max_length=255)
 
 class MetodoDePago(models.Model):
     codMetodoDePago = models.CharField(max_length=20, primary_key=True)
@@ -78,13 +73,7 @@ class Establecimiento(models.Model):
     def __str__(self):
         return f"{self.nombre} - {self.empresario}"
     
-class Imagenes(models.Model):
-    establecimiento = models.ForeignKey(Establecimiento,on_delete=models.CASCADE,related_name='imagenes')
-    codImagen = models.AutoField(primary_key=True)
-    imagen = models.ImageField(upload_to='imagenes_establecimiento/')
 
-    def __str__(self):
-        return f"Imagen {self.codImagen} de {self.establecimiento.nombre}"
     
 # Modelos de alojamientos
 
@@ -114,4 +103,10 @@ class Alojamientos(Establecimiento):
 
     def __str__(self):
         return f"{self.nombre} ({self.codTipoAlojamiento.nombre})"
+    
+    
+class Imagen(models.Model):
+    establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name='imagenes',default=0)
+    imagen = models.ImageField(upload_to='imagenes_establecimiento/')
+
     

@@ -1,14 +1,15 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets
 from .serializer_alojamientos import *
 from .serializer_establecimientos import *
 from .models import *
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
 from rest_framework import status
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import APIView
 import json
-from PIL import Image
 
 class TipoEstablecimientoViewSet(viewsets.ModelViewSet):
     queryset = TipoEstablecimiento.objects.all()
@@ -30,7 +31,6 @@ class MetodoDePagoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         # Devuelve solo los nombres de los tipos de alojamiento
         return Response([item['nombre'] for item in serializer.data])
-
 
 class TipoServicioViewSet(viewsets.ModelViewSet):
     queryset = TipoServicio.objects.all()
@@ -66,8 +66,9 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 class AlojamientoViewSet(viewsets.ModelViewSet):
     queryset = Alojamientos.objects.all()
     serializer_class = AlojamientosSerializer
-
+    
     def create(self, request, *args, **kwargs):
+        
         try:
             data = json.loads(request.body.decode('utf-8'))
             
@@ -118,43 +119,46 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
             alojamiento = Alojamientos.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono, codHorario = horario, web = web, codTipoAlojamiento = codTipoAlojamiento, codCategoria = codCategoria )
             alojamiento.metodos_de_pago.set(ids_metodos_pago)
             alojamiento.servicios.set(ids_servicios)
-            
-            #Cargar imágenes
-            imagenes = request.FILES.getlist('imagenes')
-            
-            for imagen in imagenes:
-                ruta_guardado = f'media/imagenes_establecimiento/{imagen.name}'
-                with open(ruta_guardado, 'wb+') as destino:
-                    for chunk in imagen.chunks():
-                        destino.write(chunk)
 
-                # Redimensionar la imagen si es necesario
-                # Aquí, Pillow (PIL) se utiliza para redimensionar la imagen a 800x600
-                try:
-                    img = Image.open(ruta_guardado)
-                    img.thumbnail((800, 600))
-                    img.save(ruta_guardado)
-                except Exception as e:
-                    print(f"Error al redimensionar la imagen: {e}")
-
-            print('Alojamiento creado exitosamente')
+            id_establecimiento = alojamiento.codEstablecimiento
             
-            
-            return JsonResponse({'mensaje': 'Establecimiento creado exitosamente'}, status=200)
-        except ValueError as e:
-    # Identificar el campo específico que causó el problema
-            for field, value in data.items():
-                try:
-                    int(value)
-                except ValueError:
-                    print(f"El valor para '{field}' no es un entero válido: {value}")
+            return JsonResponse({'alojamientoId': id_establecimiento, 'mensaje': 'Alojamiento creado exitosamente'}, status=200)
 
-            print('Error en la creación:', e)
-            return Response({'error': f'Error en la creación: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+        except ValidationError as ve:
+            return JsonResponse({'error': str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             print('Error en la creación:', e)
-            return Response({'error': 'Error en la creación'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'error': 'Error en la creación'}, status=status.HTTP_400_BAD_REQUEST)
 
+class ImagenAlojamientoCreateView(APIView):
+    queryset = Imagen.objects.all()
+    serializer_class = ImagenSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get(self, request, alojamiento_id):
+        try:
+            imagenes = Imagen.objects.filter(establecimiento_id=alojamiento_id)
+            serializer = ImagenSerializer(imagenes, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def post(self, request, *args, **kwargs):
+        try:
+            alojamiento_id = kwargs.get('alojamiento_id', '')  # Obtén el ID del alojamiento desde la URL
+            alojamiento = Establecimiento.objects.get(codEstablecimiento=alojamiento_id)  # Utiliza Establecimiento en lugar de Alojamientos
+
+            imagenes = request.FILES.getlist('imagenes')
+            print(imagenes)
+            for imagen in imagenes:
+                Imagen.objects.create(establecimiento=alojamiento, imagen=imagen)
+
+            return Response({'mensaje': 'Imágenes cargadas exitosamente'}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            print('Error en la carga de imágenes:', e)
+            return Response({'error': 'Error en la carga de imágenes'}, status=status.HTTP_400_BAD_REQUEST)
 #Localizacion
 
 class PaisViewSet(viewsets.ModelViewSet):
@@ -168,3 +172,4 @@ class ProvinciaViewSet(viewsets.ModelViewSet):
 class CiudadViewSet(viewsets.ModelViewSet):
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
+    
