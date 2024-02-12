@@ -12,7 +12,7 @@
     
     <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-xl xl:p-0 ">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <form [formGroup]="alojamientoForm" class="space-y-4 md:space-y-6" (ngSubmit)="submitForm()">
+            <form [formGroup]="alojamientoForm" class="space-y-4 md:space-y-6" (ngSubmit)="submitForm()" enctype="multipart/form-data">
                 <div>
                     <label for="nombreAlojamiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Alojamiento*</label>
                     <input formControlName="nombre" type="nombreAlojamiento" name="nombreAlojamiento" id="nombreAlojamiento" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Alojamiento" required>
@@ -131,7 +131,7 @@
                             <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG, or GIF (MAX. 800x400px)</p>
                           </div>
-                          <input id="dropzone-file" type="file" class="hidden" />
+                          <input id="dropzone-file" type="file" class="hidden" multiple name="imagenes" />
                           <div class="flex flex-wrap justify-center">
                             <div *ngFor="let vistaPrevia of vistasPrevias; let i = index" class="preview-item flex flex-col items-center mx-2 ">
                               <img [src]="vistaPrevia" alt="Imagen preview" class="w-20 h-20 object-cover mb-2 flex-shrink-0 mt-1" />

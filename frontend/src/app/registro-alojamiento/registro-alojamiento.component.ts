@@ -75,7 +75,7 @@ export class RegistroAlojamientoComponent {
       (userInfo: any) => {
         // Asignar los datos del usuario a los FormControls
         this.idEmpresario = userInfo.id;
-        
+        console.log(this.idEmpresario)
         
   
         // Puedes agregar idEmpresario directamente en la inicialización del formulario
@@ -113,8 +113,8 @@ export class RegistroAlojamientoComponent {
       web: ['', Validators.required],
       descripcion: ['', Validators.required],
       imagenes: this.fb.array([]),
-      horaApertura: ['', Validators.required],
-      horaCierre: ['', Validators.required],
+      horaApertura: [''],
+      horaCierre: [''],
 
       // Campos del alojamiento
       categoria: ['', Validators.required],
@@ -204,39 +204,15 @@ export class RegistroAlojamientoComponent {
   }
 
   submitForm() {
-    // Accede a las imágenes directamente desde el FormGroup
-    const imagenes = this.alojamientoForm.get('imagenes')?.value;
-
-    // console.log('¿nombreAlojamiento es válido?', this.alojamientoForm.get('nombreAlojamiento')?.valid);
-    // console.log('tipoEstablecimiento es válido?', this.alojamientoForm.get('tipoEstablecimiento')?.valid);
-    // console.log('ciudad es válido?', this.alojamientoForm.get('ciudad')?.valid);
-    // console.log('provincia es válido?', this.alojamientoForm.get('provincia')?.valid);
-    // console.log('¿calle es válido?', this.alojamientoForm.get('calle')?.valid);
-    // console.log('¿telefono es válido?', this.alojamientoForm.get('telefono')?.valid);
-    // console.log('altura es válido?', this.alojamientoForm.get('altura')?.valid);
-    // console.log('web es válido?', this.alojamientoForm.get('web')?.valid);
-    // console.log('descripcion es válido?', this.alojamientoForm.get('descripcion')?.valid);
-    // console.log('imagenes es válido?', this.alojamientoForm.get('imagenes')?.valid);
-    // console.log('horaApertura es válido?', this.alojamientoForm.get('horaApertura')?.valid);
-    // console.log('horaCierre es válido?', this.alojamientoForm.get('horaCierre')?.valid);
-    // console.log('categoria es válido?', this.alojamientoForm.get('categoria')?.valid);
-    // console.log('tipoAlojamiento es válido?', this.alojamientoForm.get('tipoAlojamiento')?.valid);
-    // console.log('servicioSeleccionados es válido?', this.alojamientoForm.get('servicioSeleccionados')?.valid);
-    // console.log('metodosPagoSeleccionados es válido?', this.alojamientoForm.get('metodosPagoSeleccionados')?.valid);
-
     console.log(this.alojamientoForm.value)
-    console.log(this.alojamientoForm.valid)
     if (this.alojamientoForm.valid) {
       // Enviar datos al servicio de autenticación
       this.alojamientoService.registrarAlojamiento(this.alojamientoForm.value).subscribe(
         (response: any) => {
-          Swal.fire({
-          title: "Registro de alojamiento exitoso",
-             icon: "success",
-             confirmButtonText: "OK"
-           }).then((result) => {
-             this.router.navigate(['/']);
-           });
+          const alojamientoId = response.alojamientoId; // Suponiendo que el servicio devuelve el ID del alojamiento
+  
+          // Registrar las imágenes asociadas al alojamiento
+          this.registrarImagenes(alojamientoId);
         },
         (error) => {
           // Manejar el error, mostrar mensajes de error apropiados al usuario
@@ -244,6 +220,28 @@ export class RegistroAlojamientoComponent {
         }
       );
     }
+  }
+
+  registrarImagenes(alojamientoId: number) {
+    // Accede a las imágenes directamente desde el FormGroup
+    const imagenes = this.alojamientoForm.get('imagenes')?.value;
+  
+    // Envía las imágenes al servicio junto con el ID del alojamiento
+    this.alojamientoService.registrarImagenes(imagenes, alojamientoId).subscribe(
+      (response: any) => {
+        Swal.fire({
+          title: "Registro de alojamiento e imágenes exitoso",
+          icon: "success",
+          confirmButtonText: "OK"
+        }).then((result) => {
+          this.router.navigate(['/']);
+        });
+      },
+      (error) => {
+        // Manejar el error, mostrar mensajes de error apropiados al usuario
+        console.error(error);
+      }
+    );
   }
 
 }

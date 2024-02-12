@@ -13,6 +13,7 @@ import { AuthService } from './service/auth.service';
 import { RegistroAlojamientoComponent } from './registro-alojamiento/registro-alojamiento.component';
 import { RegistroGastronomiaComponent } from './registro-gastronomia/registro-gastronomia.component';
 import { RegistroComercioComponent } from './registro-comercio/registro-comercio.component';
+import { DetalleAlojamientoComponent } from './detalle-alojamiento/detalle-alojamiento.component';
 
 const routes: Routes = [
   {path:'', component: InicioComponent},
@@ -22,10 +23,11 @@ const routes: Routes = [
   {path: 'inicioSesion', component: InicioSesionComponent},
   {path: 'registrarse', component: RegistrarseComponent},
   {path: 'registroEmpresario', component: RegistroEmpresarioComponent},
-  {path: 'registroAlojamiento', component: RegistroAlojamientoComponent},
-  {path: 'registroGastronomia', component: RegistroGastronomiaComponent},
-  {path: 'registroComercio', component: RegistroComercioComponent},
+  {path: 'registroAlojamiento', component: RegistroAlojamientoComponent, canActivate: [AuthService]},
+  {path: 'registroGastronomia', component: RegistroGastronomiaComponent, canActivate: [AuthService]},
+  {path: 'registroComercio', component: RegistroComercioComponent, canActivate: [AuthService]},
   {path: 'perfil', component: PerfilComponent, canActivate: [AuthService] },
+  { path: 'detalle-alojamiento/:id', component: DetalleAlojamientoComponent },
   {path: '**', component: ErrorComponent}
 ];
 

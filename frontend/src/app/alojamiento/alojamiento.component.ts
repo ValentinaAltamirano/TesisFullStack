@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@ang
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { AlojamientoService } from '../service/alojamiento.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-alojamiento',
@@ -14,12 +15,15 @@ export class AlojamientoComponent {
   tiposCategoria: any[] = [];
   tiposServicio: any[] = [];
   tiposmetodosPago: any[] = [];
+  alojamientos: any[] = [];
+  imagenes: any[] = [];
+  establecimientoId: number = 0;
+  baseUrl = 'http://127.0.0.1:8000';
 
   obtenerTiposAlojamiento(): void {
-    this.alojamientoSerice.obtenerTiposAlojamiento().subscribe(
+    this.alojamientoService.obtenerTiposAlojamiento().subscribe(
       (data) => {
         this.tiposAlojamiento = data;
-        console.log(this.tiposAlojamiento)
       },
       (error) => {
         console.error('Error al obtener tipos de alojamiento', error);
@@ -29,7 +33,7 @@ export class AlojamientoComponent {
   }
 
   obtenerCategoria(): void {
-    this.alojamientoSerice.obtenerCategoria().subscribe(
+    this.alojamientoService.obtenerCategoria().subscribe(
       (data) => {
         this.tiposCategoria = data;
       },
@@ -41,7 +45,7 @@ export class AlojamientoComponent {
   }
 
   obtenerServicio(): void {
-    this.alojamientoSerice.obtenerServicios().subscribe(
+    this.alojamientoService.obtenerServicios().subscribe(
       (data) => {
         this.tiposServicio = data;
       },
@@ -53,10 +57,9 @@ export class AlojamientoComponent {
   }
 
   obtenerMetodosPago(): void {
-    this.alojamientoSerice.obtenerMetodosDePago().subscribe(
+    this.alojamientoService.obtenerMetodosDePago().subscribe(
       (data) => {
         this.tiposmetodosPago = data;
-        console.log(this.tiposmetodosPago)
       },
       (error) => {
         console.error('Error al obtener tipos de categoria', error);
@@ -67,14 +70,53 @@ export class AlojamientoComponent {
 
   constructor(
     private fb: FormBuilder,
-    private alojamientoSerice: AlojamientoService,
+    private alojamientoService: AlojamientoService,
     private router: Router,
   ) {}
+
+  
 
   ngOnInit() {
     this.obtenerTiposAlojamiento();
     this.obtenerCategoria();
     this.obtenerServicio();
     this.obtenerMetodosPago();
+
+    this.alojamientoService.getTodosAlojamientos().subscribe(
+      (data) => {
+        this.alojamientos = data;
+    
+        const observables = this.alojamientos.map(alojamiento => {
+          const establecimientoId = alojamiento.codEstablecimiento;
+          return this.alojamientoService.obtenerImagenesAlojamiento(establecimientoId);
+        });
+
+        console.log(this.alojamientos);
+
+    
+        forkJoin(observables).subscribe(
+          (imagenesArrays) => {
+    
+            // Ahora imagenesArrays contiene un array de imágenes para cada alojamiento
+    
+            // Puedes obtener la primera imagen de cada array
+            imagenesArrays.forEach((imagenesArray, index) => {
+              // Agregar las imágenes al array de imágenes del alojamiento correspondiente
+              this.alojamientos[index].imagenesAlojamientos = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
+              
+            });
+            
+          },
+          (error) => {
+            console.error('Error al obtener imágenes de alojamientos', error);
+          }
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+
+    
   }
 }

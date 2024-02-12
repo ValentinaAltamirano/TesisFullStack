@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -36,12 +37,32 @@ export class AlojamientoService {
 
 
   registrarAlojamiento(data: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
-    });
-    return this.http.post(this.url + 'alojamientos/alojamientos/', data, { headers });
+    return this.http.post(this.url + 'alojamientos/alojamientos/', data);
   }
+
+  registrarImagenes(imagenes: File[], alojamientoId: number): Observable<any> {
+    const formData = new FormData();
+
+    for (const imagen of imagenes) {
+      formData.append('imagenes', imagen);
+    }
+
+    return this.http.post<any>(`${this.url}registrar-imagenes/${alojamientoId}/`, formData);
+  }
+
+  getTodosAlojamientos(): Observable<any> {
+    return this.http.get(`${this.url}alojamientos/alojamientos/`);
+  }
+
+  obtenerImagenesAlojamiento(alojamientoId: number): Observable<any[]> {
+    const url = `${this.url}imagenes-alojamiento/${alojamientoId}/`;
+    return this.http.get<any[]>(url);
+}
+
+obtenerAlojamiento(establecimientoId: number): Observable<any> {
+  const url = `${this.url}alojamientos/alojamientos/${establecimientoId}/`;
+  return this.http.get(url);
+}
     
 
   }
