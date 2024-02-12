@@ -175,7 +175,13 @@
                 
               
                 <div class="mt-1 p-2">
-                  <p class="mt-1 text-sm text-slate-400">{{ alojamiento.codTipoAlojamiento.nombre }} {{ alojamiento.codCategoria.nombre }} </p>
+                  <p class="mt-1 text-sm text-slate-400">{{ alojamiento.codTipoAlojamiento.nombre }} {{ alojamiento.codCategoria.nombre }}
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '1 estrella'"> &#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '2 estrellas'"> &#9733;&#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '3 estrellas'"> &#9733;&#9733;&#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '4 estrellas'"> &#9733;&#9733;&#9733;&#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '5 estrellas'"> &#9733;&#9733;&#9733;&#9733;&#9733;</ng-container>
+                  </p>
                   <h2 class="text-slate-700 text-lg">{{ alojamiento.nombre }}</h2>
                   <p class="mt-1 text-xs text-slate-500">{{ alojamiento.calle }} {{ alojamiento.altura }}, {{ alojamiento.codCiudad.nombre }}</p>
                   <p class="mt-1 text-sm text-slate-500">Tel. {{ alojamiento.telefono }} </p>
@@ -183,7 +189,7 @@
                     
 
                   <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" [routerLink]="['/detalle-alojamiento', alojamiento.codEstablecimiento]" >Ver más</a>
-                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ alojamiento.codCiudad.nombre }}" target="_blank" >Página web</a>
+                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ alojamiento.web }}" target="_blank" >Página web</a>
               
                   
                   </div>
