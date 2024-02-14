@@ -24,6 +24,8 @@ import { RegistroComercioComponent } from './registro-comercio/registro-comercio
 import { CookieService } from 'ngx-cookie-service';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { DetalleAlojamientoComponent } from './detalle-alojamiento/detalle-alojamiento.component';
+import { MisEstablecimientosComponent } from './mis-establecimientos/mis-establecimientos.component';
+import { EditarAlojamientoComponent } from './editar-alojamiento/editar-alojamiento.component';
 
 const appRoutes: Routes=[];
 
@@ -44,7 +46,9 @@ const appRoutes: Routes=[];
     RegistroAlojamientoComponent,
     RegistroGastronomiaComponent,
     RegistroComercioComponent,
-    DetalleAlojamientoComponent
+    DetalleAlojamientoComponent,
+    MisEstablecimientosComponent,
+    EditarAlojamientoComponent
   ],
   imports: [
     BrowserModule,

@@ -63,8 +63,13 @@ obtenerAlojamiento(establecimientoId: number): Observable<any> {
   const url = `${this.url}alojamientos/alojamientos/${establecimientoId}/`;
   return this.http.get(url);
 }
+
+getAlojamientoPorIdEmpresario(idEmpresario: number): Observable<any> {
+  const url = `${this.url}alojamientos/alojamientos/obtenerPorIdEmpresario/?idEmpresario=${idEmpresario}`;
+  return this.http.get(url);
+}
     
 
-  }
+}
 
 

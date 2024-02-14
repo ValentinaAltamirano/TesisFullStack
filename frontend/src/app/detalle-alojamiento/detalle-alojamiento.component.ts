@@ -1,10 +1,7 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlojamientoService } from '../service/alojamiento.service';
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 
 @Component({
   selector: 'app-detalle-alojamiento',
@@ -18,7 +15,6 @@ export class DetalleAlojamientoComponent {
   baseUrl = 'http://127.0.0.1:8000';
   imagenPrincipal: string = '';
   numeroColumnas: number = 0;
-  private apiKey = 'AIzaSyDnh8zPYqYEx1d1kNOYUWvCQZVgR4XW4so';
 
   constructor(private route: ActivatedRoute, private alojamientoService: AlojamientoService, private http: HttpClient) { 
     this.establecimientoId = 0;
