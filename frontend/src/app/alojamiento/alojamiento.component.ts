@@ -69,12 +69,8 @@ export class AlojamientoComponent {
   }
 
   constructor(
-    private fb: FormBuilder,
     private alojamientoService: AlojamientoService,
-    private router: Router,
   ) {}
-
-  
 
   ngOnInit() {
     this.obtenerTiposAlojamiento();
@@ -85,6 +81,7 @@ export class AlojamientoComponent {
     this.alojamientoService.getTodosAlojamientos().subscribe(
       (data) => {
         this.alojamientos = data;
+        console.log(this.alojamientos)
     
         const observables = this.alojamientos.map(alojamiento => {
           const establecimientoId = alojamiento.codEstablecimiento;
@@ -117,6 +114,5 @@ export class AlojamientoComponent {
       }
     );
 
-    
   }
 }
