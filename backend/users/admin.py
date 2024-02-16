@@ -7,7 +7,7 @@ admin.site.register(MetodoDePago)
 
 
 #imagenes y Relaciones:
-admin.site.register(Imagenes)
+admin.site.register(Imagen)
 
 #tipos y Servicios:
 admin.site.register(TipoEstablecimiento)

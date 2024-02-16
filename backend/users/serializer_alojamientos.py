@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import *
+from .serializer_establecimientos import *
+from .serializer_users import *
 
 class TipoServicioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,6 +20,12 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 class AlojamientosSerializer(serializers.ModelSerializer):
     servicios = TipoServicioSerializer(many=True)  
+    codCiudad = CiudadSerializer()
+    codHorario = HorarioSerializer()
+    codTipoAlojamiento = TipoAlojamientoSerializer()
+    codCategoria = CategoriaSerializer()
+    empresario = EmpresarioSerializer()
+    metodos_de_pago = MetodoDePagoSerializer(many=True)
     
     class Meta:
         model = Alojamientos

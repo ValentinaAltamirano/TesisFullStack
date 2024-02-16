@@ -16,11 +16,6 @@ class CiudadSerializer(serializers.ModelSerializer):
         model = Ciudad
         fields = '__all__'
 
-class TelefonoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Telefono
-        fields = '__all__'
-
 class TipoEstablecimientoSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoEstablecimiento
@@ -35,15 +30,17 @@ class MetodoDePagoSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetodoDePago
         fields = '__all__'
+        
+class ImagenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Imagen
+        fields = ['imagen']
 
 class EstablecimientoSerializer(serializers.ModelSerializer):
     metodos_de_pago = MetodoDePagoSerializer(many=True)
+    imagenes = ImagenSerializer(many=True, read_only=True)
     
     class Meta:
         model = Establecimiento
         fields = '__all__'
-
-class ImagenesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Imagenes
-        fields = '__all__'
+        

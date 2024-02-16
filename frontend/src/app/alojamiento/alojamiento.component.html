@@ -1,18 +1,211 @@
 <app-navbar></app-navbar>
 
 <div class="relative inline-block center">
-    <img class="w-screen" src="../../assets/carlosPaz3.jpg" />
+    <img class="w-screen h-1/2" src="../../assets/carlosPaz3.jpg" />
     <div class="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 text-white text-center text-5xl font-bold uppercase">
-        Alojamiento
+      Alojamiento en Villa Carlos Paz
     </div>
-  </div>
+</div>
 
-  <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-xl xl:p-0 ">
-    <div class="search-container">
-        <input type="text" placeholder="Buscar..." class="search-input">
-        <button class="search-button">
-          <!-- Puedes poner un ícono de búsqueda aquí -->
-          Buscar
-        </button>
-      </div>
+<div class="bg-white">
+  <div>
+    <!-- Phone https://tailwindui.com/components/ecommerce/components/category-filters -->
+
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-5"></div>
+
+      <section aria-labelledby="products-heading" class="pb-24 pt-6">
+
+        <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+          <!-- Filters -->
+          <form class="hidden lg:block">
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Tipo de Alojamiento</span>
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-0">
+                
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposAlojamiento" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Servicios</span>
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-1">
+
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposServicio" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Categoría</span>
+                  
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-2">
+                
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposCategoria" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Servicios</span>
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-1">
+
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposServicio" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="border-b border-gray-200 py-6">
+              <h3 class="-my-3 flow-root">
+                <!-- Expand/collapse section button -->
+                <span class="font-medium text-gray-900">Métodos de Pago</span>
+                  
+              </h3>
+              <!-- Filter section, show/hide based on section state. -->
+              <div class="pt-6" id="filter-section-2">
+                
+                <div class="space-y-4">
+                  <div *ngFor="let tipo of tiposmetodosPago" class="flex items-center">
+                    <input
+                      [id]="'filter-color-' + tipo.id"
+                      [name]="'color[]'"
+                      [value]="tipo.nombre"
+                      type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <label [for]="'filter-color-' + tipo.id" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            
+          </form>
+
+          
+          <div class="lg:col-span-3">
+            <!-- Alojamientos -->
+            <div class="flex flex-wrap -mx-4">
+              <div *ngFor="let alojamiento of alojamientos"  class="w-full md:w-2/5 lg:w-2/5 px-4 mb-6">
+                
+                <div  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl">
+                <div class="relative flex items-end overflow-hidden rounded-xl">
+                  <img *ngIf="alojamiento.imagenesAlojamientos && alojamiento.imagenesAlojamientos.length > 0"
+                  [src]="baseUrl + alojamiento.imagenesAlojamientos[0].imagen"
+                  alt="Imagen del establecimiento">
+              
+                  <div class="absolute bottom-3 left-3 inline-flex items-center rounded-lg bg-white p-2 shadow-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+              
+                  <span class="ml-1 text-sm text-slate-400">4.9</span>
+                  </div>
+
+                  <div class="absolute top-3 right-3 inline-flex items-center rounded-lg bg-white p-2 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-orange-400 group-hover:text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                    </svg>
+                  </div>
+                </div>
+
+                
+              
+                <div class="mt-1 p-2">
+                  <p class="mt-1 text-sm text-slate-400">{{ alojamiento.codTipoAlojamiento.nombre }} {{ alojamiento.codCategoria.nombre }}
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '1 estrella'"> &#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '2 estrellas'"> &#9733;&#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '3 estrellas'"> &#9733;&#9733;&#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '4 estrellas'"> &#9733;&#9733;&#9733;&#9733;</ng-container>
+                    <ng-container *ngIf="alojamiento.codCategoria.nombre === '5 estrellas'"> &#9733;&#9733;&#9733;&#9733;&#9733;</ng-container>
+                  </p>
+                  <h2 class="text-slate-700 text-lg">{{ alojamiento.nombre }}</h2>
+                  <p class="mt-1 text-xs text-slate-500">{{ alojamiento.calle }} {{ alojamiento.altura }}, {{ alojamiento.codCiudad.nombre }}</p>
+                  <p class="mt-1 text-sm text-slate-500">Tel. {{ alojamiento.telefono }} </p>
+                  <div class="mt-3 flex items-end justify-between">
+                    
+
+                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" [routerLink]="['/detalle-alojamiento', alojamiento.codEstablecimiento]" >Ver más</a>
+                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ alojamiento.web }}" target="_blank" >Página web</a>
+              
+                  
+                  </div>
+                  
+                </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+        
+      </section>
+      
+    </main>
   </div>
+</div>
+
+<app-footer></app-footer>
