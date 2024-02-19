@@ -8,8 +8,42 @@
     
 
         <!-- Alojamientos -->
-        <div class="flex py-4 pt-5 justify-center">
+        <div class="flex font-bold  py-4 pt-10 justify-center pb-10">
             
+          <div *ngIf="noAlojamientosEncontrados" class="flex flex-col items-center mt-6 text-center border rounded-lg pt-16 pb-36 dark:border-gray-700 px-16">
+            <div class="flex flex-col w-full max-w-sm px-4 mx-auto pt-6">
+              <div class="p-3 mx-auto text-blue-500 bg-blue-100 rounded-full dark:bg-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+              </div>
+              <h2 class="mt-3 text-lg text-gray-800 dark:text-white">No se encontraron establecimientos</h2>
+              <p class="mt-2 text-gray-500 dark:text-gray-400">Comienza creando un nuevo establecimiento</p>
+            </div>
+          
+            <div class="mt-4 ml-4 relative"> <!-- Ajusta el margen izquierdo según sea necesario -->
+              <button (click)="toggleDropdown()" class="text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 " type="button">+ Nuevo Establecimiento</button>
+          
+              <div *ngIf="dropdownVisible" id="dropdown" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute max-h-40 overflow-y-auto">
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+                  <li>
+                    <a href="/registroAlojamiento" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Alojamiento</a>
+                  </li>
+                  <li>
+                    <a href="/registroGastronomia" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Gastronomia</a>
+                  </li>
+                  <li>
+                    <a href="/registroComercio" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Comercio</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          
+          </div>
+
+            
+
+
             <div *ngFor="let alojamiento of establecimiento"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl  w-1/4 mx-10">
             <div class="relative flex items-end overflow-hidden rounded-xl ">
               

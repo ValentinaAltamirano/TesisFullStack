@@ -40,5 +40,4 @@ export class GastronomiaComponent {
                   codEstablecimiento: 2,
                    }
                 ];
-
 }

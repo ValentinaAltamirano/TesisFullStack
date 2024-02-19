@@ -26,6 +26,8 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
 import { DetalleAlojamientoComponent } from './detalle-alojamiento/detalle-alojamiento.component';
 import { MisEstablecimientosComponent } from './mis-establecimientos/mis-establecimientos.component';
 import { EditarAlojamientoComponent } from './editar-alojamiento/editar-alojamiento.component';
+import { DetalleGastronomiaComponent } from './detalle-gastronomia/detalle-gastronomia.component';
+import { RegistroTuristaComponent } from './registro-turista/registro-turista.component';
 
 const appRoutes: Routes=[];
 
@@ -48,7 +50,9 @@ const appRoutes: Routes=[];
     RegistroComercioComponent,
     DetalleAlojamientoComponent,
     MisEstablecimientosComponent,
-    EditarAlojamientoComponent
+    EditarAlojamientoComponent,
+    DetalleGastronomiaComponent,
+    RegistroTuristaComponent
   ],
   imports: [
     BrowserModule,
