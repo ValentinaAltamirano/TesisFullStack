@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import routers
-from users import views_alojamientos, views_users  # Importa las vistas necesarias
+from users import views_alojamientos, views_users, views_gastronomia  # Importa las vistas necesarias
 from .views_users import *  # Importa todas las vistas relacionadas con usuarios
 from .views_alojamientos import *  # Importa todas las vistas relacionadas con alojamientos
 from .views_gastronomia import *  # Importa todas las vistas relacionadas con gastronomía
@@ -30,10 +30,7 @@ router_alojamientos.register(r'categoria', views_alojamientos.CategoriaViewSet)
 # Lista de URL conf para las vistas de la aplicación
 urlpatterns = [
     # Rutas relacionadas con usuarios
-    path('crear_empresario/', crear_empresario, name='crear_empresario'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('obtener_datos_empresario/', obtener_datos_empresario, name='obtener_datos_empresario'),
-    path('actualizar-datos-empresario/', actualizar_datos_empresario, name='actualizar_datos_empresario'),
 
     # Rutas para gastronomía
     path('', include(router_gastronomia.urls)),
