@@ -7,9 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
-from rest_framework.parsers import MultiPartParser, FormParsers
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 import json
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 class TipoEstablecimientoViewSet(viewsets.ModelViewSet):
     queryset = TipoEstablecimiento.objects.all()
@@ -20,7 +23,6 @@ class TipoEstablecimientoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         # Devuelve solo los nombres de los tipos de alojamiento
         return Response([item['nombre'] for item in serializer.data])
-
 
 class MetodoDePagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoDePago.objects.all()
@@ -61,7 +63,6 @@ class CategoriaViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         # Devuelve solo los nombres de los tipos de alojamiento
         return Response([item['nombre'] for item in serializer.data])    
-
 # Alojamiento
 class AlojamientoViewSet(viewsets.ModelViewSet):
     queryset = Alojamientos.objects.all()
@@ -130,6 +131,30 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print('Error en la creación:', e)
             return JsonResponse({'error': 'Error en la creación'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['GET'])
+    @permission_classes([IsAuthenticated])
+    def obtenerAlojamientosEmpresario(self, request, *args, **kwargs):
+        try:
+            # Obtén el empresario asociado al usuario autenticado
+            empresario = Empresario.objects.get(user=request.user)
+
+            # Obtén los alojamientos asociados al empresario
+            alojamientos = Alojamientos.objects.filter(empresario=empresario)
+
+            if alojamientos.exists():
+                # Serializa la lista de alojamientos
+                serializer = AlojamientosSerializer(alojamientos, many=True)
+                return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+            else:
+                return JsonResponse({'error': 'No se encontró ningún alojamiento asociado al empresario.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Empresario.DoesNotExist:
+            return JsonResponse({'error': 'No se encontró el empresario.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            print('Error al obtener el alojamiento por ID del empresario:', e)
+            return JsonResponse({'error': 'Error al obtener el alojamiento.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ImagenAlojamientoCreateView(APIView):
     queryset = Imagen.objects.all()
@@ -159,7 +184,6 @@ class ImagenAlojamientoCreateView(APIView):
         except Exception as e:
             print('Error en la carga de imágenes:', e)
             return Response({'error': 'Error en la carga de imágenes'}, status=status.HTTP_400_BAD_REQUEST)
-#Localizacion
 
 class PaisViewSet(viewsets.ModelViewSet):
     queryset = Pais.objects.all()
@@ -172,4 +196,3 @@ class ProvinciaViewSet(viewsets.ModelViewSet):
 class CiudadViewSet(viewsets.ModelViewSet):
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
-    
