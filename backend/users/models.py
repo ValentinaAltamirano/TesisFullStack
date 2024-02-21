@@ -67,7 +67,6 @@ class Establecimiento(models.Model):
     telefono = models.CharField(max_length=255)
     codHorario = models.ForeignKey(Horario, on_delete=models.CASCADE)
     web = models.TextField(max_length=255, default='')
-    
     metodos_de_pago = models.ManyToManyField(MetodoDePago, related_name='establecimientos')
     
     def __str__(self):
@@ -135,7 +134,6 @@ class TipoPrefAliment(models.Model):
 
 class Gastronomia(Establecimiento):
     codGastronomia = models.AutoField(primary_key=True)
-    codCategoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     tipos_servicio_gastronomico = models.ManyToManyField(TipoServGastro, related_name='Gastronomia')
     tipos_gastronomia = models.ManyToManyField(TipoGastronomia, related_name='Gastronomia')
     tipos_comida = models.ManyToManyField(TipoComida, related_name='Gastronomia')

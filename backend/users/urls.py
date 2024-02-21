@@ -11,10 +11,10 @@ from django.conf.urls.static import static
 # Define los routers para gastronomía y alojamientos
 router_gastronomia = routers.DefaultRouter()
 router_gastronomia.register(r'tipogastronomia', views_gastronomia.TipoGastronomiaViewSet)
-router_gastronomia.register(r'tiposervgastro', views_gastronomia.TipoServGastroViewSet)
+router_gastronomia.register(r'serviciosGastronomia', views_gastronomia.TipoServGastroViewSet)
 router_gastronomia.register(r'tipocomida', views_gastronomia.TipoComidaViewSet)
-router_gastronomia.register(r'tipoprefaliment', views_gastronomia.TipoPrefAlimentViewSet)
-router_gastronomia.register(r'gastronomia', views_gastronomia.GastronomiaViewSet, basename='gastronomia')
+router_gastronomia.register(r'preferenciaAlimentaria', views_gastronomia.TipoPrefAlimentViewSet)
+router_gastronomia.register(r'gastronomias', views_gastronomia.GastronomiaViewSet, basename='gastronomia')
 
 router_alojamientos = routers.DefaultRouter()
 router_alojamientos.register(r'tipoestablecimientos', views_alojamientos.TipoEstablecimientoViewSet)
@@ -27,6 +27,9 @@ router_alojamientos.register(r'provincia', views_alojamientos.ProvinciaViewSet)
 router_alojamientos.register(r'ciudad', views_alojamientos.CiudadViewSet)
 router_alojamientos.register(r'categoria', views_alojamientos.CategoriaViewSet)
 
+router_user = routers.DefaultRouter()
+router_user.register(r'empresarios', views_users.EmpresarioViewSet, basename='empresario')
+
 # Lista de URL conf para las vistas de la aplicación
 urlpatterns = [
     # Rutas relacionadas con usuarios
@@ -37,6 +40,9 @@ urlpatterns = [
 
     # Rutas para alojamientos
     path('', include(router_alojamientos.urls)),
+    
+    # Rutas para empresario
+    path('', include(router_user.urls)),
 
     # Rutas para cargar y obtener imágenes de alojamientos
     path('registrar-imagenes/<int:alojamiento_id>/', ImagenAlojamientoCreateView.as_view(), name='cargar_imagenes_alojamiento'),

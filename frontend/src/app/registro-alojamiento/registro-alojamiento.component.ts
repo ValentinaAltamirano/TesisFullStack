@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../service/auth.service';
 import { AlojamientoService } from '../service/alojamiento.service';
-import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
 
 @Component({
@@ -21,6 +20,14 @@ export class RegistroAlojamientoComponent {
   imagenes: File[] = [];
   vistasPrevias: string[] = [];
   idEmpresario: any;
+
+  constructor(
+    private fb: FormBuilder,
+    private alojamientoService: AlojamientoService,
+    private router: Router,
+    private authService: AuthService,
+  ) {}
+
 
   obtenerTiposAlojamiento(): void {
     this.alojamientoService.obtenerTiposAlojamiento().subscribe(
@@ -123,13 +130,6 @@ export class RegistroAlojamientoComponent {
       metodosPagoSeleccionados: this.fb.array([]),
     });
   }
-
-  constructor(
-    private fb: FormBuilder,
-    private alojamientoService: AlojamientoService,
-    private router: Router,
-    private authService: AuthService,
-  ) {}
 
   getFormControl(formPath: string): FormControl {
     const control = this.alojamientoForm.get(formPath) as FormControl;
