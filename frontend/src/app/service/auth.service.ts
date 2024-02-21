@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   registrarEmpresario(data: any): Observable<any> {
-    return this.http.post(this.url + 'crear_empresario/', data);
+    return this.http.post(this.url + 'empresarios/', data);
   }
 
   login(credentials: { username: string; password: string }): Observable<any> {
@@ -57,7 +57,8 @@ export class AuthService {
   }
 
   obtenerDatosEmpresario(): Observable<any> {
-    const userInfoUrl = `${this.url}obtener_datos_empresario/`;
+    
+    const userInfoUrl = `${this.url}empresarios/obtenerDatos/`;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.getTokenFromCookie()}`
@@ -67,14 +68,14 @@ export class AuthService {
   }
 
   actualizarDatosEmpresario(datos: any): Observable<any> {
-    const url = `${this.url}actualizar-datos-empresario/`;
+    const url = `${this.url}empresarios/actualizarDatos/`;
     const headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.getTokenFromCookie()}`
     });
 
     return this.http.put(url, datos, { headers });
-}
+  }
 
 
 }

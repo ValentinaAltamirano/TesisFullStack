@@ -4,7 +4,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,24 +19,24 @@ export class AlojamientoService {
   }
 
   obtenerTiposAlojamiento(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'alojamientos/tipoalojamientos/');
+    return this.http.get<AlojamientoService[]>(this.url + 'tipoalojamientos/');
   }
 
   obtenerCategoria(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'alojamientos/categoria/');
+    return this.http.get<AlojamientoService[]>(this.url + 'categoria/');
   }
 
   obtenerServicios(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'alojamientos/tiposervicios/');
+    return this.http.get<AlojamientoService[]>(this.url + 'tiposervicios/');
   }
 
   obtenerMetodosDePago(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'alojamientos/metodospago/');
+    return this.http.get<AlojamientoService[]>(this.url + 'metodospago/');
   }
 
 
   registrarAlojamiento(data: any): Observable<any> {
-    return this.http.post(this.url + 'alojamientos/alojamientos/', data);
+    return this.http.post(this.url + 'alojamientos/', data);
   }
 
   registrarImagenes(imagenes: File[], alojamientoId: number): Observable<any> {
@@ -51,7 +50,7 @@ export class AlojamientoService {
   }
 
   getTodosAlojamientos(): Observable<any> {
-    return this.http.get(`${this.url}alojamientos/alojamientos/`);
+    return this.http.get(`${this.url}alojamientos/`);
   }
 
   obtenerImagenesAlojamiento(alojamientoId: number): Observable<any[]> {
@@ -60,13 +59,19 @@ export class AlojamientoService {
 }
 
 obtenerAlojamiento(establecimientoId: number): Observable<any> {
-  const url = `${this.url}alojamientos/alojamientos/${establecimientoId}/`;
+  const url = `${this.url}alojamientos/${establecimientoId}/`;
   return this.http.get(url);
 }
 
 getAlojamientoPorIdEmpresario(idEmpresario: number): Observable<any> {
-  const url = `${this.url}alojamientos/alojamientos/obtenerPorIdEmpresario/?idEmpresario=${idEmpresario}`;
-  return this.http.get(url);
+  
+  const url = `${this.url}alojamientos/obtenerAlojamientosEmpresario/`;
+  const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
+  });
+
+  return this.http.get(url, { headers });
 }
     
 

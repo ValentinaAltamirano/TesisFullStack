@@ -2,28 +2,28 @@
 
 <div class="bg-gray-50 px-8 py-14">
     
-    <div class="sm:mx-auto sm:w-full sm:max-w-md shadow dark:border  py-4 bg-white">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md shadow dark:border py-4 bg-white">
         <img class="mx-auto h-auto w-auto" src="../../assets/logo3.png" alt="Your Company">
-        <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">Registre su cuenta como empresario</h1>
+        <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">Registre su cuenta como Turista</h1>
     
     <p class="mt-2 text-center text-sm text-gray-500">
         ¿Ya tiene una cuenta? 
         <a href="/inicioSesion" class="font-semibold leading-6 text-red-600 hover:text-red-500">Inciar sesión</a>
     </p>
     
-    <div  class="w-full  rounded-lg  md:mt-0 sm:max-w-md xl:p-0 ">
+    <div  class="w-full  rounded-lg  md:mt-0 sm:max-w-md  ">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <form  [formGroup]="empresarioForm" (ngSubmit)="submitForm()" class="space-y-4 md:space-y-6" >
+            <form  [formGroup]="turistaForm" (ngSubmit)="submitForm()" class="space-y-4 md:space-y-6" >
                 <div>
                     <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre de Usuario</label>
                     <input formControlName="username"  name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Usuario" required>
-                    <div *ngIf="empresarioForm.get('username')?.hasError('required') && empresarioForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('username')?.hasError('required') && turistaForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre de usuario es obligatorio.
                     </div>
-                    <div *ngIf="empresarioForm.get('username')?.hasError('pattern') && empresarioForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('username')?.hasError('pattern') && turistaForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre de usuario no puede contener espacios ni símbolos.
                     </div>
-                    <div *ngIf="empresarioForm.get('username')?.hasError('duplicateUsername')"  class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('username')?.hasError('duplicateUsername')"  class="text-red-500 text-sm">
                         El nombre de usuario ya está en uso.
                     </div>
                     
@@ -32,10 +32,10 @@
                 <div>
                     <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Responsable</label>
                     <input formControlName="nombre"  name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre" required>
-                    <div *ngIf="empresarioForm.get('nombre')?.hasError('required') && empresarioForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('nombre')?.hasError('required') && turistaForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre del reponsable es obligatorio.
                     </div>
-                    <div *ngIf="empresarioForm.get('nombre')?.hasError('pattern') && empresarioForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('nombre')?.hasError('pattern') && turistaForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre del reponsable no puede contener símbolos.
                      </div>
                 </div>
@@ -43,23 +43,23 @@
                 <div>
                     <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido Responsable</label>
                     <input formControlName="apellido"   name="apellido" id="apellido" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Apellido" required>
-                    <div *ngIf="empresarioForm.get('apellido')?.hasError('required') && empresarioForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('apellido')?.hasError('required') && turistaForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
                         El apellido del reponsable es obligatorio.
                     </div>
-                    <div *ngIf="empresarioForm.get('apellido')?.hasError('pattern') && empresarioForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('apellido')?.hasError('pattern') && turistaForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
                         El apellido del reponsable no puede contener símbolos.
                      </div>
                 </div>
                 <div>
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                     <input formControlName="email" type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email" required>
-                    <div *ngIf="empresarioForm.get('email')?.hasError('required') && empresarioForm.get('email')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('email')?.hasError('required') && turistaForm.get('email')?.touched" class="error-message" class="text-red-500 text-sm">
                         El email es obligatorio.
                     </div>
-                    <div *ngIf="empresarioForm.get('email')?.hasError('email') && empresarioForm.get('email')?.touched" class="error-message"  class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('email')?.hasError('email') && turistaForm.get('email')?.touched" class="error-message"  class="text-red-500 text-sm">
                         El formato del correo electrónico no es válido.
                     </div>
-                    <div *ngIf="empresarioForm.get('email')?.hasError('duplicateEmail')" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('email')?.hasError('duplicateEmail')" class="text-red-500 text-sm">
                         El correo electrónico ya está en uso.
                       </div>
                 </div>
@@ -79,13 +79,13 @@
                           </div>
                       </div>
                     
-                    <div *ngIf="empresarioForm.get('password')?.hasError('required') && empresarioForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.get('password')?.hasError('required') && turistaForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
                         La contraseña es obligatoria.
                       </div>
-                      <div *ngIf="empresarioForm.get('password')?.hasError('minlength') && empresarioForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
+                      <div *ngIf="turistaForm.get('password')?.hasError('minlength') && turistaForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
                         La contraseña debe tener al menos 6 caracteres.
                       </div>
-                      <div *ngIf="empresarioForm.get('password')?.hasError('passwordRequirements') && empresarioForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
+                      <div *ngIf="turistaForm.get('password')?.hasError('passwordRequirements') && turistaForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
                         La contraseña debe contener al menos una letra y un número.
                       </div>
                     
@@ -107,35 +107,12 @@
                         </div>
                   </div>
 
-                    <div *ngIf="empresarioForm.hasError('passwordMismatch') && empresarioForm.get('confirm_password')?.touched" class="error-message" class="text-red-500 text-sm">
+                    <div *ngIf="turistaForm.hasError('passwordMismatch') && turistaForm.get('confirm_password')?.touched" class="error-message" class="text-red-500 text-sm">
                         Las contraseñas no coinciden.
                     </div>
-
-                <div>
-                    <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefono</label>
-                    <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Telefono" required>
-                    <div *ngIf="empresarioForm.get('telefono')?.hasError('required') && empresarioForm.get('telefono')?.touched" class="error-message" class="text-red-500 text-sm">
-                        El telefono es obligatorio.
-                    </div>
-                </div>
-                <div>
-                    <label for="razonSocial" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Razón Social</label>
-                    <input formControlName="razonSocial" type="razonSocial" name="razonSocial" id="razonSocial" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Razón Social" required>
-                    <div *ngIf="empresarioForm.get('razonSocial')?.hasError('required') && empresarioForm.get('razonSocial')?.touched" class="error-message" class="text-red-500 text-sm">
-                        La razon social es obligatoria.
-                    </div>
-                </div>
-                <div>
-                    <label for="nombreEstablecimiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Establecimiento</label>
-                    <input  formControlName="descripcion" type="nombreEstablecimiento" name="nombreEstablecimiento" id="nombreEstablecimiento" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Establecimiento" required>
-                    <div *ngIf="empresarioForm.get('descripcion')?.hasError('required') && empresarioForm.get('descripcion')?.touched" class="error-message" class="text-red-500 text-sm">
-                        El nombre establecimiento es obligatorio.
-                    </div>
-                </div>
-                
                 
                 <div *ngIf="mensajeError" class="text-red-500 w-full text-center p-1">{{ mensajeError }}</div>
-                <button type="submit" [disabled]="!empresarioForm.valid" class="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrarse</button>
+                <button type="submit" [disabled]="!turistaForm.valid" class="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrarse</button>
             </form>
         </div>
     </div>
