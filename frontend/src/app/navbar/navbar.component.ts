@@ -12,6 +12,7 @@ export class NavbarComponent implements OnInit {
   isAuthenticated: boolean = false;
   nombreUsuario: any ;
   email: any;
+  isMenuHidden = true;
 
   constructor(public authService: AuthService, 
     private router: Router) {
@@ -30,7 +31,10 @@ export class NavbarComponent implements OnInit {
       }
       
     }
-  
+    
+    toggleMenu(): void {
+      this.isMenuHidden = !this.isMenuHidden;
+    }
 
     obtenerDatosUsuario() {
       this.authService.obtenerDatosEmpresario().subscribe(

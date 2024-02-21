@@ -19,6 +19,7 @@ export class AlojamientoComponent {
   imagenes: any[] = [];
   establecimientoId: number = 0;
   baseUrl = 'http://127.0.0.1:8000';
+  alojamientoForm: FormGroup = new FormGroup({});
 
   obtenerTiposAlojamiento(): void {
     this.alojamientoService.obtenerTiposAlojamiento().subscribe(
@@ -69,8 +70,87 @@ export class AlojamientoComponent {
   }
 
   constructor(
-    private alojamientoService: AlojamientoService,
-  ) {}
+    private alojamientoService: AlojamientoService, private fb: FormBuilder,
+  ) {
+    this.alojamientoForm = this.fb.group({
+      tiposAlojamientoSeleccionados: this.fb.array([]),
+      serviciosSeleccionados: this.fb.array([]),
+      categoriasSeleccionadas: this.fb.array([]),
+    });
+  }
+
+  getFormControl(formPath: string): FormControl {
+    const control = this.alojamientoForm.get(formPath) as FormControl;
+    return control || new FormControl(null);
+  }
+
+  getTiposAlojamientoSeleccionados(): string[] {
+    const formArray = this.alojamientoForm.get('tiposAlojamientoSeleccionados') as FormArray;
+    return formArray.value;
+  }
+
+  toggleCheckbox(controlName: string): void {
+    const tiposAlojamientoFormArray = this.alojamientoForm.get('tiposAlojamientoSeleccionados') as FormArray;
+    const serviciosFormArray = this.alojamientoForm.get('serviciosSeleccionados') as FormArray;
+    const categoriasFormArray = this.alojamientoForm.get('categoriasSeleccionadas') as FormArray;
+  
+    const control = this.fb.control(controlName);
+  
+    // Determinar a cuál FormArray pertenece el control
+    let formArray: FormArray;
+  
+    if (controlName.includes('tiposAlojamientoSeleccionados')) {
+      formArray = tiposAlojamientoFormArray;
+    } else if (controlName.includes('serviciosSeleccionados')) {
+      formArray = serviciosFormArray;
+    } else if (controlName.includes('categoriasSeleccionadas')) {
+      formArray = categoriasFormArray;
+    } else {
+      // Lógica adicional si es necesario manejar otros casos
+      return;
+    }
+  
+    if (formArray.value.includes(controlName)) {
+      const index = formArray.value.findIndex((item: string) => item === controlName);
+      formArray.removeAt(index);
+    } else {
+      formArray.push(control);
+    }
+  }
+  
+  getAlojamientosFiltrados(): any[] {
+  const tiposSeleccionados = this.alojamientoForm.get('tiposAlojamientoSeleccionados')?.value;
+  const serviciosSeleccionados = this.alojamientoForm.get('serviciosSeleccionados')?.value;
+  const categoriasSeleccionadas = this.alojamientoForm.get('categoriasSeleccionadas')?.value;
+  
+  if (tiposSeleccionados.length === 0 && serviciosSeleccionados.length === 0 && categoriasSeleccionadas.length === 0) {
+    // Si no se han seleccionado tipos de alojamiento, servicios ni categorías, devolver todos los alojamientos
+    return this.alojamientos;
+  }
+
+  const alojamientosFiltrados = this.alojamientos.filter((alojamiento) => {
+    const cumpleTipos = tiposSeleccionados.length === 0 || tiposSeleccionados.some(
+      (tipo: string) => tipo === `tiposAlojamientoSeleccionados.${alojamiento.codTipoAlojamiento.nombre}`
+    );
+
+    const cumpleCategorias = categoriasSeleccionadas.length === 0 || categoriasSeleccionadas.every(
+      (categoria: string) => categoria === `categoriasSeleccionadas.${alojamiento.codCategoria.nombre}`
+    );
+
+    const cumpleServicios = serviciosSeleccionados.length === 0 || 
+      serviciosSeleccionados.every(
+        (servicio: string) => alojamiento.servicios.some(
+          (alojamientoServicio: { nombre: string }) => servicio.includes(`serviciosSeleccionados.${alojamientoServicio.nombre}`)
+        )
+      );
+
+    return cumpleTipos && cumpleCategorias && cumpleServicios;
+  });
+  
+    console.log('Alojamientos Filtrados:', alojamientosFiltrados);
+  
+    return alojamientosFiltrados;
+  }
 
   ngOnInit() {
     this.obtenerTiposAlojamiento();

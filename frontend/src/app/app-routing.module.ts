@@ -33,7 +33,7 @@ const routes: Routes = [
   {path: 'registroComercio', component: RegistroComercioComponent, canActivate: [AuthService]},
   {path: 'perfil', component: PerfilComponent, canActivate: [AuthService] },
   {path: 'misEstablecimiento', component: MisEstablecimientosComponent, canActivate: [AuthService] },
-  { path: 'detalle-alojamiento/:id', component: DetalleAlojamientoComponent, canActivate: [AuthService] },
+  { path: 'detalle-alojamiento/:id', component: DetalleAlojamientoComponent },
   { path: 'editar-alojamiento/:id', component: EditarAlojamientoComponent, canActivate: [AuthService] },
   { path: 'detalle-gastronomia/:id', component: DetalleGastronomiaComponent, canActivate: [AuthService] },
   {path: '**', component: ErrorComponent}
