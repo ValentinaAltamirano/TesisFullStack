@@ -5,20 +5,25 @@ from .models import *
 admin.site.register(Empresario)
 admin.site.register(MetodoDePago)
 
-
-#imagenes y Relaciones:
+# Imágenes y relaciones
 admin.site.register(Imagen)
 
-#tipos y Servicios:
+# Tipos y servicios
 admin.site.register(TipoEstablecimiento)
 admin.site.register(TipoAlojamiento)
 admin.site.register(TipoServicio)
 
-#Alojamientos y servicios:
+# Alojamientos y servicios
 admin.site.register(Alojamientos)
 
-#Pais, Provincia y Ciudad:
+# Gastronomía
+admin.site.register(TipoGastronomia)
+admin.site.register(TipoServGastro)
+admin.site.register(TipoComida)
+admin.site.register(TipoPrefAliment)
+admin.site.register(Gastronomia)
 
+# País, Provincia y Ciudad
 admin.site.register(Pais)
 admin.site.register(Provincia)
 admin.site.register(Ciudad)

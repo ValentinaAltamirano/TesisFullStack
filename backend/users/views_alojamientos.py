@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParsers
 from rest_framework.views import APIView
 import json
 

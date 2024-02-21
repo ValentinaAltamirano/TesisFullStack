@@ -109,4 +109,40 @@ class Imagen(models.Model):
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name='imagenes',default=0)
     imagen = models.ImageField(upload_to='imagenes_establecimiento/')
 
-    
+class TipoGastronomia(models.Model):
+    codTipoGastronomia = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    def __str__(self):
+        return self.nombre
+
+class TipoServGastro(models.Model):
+    codTipoServGastro = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    def __str__(self):
+        return self.nombre
+
+class TipoComida(models.Model):
+    codTipoComida = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    def __str__(self):
+        return self.nombre
+
+class TipoPrefAliment(models.Model):
+    codTipoPrefAliment = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    def __str__(self):
+        return self.nombre
+
+class Gastronomia(Establecimiento):
+    codGastronomia = models.AutoField(primary_key=True)
+    codCategoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    tipos_servicio_gastronomico = models.ManyToManyField(TipoServGastro, related_name='Gastronomia')
+    tipos_gastronomia = models.ManyToManyField(TipoGastronomia, related_name='Gastronomia')
+    tipos_comida = models.ManyToManyField(TipoComida, related_name='Gastronomia')
+    tipos_pref_alimentaria = models.ManyToManyField(TipoPrefAliment, related_name='Gastronomia')
+
+    def __str__(self):
+        return self.nombre
+
+
+
