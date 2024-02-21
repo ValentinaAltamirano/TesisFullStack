@@ -203,7 +203,14 @@ export class RegistroAlojamientoComponent {
     return Math.max(numRows * itemHeight, minHeight);
   }
 
+  convertirSaltosDeLineaEnBr(texto: string): string {
+    return texto.replace(/\n/g, '<br>');
+  }
+
   submitForm() {
+    const descripcionConvertida = this.convertirSaltosDeLineaEnBr(this.alojamientoForm.get('descripcion')?.value);
+    this.alojamientoForm.get('descripcion')?.setValue(descripcionConvertida);
+
     console.log(this.alojamientoForm.value)
     if (this.alojamientoForm.valid) {
       // Enviar datos al servicio de autenticación

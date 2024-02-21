@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@ang
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../service/auth.service';
-import { AlojamientoService } from '../service/alojamiento.service';
 import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
 import { GastronomiaService } from '../service/gastronomia.service';
 
@@ -91,18 +90,34 @@ export class RegistroGastronomiaComponent {
     );
   }
 
+  obtenerIdEmpresario() {
+    this.authService.obtenerDatosEmpresario().subscribe(
+      (userInfo: any) => {
+        // Asignar los datos del usuario a los FormControls
+        this.idEmpresario = userInfo.id;
+        // Puedes agregar idEmpresario directamente en la inicialización del formulario
+        this.gastronomiaForm.get('idEmpresario')?.setValue(this.idEmpresario);
+      },
+      error => {
+        console.error('Error al obtener la información del usuario:', error);
+      }
+    );
+  }
+
   ngOnInit() {
     this.obtenerTiposGastronomia();
     this.obtenerServicioGastronomia();
     this.obtenerTipoComida();
     this.obtenerPreferenciaAlimentaria();
     this.obtenerMetodosDePago(); 
+    this.obtenerIdEmpresario(); 
     this.initForm();
   }
   
   initForm(): void {
     this.gastronomiaForm = this.fb.group({
       // Campos del establecimiento
+      idEmpresario: [''],
       nombre: ['', [Validators.required]],
       tipoEstablecimiento: [2],
       codCiudad: [1],
@@ -195,12 +210,52 @@ export class RegistroGastronomiaComponent {
     return Math.max(numRows * itemHeight, minHeight);
   }
 
-  submitForm() {
-    console.log(this.gastronomiaForm.value)
-    
+  convertirSaltosDeLineaEnBr(texto: string): string {
+    return texto.replace(/\n/g, '<br>');
   }
 
-  registrarImagenes(gastronomiaId: number) {
-    
+  submitForm() {
+    const descripcionConvertida = this.convertirSaltosDeLineaEnBr(this.gastronomiaForm.get('descripcion')?.value);
+    this.gastronomiaForm.get('descripcion')?.setValue(descripcionConvertida);
+    console.log(this.gastronomiaForm.value)
+
+    if (this.gastronomiaForm.valid) {
+      // Enviar datos al servicio de autenticación
+      this.gastronomiaService.registrarGastronomia(this.gastronomiaForm.value).subscribe(
+        (response: any) => {
+          const establecimientoId = response.establecimientoId; // Suponiendo que el servicio devuelve el ID del establecimiento
+  
+          // Registrar las imágenes asociadas al establecimiento
+          this.registrarImagenes(establecimientoId);
+        },
+        (error) => {
+          // Manejar el error, mostrar mensajes de error apropiados al usuario
+          console.error(error);
+        }
+      );
+    }
   }
+
+  registrarImagenes(establecimientoId: number) {
+    // Accede a las imágenes directamente desde el FormGroup
+    const imagenes = this.gastronomiaForm.get('imagenes')?.value;
+  
+    // Envía las imágenes al servicio junto con el ID del establecimiento
+    this.gastronomiaService.registrarImagenes(imagenes, establecimientoId).subscribe(
+      (response: any) => {
+        Swal.fire({
+          title: "Registro de local gastronómico exitoso",
+          icon: "success",
+          confirmButtonText: "OK"
+        }).then((result) => {
+          this.router.navigate(['/']);
+        });
+      },
+      (error) => {
+        // Manejar el error, mostrar mensajes de error apropiados al usuario
+        console.error(error);
+      }
+    );
+  }
+
 }

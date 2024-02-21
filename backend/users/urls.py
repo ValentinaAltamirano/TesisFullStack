@@ -47,6 +47,9 @@ urlpatterns = [
     # Rutas para cargar y obtener imágenes de alojamientos
     path('registrar-imagenes/<int:alojamiento_id>/', ImagenAlojamientoCreateView.as_view(), name='cargar_imagenes_alojamiento'),
     path('imagenes-alojamiento/<int:alojamiento_id>/', ImagenAlojamientoCreateView.as_view(), name='imagenes_alojamiento'),
+    
+    path('setImagenesGastronomia/<int:establecimiento_id>/', ImagenGastronomiaCreateView.as_view(), name='setImagenesGastronomia'),
+    path('getImagenesGastronomia/<int:establecimiento_id>/', ImagenGastronomiaCreateView.as_view(), name='getImagenesGastronomia'),
 ]
 
 # Si el modo DEBUG está activado, sirve las rutas para los archivos multimedia
