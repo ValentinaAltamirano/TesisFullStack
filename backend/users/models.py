@@ -144,5 +144,17 @@ class Gastronomia(Establecimiento):
     def __str__(self):
         return self.nombre
 
+class TipoComercio(models.Model):
+    codTipoComercio = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    def __str__(self):
+        return self.nombre
+
+class Comercio(Establecimiento):
+    codComercio = models.AutoField(primary_key=True)
+    codTipoComercio = models.ForeignKey(TipoComercio, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre
 
 

@@ -27,3 +27,8 @@ admin.site.register(Gastronomia)
 admin.site.register(Pais)
 admin.site.register(Provincia)
 admin.site.register(Ciudad)
+
+#Comercio
+
+admin.site.register(Comercio)
+admin.site.register(TipoComercio)
