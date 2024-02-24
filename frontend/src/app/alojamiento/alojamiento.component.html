@@ -11,12 +11,12 @@
   <div>
     <!-- Phone https://tailwindui.com/components/ecommerce/components/category-filters -->
 
-    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <main class="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
       <div class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-5"></div>
 
       <section aria-labelledby="products-heading" class="pb-24 pt-6">
 
-        <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+        <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
           <!-- Filters -->
           <form class="hidden lg:block" [formGroup]="alojamientoForm">
 
@@ -103,10 +103,10 @@
           </form>
 
           
-          <div class="lg:col-span-3">
+          <div class="lg:col-span-4">
             <!-- Alojamientos -->
-            <div class="flex flex-wrap -mx-4">
-              <div *ngFor="let alojamiento of getAlojamientosFiltrados()"  class="w-full md:w-2/5 lg:w-2/5 px-4 mb-6">
+            <div class="flex  max-w-6xl">
+              <div *ngFor="let alojamiento of getAlojamientosFiltrados()"  class="w-full  lg:w-2/5 px-4 mb-6">
                 
                 <div  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl">
                 <div class="relative flex items-end overflow-hidden rounded-xl">

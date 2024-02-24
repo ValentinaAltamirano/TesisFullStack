@@ -67,7 +67,6 @@ class Establecimiento(models.Model):
     telefono = models.CharField(max_length=255)
     codHorario = models.ForeignKey(Horario, on_delete=models.CASCADE)
     web = models.TextField(max_length=255, default='')
-    
     metodos_de_pago = models.ManyToManyField(MetodoDePago, related_name='establecimientos')
     
     def __str__(self):
@@ -135,7 +134,6 @@ class TipoPrefAliment(models.Model):
 
 class Gastronomia(Establecimiento):
     codGastronomia = models.AutoField(primary_key=True)
-    codCategoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     tipos_servicio_gastronomico = models.ManyToManyField(TipoServGastro, related_name='Gastronomia')
     tipos_gastronomia = models.ManyToManyField(TipoGastronomia, related_name='Gastronomia')
     tipos_comida = models.ManyToManyField(TipoComida, related_name='Gastronomia')
@@ -156,5 +154,35 @@ class Comercio(Establecimiento):
 
     def __str__(self):
         return self.nombre
+
+# las clases para Turista:
+
+# Aquí va la definición de Comentario
+
+from django.db import models
+from django.contrib.auth.models import User
+
+# Define el modelo Comentario
+
+class Comentario(models.Model):
+    codComentario = models.AutoField(primary_key=True)
+    comentario = models.TextField(max_length=500)
+    calificacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rango de calificación de 1 a 5 estrellas
+    establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)  # Relación con Establecimiento
+    turista = models.ForeignKey('Turista', on_delete=models.CASCADE, related_name='comentarios_turista')  # Relación con Turista
+
+    def __str__(self):
+        return f"Comentario #{self.codComentario}"
+
+# Define el modelo Turista
+class Turista(models.Model):
+    codTurista = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    comentarios = models.ManyToManyField(Comentario, blank=True, related_name='turista_comentarios')  # Relación con Comentarios
+
+    def __str__(self):
+        return f"Turista {self.user.username} - {self.codTurista}"
+
+
 
 
