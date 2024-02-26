@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { GastronomiaService } from '../service/gastronomia.service';
 
 @Component({
   selector: 'app-gastronomia',
@@ -14,30 +17,57 @@ export class GastronomiaComponent {
   servicios = ['Asiento', 'Servicio de mesa', 'Reserva', 'Sirve alchohol','Wi-fi gratis', 'Accesibilidad', 'Comida para llevar']
   metodosDePago = ['Tarjeta de Credito', 'Tarjeta Debito', 'Efectivo', 'Transferencaia']
 
-  locales: any[] = [
-                  { 
-                  altura: '1093', 
-                  calle: 'Boulevard Sarmiento',
-                  ciudad: 'Villa Carlos Paz',
-                  provincia: 'Córdoba',
-                  nombre: 'Ambrogio Restaurante',
-                  tipoGastronomia: 'Restaurante',
-                  telefono: '+54 3541 42-1200',
-                  imagen: '../../assets/ambrogioRestaurante.jpg',
-                  web: 'https://www.facebook.com/ambrogio.restaurante',
-                  codEstablecimiento: 1,
-                  },
-                  { 
-                  altura: '675', 
-                  calle: 'Avenida Illia',
-                  ciudad: 'Villa Carlos Paz',
-                  provincia: 'Córdoba',
-                  nombre: 'Pueblo Mio',
-                  tipoGastronomia: 'Restaurante',
-                  telefono: '+54 3541 42-0476',
-                  imagen: '../../assets/puebloMio.jpg',
-                  web: 'https://www.facebook.com/PuebloMioR',
-                  codEstablecimiento: 2,
-                   }
-                ];
+  
+  gastronomias: any[] = [];
+  imagenes: any[] = [];
+  establecimientoId: number = 0;
+  baseUrl = 'http://127.0.0.1:8000';
+
+  constructor(
+    private gastronomiaService: GastronomiaService, private fb: FormBuilder,
+  ) {}
+
+  getAlojamientosFiltrados(): any[] {
+    
+    return this.gastronomias;
+
+    }
+
+  
+  ngOnInit() {
+
+    this.gastronomiaService.getTodosGastronomia().subscribe(
+      (data) => {
+        this.gastronomias = data;
+        console.log(this.gastronomias)
+    
+        const observables = this.gastronomias.map(gastronomia => {
+          const establecimientoId = gastronomia.establecimiento_ptr;
+          return this.gastronomiaService.obtenerImagenesGastronomia(establecimientoId);
+        });
+
+        forkJoin(observables).subscribe(
+          (imagenesArrays) => {
+    
+            // Ahora imagenesArrays contiene un array de imágenes para cada alojamiento
+    
+            // Puedes obtener la primera imagen de cada array
+            imagenesArrays.forEach((imagenesArray, index) => {
+              // Agregar las imágenes al array de imágenes del alojamiento correspondiente
+              this.gastronomias[index].imagenesGastronomia = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
+              
+            });
+            
+          },
+          (error) => {
+            console.error('Error al obtener imágenes del local gastronomico', error);
+          }
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+
+  }
 }

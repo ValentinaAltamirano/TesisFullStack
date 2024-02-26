@@ -46,7 +46,7 @@ export class AlojamientoService {
       formData.append('imagenes', imagen);
     }
 
-    return this.http.post<any>(`${this.url}registrar-imagenes/${alojamientoId}/`, formData);
+    return this.http.post<any>(`${this.url}imagenesAlojamiento/${alojamientoId}/`, formData);
   }
 
   getTodosAlojamientos(): Observable<any> {
@@ -54,7 +54,7 @@ export class AlojamientoService {
   }
 
   obtenerImagenesAlojamiento(alojamientoId: number): Observable<any[]> {
-    const url = `${this.url}imagenes-alojamiento/${alojamientoId}/`;
+    const url = `${this.url}imagenesAlojamiento/${alojamientoId}/`;
     return this.http.get<any[]>(url);
 }
 
