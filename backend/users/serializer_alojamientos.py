@@ -21,7 +21,6 @@ class CategoriaSerializer(serializers.ModelSerializer):
 class AlojamientosSerializer(serializers.ModelSerializer):
     servicios = TipoServicioSerializer(many=True)  
     codCiudad = CiudadSerializer()
-    codHorario = HorarioSerializer()
     codTipoAlojamiento = TipoAlojamientoSerializer()
     codCategoria = CategoriaSerializer()
     empresario = EmpresarioSerializer()

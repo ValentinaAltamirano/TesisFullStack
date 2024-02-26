@@ -78,10 +78,6 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             data = request.data
             print(data)
             
-            # Datos Horario
-            horaApertura = data.get('horaApertura', '')
-            horaCierre = data.get('horaCierre', '')
-            horario = Horario.objects.create(horaApertura=horaApertura, horaCierre=horaCierre)
             
             # Datos Establecimiento
             
@@ -121,7 +117,7 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             idsTiposPrefAliment = TipoPrefAliment.objects.filter(nombre__in=nombresTiposPrefAliment).values_list('codTipoPrefAliment', flat=True)
             
             # Crear una instancia de Gastronomia y establecer las relaciones con otros modelos
-            gastronomia = Gastronomia.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono, codHorario = horario, web = web)
+            gastronomia = Gastronomia.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono,  web = web)
             gastronomia.metodos_de_pago.set(idsMetodosDePago)
             gastronomia.tipos_servicio_gastronomico.set(idsTiposServicios)
             gastronomia.tipos_gastronomia.set(idsTiposGastronomia)
