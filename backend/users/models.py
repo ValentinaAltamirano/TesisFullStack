@@ -142,5 +142,47 @@ class Gastronomia(Establecimiento):
     def __str__(self):
         return self.nombre
 
+class TipoComercio(models.Model):
+    codTipoComercio = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    def __str__(self):
+        return self.nombre
+
+class Comercio(Establecimiento):
+    codComercio = models.AutoField(primary_key=True)
+    codTipoComercio = models.ForeignKey(TipoComercio, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre
+
+# las clases para Turista:
+
+# Aquí va la definición de Comentario
+
+from django.db import models
+from django.contrib.auth.models import User
+
+# Define el modelo Comentario
+
+class Comentario(models.Model):
+    codComentario = models.AutoField(primary_key=True)
+    comentario = models.TextField(max_length=500)
+    calificacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rango de calificación de 1 a 5 estrellas
+    establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)  # Relación con Establecimiento
+    turista = models.ForeignKey('Turista', on_delete=models.CASCADE, related_name='comentarios_turista')  # Relación con Turista
+
+    def __str__(self):
+        return f"Comentario #{self.codComentario}"
+
+# Define el modelo Turista
+class Turista(models.Model):
+    codTurista = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    comentarios = models.ManyToManyField(Comentario, blank=True, related_name='turista_comentarios')  # Relación con Comentarios
+
+    def __str__(self):
+        return f"Turista {self.user.username} - {self.codTurista}"
+
+
 
 
