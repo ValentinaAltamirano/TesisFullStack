@@ -49,7 +49,7 @@ export class GastronomiaService {
       formData.append('imagenes', imagen);
     }
 
-    return this.http.post<any>(`${this.url}registrar-imagenes/${estbalecimientoID}/`, formData);
+    return this.http.post<any>(`${this.url}imagenesGastronomia/${estbalecimientoID}/`, formData);
   }
 
   getTodosGastronomia(): Observable<any> {
@@ -57,7 +57,7 @@ export class GastronomiaService {
   }
 
   obtenerImagenesGastronomia(gastronomiaId: number): Observable<any[]> {
-    const url = `${this.url}imagenes-gastronomia/${gastronomiaId}/`;
+    const url = `${this.url}imagenesGastronomia/${gastronomiaId}/`;
     return this.http.get<any[]>(url);
   }
 
