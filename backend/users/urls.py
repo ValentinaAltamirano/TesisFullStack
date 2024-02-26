@@ -1,15 +1,13 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import routers
-from users import views_alojamientos, views_users, views_gastronomia, views_comercio, views_turista  # Importa las vistas necesarias
-from .views_users import *  # Importa todas las vistas relacionadas con usuarios
-from .views_alojamientos import *  # Importa todas las vistas relacionadas con alojamientos
-from .views_gastronomia import *  # Importa todas las vistas relacionadas con gastronomía
-from .views_comercio import * # Importa todas las vistas relacionadas con Comercio
-from .views_turista import * # Importa todas las vistas relacionadas con Turista
+from users import views_alojamientos, views_users, views_gastronomia, views_comercio, views_turista  
+from .views_users import *  
+from .views_alojamientos import *  
+from .views_gastronomia import *  
+from .views_turista import * 
 from django.conf import settings
 from django.conf.urls.static import static
-
 
 # Define los routers para gastronomía
 router_gastronomia = routers.DefaultRouter()
@@ -17,7 +15,10 @@ router_gastronomia.register(r'tipogastronomia', views_gastronomia.TipoGastronomi
 router_gastronomia.register(r'tiposervgastro', views_gastronomia.TipoServGastroViewSet)
 router_gastronomia.register(r'tipocomida', views_gastronomia.TipoComidaViewSet)
 router_gastronomia.register(r'tipoprefaliment', views_gastronomia.TipoPrefAlimentViewSet)
-router_gastronomia.register(r'list_gastronomia', views_gastronomia.GastronomiaViewSet, basename='gastronomia')
+router_gastronomia.register(r'pais', views_alojamientos.PaisViewSet)
+router_gastronomia.register(r'provincia', views_alojamientos.ProvinciaViewSet)
+router_gastronomia.register(r'ciudad', views_alojamientos.CiudadViewSet)
+router_gastronomia.register(r'metodospago', views_alojamientos.MetodoDePagoViewSet)
 
 # Define el router para las vistas de los alojamientos
 router_alojamientos = routers.DefaultRouter()
@@ -25,7 +26,6 @@ router_alojamientos.register(r'tipoestablecimientos', views_alojamientos.TipoEst
 router_alojamientos.register(r'metodospago', views_alojamientos.MetodoDePagoViewSet)
 router_alojamientos.register(r'tiposervicios', views_alojamientos.TipoServicioViewSet)
 router_alojamientos.register(r'tipoalojamientos', views_alojamientos.TipoAlojamientoViewSet)
-router_alojamientos.register(r'list_alojamientos', views_alojamientos.AlojamientoViewSet, basename='alojamientos')
 router_alojamientos.register(r'pais', views_alojamientos.PaisViewSet)
 router_alojamientos.register(r'provincia', views_alojamientos.ProvinciaViewSet)
 router_alojamientos.register(r'ciudad', views_alojamientos.CiudadViewSet)
@@ -35,16 +35,15 @@ router_alojamientos.register(r'categoria', views_alojamientos.CategoriaViewSet)
 # Define el router para las vistas del comercio
 router_comercios = routers.DefaultRouter()
 router_comercios.register(r'tipocomercio', views_comercio.TipoComercioViewSet)
-router_comercios.register(r'list_comercio', views_comercio.ComercioViewSet, basename='comercio')
 
 # Define el router para las vistas del empresario
 router_user = routers.DefaultRouter()
-router_user.register(r'list_empresarios', views_users.EmpresarioViewSet, basename='empresario')
+router_user.register(r'', views_users.EmpresarioViewSet, basename='empresarios')
 
 # Define el router para las vistas del turista
 router_turista = routers.DefaultRouter()
-router_turista.register(r'turista', views_turista.TuristaViewSet, basename='turista')
-router_turista.register(r'comentario', views_turista.ComentarioViewSet, basename='comentario')
+router_turista.register(r'', views_turista.TuristaViewSet, basename='turistas')
+router_turista.register(r'comentario', views_turista.ComentarioViewSet)
 
 
 # Lista de URL conf para las vistas de la aplicación
@@ -53,19 +52,22 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 
     # Rutas para gastronomía
-    path('Gastronomia', include(router_gastronomia.urls)),
+    path('gastronomias/', views_gastronomia.GastronomiaViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('gastronomiasCampos/', include(router_gastronomia.urls)),
 
     # Rutas para alojamientos
-    path('Alojamientos', include(router_alojamientos.urls)),
+    path('alojamientos/', views_alojamientos.AlojamientoViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('alojamientosCampos/', include(router_alojamientos.urls)),
 
     # Rutas para empresario
-    path('Empresario', include(router_user.urls)),
+    path('empresarios/', include(router_user.urls)),
 
     # Rutas para comercios
-    path('Comercios', include(router_comercios.urls)),
+    path('comercios/', views_comercio.ComercioViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('alojamientosCampos/', include(router_comercios.urls)),
 
     # Rutas para el turista
-    path('Turista/', include(router_turista.urls)),
+    path('turistas/', include(router_turista.urls)),
 
 
     # Rutas para cargar y obtener imágenes de alojamientos
@@ -77,4 +79,3 @@ urlpatterns = [
 # Si el modo DEBUG está activado, sirve las rutas para los archivos multimedia
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
