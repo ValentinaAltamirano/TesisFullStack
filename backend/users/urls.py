@@ -64,11 +64,10 @@ urlpatterns = [
 
     # Rutas para comercios
     path('comercios/', views_comercio.ComercioViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('alojamientosCampos/', include(router_comercios.urls)),
+    path('comerciosCampos/', include(router_comercios.urls)),
 
     # Rutas para el turista
     path('turistas/', include(router_turista.urls)),
-
 
     # Rutas para cargar y obtener imágenes de alojamientos
     path('imagenesAlojamiento/<int:alojamiento_id>/', ImagenAlojamientoCreateView.as_view(), name='imagenes_alojamiento'),

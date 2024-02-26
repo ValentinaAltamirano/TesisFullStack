@@ -2,9 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Empresario(models.Model):
+class Empresario(User):
     idEmpresario = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
     razonSocial = models.CharField(max_length=255)
     descripcion = models.TextField()
     telefono = models.CharField(max_length=20)
@@ -49,7 +48,7 @@ class Horario(models.Model):
     horaCierre = models.CharField(max_length=255)
 
 class MetodoDePago(models.Model):
-    codMetodoDePago = models.CharField(max_length=20, primary_key=True)
+    codMetodoDePago = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
 
     def __str__(self):
@@ -157,11 +156,6 @@ class Comercio(Establecimiento):
 
 # las clases para Turista:
 
-# Aquí va la definición de Comentario
-
-from django.db import models
-from django.contrib.auth.models import User
-
 # Define el modelo Comentario
 
 class Comentario(models.Model):
@@ -175,13 +169,12 @@ class Comentario(models.Model):
         return f"Comentario #{self.codComentario}"
 
 # Define el modelo Turista
-class Turista(models.Model):
+class Turista(User):
     codTurista = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     comentarios = models.ManyToManyField(Comentario, blank=True, related_name='turista_comentarios')  # Relación con Comentarios
 
     def __str__(self):
-        return f"Turista {self.user.username} - {self.codTurista}"
+        return f"Turista {self.username} - {self.codTurista}"
 
 
 
