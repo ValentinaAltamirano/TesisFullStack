@@ -1,6 +1,14 @@
 from rest_framework import serializers
 from .models import *
 
+
+#ultimo cambio para solucionar el error del metododepago en el view
+class MetodoDePagoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MetodoDePago
+        fields = ['codMetodoDePago', 'nombre']
+
+
 class TipoGastronomiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoGastronomia
@@ -26,6 +34,7 @@ class GastronomiaSerializer(serializers.ModelSerializer):
     tipos_gastronomia = TipoGastronomiaSerializer(many=True)
     tipos_comida = TipoComidaSerializer(many=True)
     tipos_pref_alimentaria = TipoPrefAlimentSerializer(many=True)
+    metodos_de_pago = MetodoDePagoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Gastronomia
