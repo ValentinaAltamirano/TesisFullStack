@@ -21,10 +21,6 @@ class TipoEstablecimientoSerializer(serializers.ModelSerializer):
         model = TipoEstablecimiento
         fields = '__all__'
 
-class HorarioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Horario
-        fields = '__all__'
 
 class MetodoDePagoSerializer(serializers.ModelSerializer):
     class Meta:

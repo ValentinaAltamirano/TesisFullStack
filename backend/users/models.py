@@ -41,11 +41,7 @@ class TipoEstablecimiento(models.Model):
     nombre = models.CharField(max_length=255)
     def __str__(self):
         return self.nombre
-    
-class Horario(models.Model):
-    codHorario = models.AutoField(primary_key=True)
-    horaApertura = models.CharField(max_length=255)
-    horaCierre = models.CharField(max_length=255)
+
 
 class MetodoDePago(models.Model):
     codMetodoDePago = models.AutoField(primary_key=True)
@@ -64,7 +60,6 @@ class Establecimiento(models.Model):
     descripcion = models.TextField(max_length=255, default='Sin descripcion')
     tipoEstablecimiento = models.ForeignKey(TipoEstablecimiento, on_delete=models.CASCADE)
     telefono = models.CharField(max_length=255)
-    codHorario = models.ForeignKey(Horario, on_delete=models.CASCADE)
     web = models.TextField(max_length=255, default='')
     metodos_de_pago = models.ManyToManyField(MetodoDePago, related_name='establecimientos')
     

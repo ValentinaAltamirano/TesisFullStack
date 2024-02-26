@@ -7,6 +7,18 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.http import JsonResponse
 
+
+class MetodoDePagoViewSet(viewsets.ModelViewSet):
+    queryset = MetodoDePago.objects.all()
+    serializer_class = MetodoDePagoSerializer
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        # Devuelve solo los nombres de los tipos de alojamiento
+        return Response([item['nombre'] for item in serializer.data])
+
+
 # Vista para manejar los tipos de gastronomía
 class TipoGastronomiaViewSet(viewsets.ModelViewSet):
     queryset = TipoGastronomia.objects.all()
@@ -66,10 +78,6 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             data = request.data
             print(data)
             
-            # Datos Horario
-            horaApertura = data.get('horaApertura', '')
-            horaCierre = data.get('horaCierre', '')
-            horario = Horario.objects.create(horaApertura=horaApertura, horaCierre=horaCierre)
             
             # Datos Establecimiento
             
@@ -109,13 +117,14 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             idsTiposPrefAliment = TipoPrefAliment.objects.filter(nombre__in=nombresTiposPrefAliment).values_list('codTipoPrefAliment', flat=True)
             
             # Crear una instancia de Gastronomia y establecer las relaciones con otros modelos
-            gastronomia = Gastronomia.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono, codHorario = horario, web = web)
+            gastronomia = Gastronomia.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono,  web = web)
             gastronomia.metodos_de_pago.set(idsMetodosDePago)
             gastronomia.tipos_servicio_gastronomico.set(idsTiposServicios)
             gastronomia.tipos_gastronomia.set(idsTiposGastronomia)
             gastronomia.tipos_comida.set(idsTiposComida)
             gastronomia.tipos_pref_alimentaria.set(idsTiposPrefAliment)
-            
+            gastronomia.metodos_de_pago.set(idsMetodosDePago)# linea que agregue para solucionar el error de que solo 
+                                                            # muestra el id, ahora muestra id y nombre de metodo de pago
             idEstablecimiento = gastronomia.codEstablecimiento
             
             return JsonResponse({'establecimientoId': idEstablecimiento, 'mensaje': 'Local Gastronómico creado exitosamente'}, status=200)

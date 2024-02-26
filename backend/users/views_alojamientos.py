@@ -73,10 +73,7 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
         try:
             data = json.loads(request.body.decode('utf-8'))
             
-            # Datos Horario
-            horaApertura = data.get('horaApertura', '')
-            horaCierre = data.get('horaCierre', '')
-            horario = Horario.objects.create(horaApertura=horaApertura, horaCierre=horaCierre)
+            
             
             # Datos Establecimiento
             
@@ -117,7 +114,7 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
             id_categoria = Categoria.objects.filter(nombre__iexact=nombre_categoria).values_list('codCategoria', flat=True).first()
             codCategoria =  Categoria.objects.get(codCategoria=id_categoria)
             
-            alojamiento = Alojamientos.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono, codHorario = horario, web = web, codTipoAlojamiento = codTipoAlojamiento, codCategoria = codCategoria )
+            alojamiento = Alojamientos.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono,  web = web, codTipoAlojamiento = codTipoAlojamiento, codCategoria = codCategoria )
             alojamiento.metodos_de_pago.set(ids_metodos_pago)
             alojamiento.servicios.set(ids_servicios)
 
