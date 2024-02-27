@@ -73,6 +73,15 @@ getAlojamientoPorIdEmpresario(): Observable<any> {
 
   return this.http.get(url, { headers });
 }
+
+eliminarEstablecimiento(idEstablecimiento: number): Observable<void> {
+  const url = `${this.url}gastronomias/${idEstablecimiento}`; 
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
+  });
+  return this.http.delete<void>(url, { headers });
+}
     
 
 }

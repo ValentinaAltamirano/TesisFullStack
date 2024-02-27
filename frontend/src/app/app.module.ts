@@ -28,6 +28,7 @@ import { MisEstablecimientosComponent } from './mis-establecimientos/mis-estable
 import { EditarAlojamientoComponent } from './editar-alojamiento/editar-alojamiento.component';
 import { DetalleGastronomiaComponent } from './detalle-gastronomia/detalle-gastronomia.component';
 import { RegistroTuristaComponent } from './registro-turista/registro-turista.component';
+import { EditarGastronomiaComponent } from './editar-gastronomia/editar-gastronomia.component';
 
 const appRoutes: Routes=[];
 
@@ -52,7 +53,8 @@ const appRoutes: Routes=[];
     MisEstablecimientosComponent,
     EditarAlojamientoComponent,
     DetalleGastronomiaComponent,
-    RegistroTuristaComponent
+    RegistroTuristaComponent,
+    EditarGastronomiaComponent
   ],
   imports: [
     BrowserModule,

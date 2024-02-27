@@ -66,4 +66,24 @@ export class GastronomiaService {
     const url = `${this.url}gastronomias/${establecimientoId}/`;
     return this.http.get(url);
   }
+
+  getGastronomiaPorIdEmpresario(): Observable<any> {
+  
+    const url = `${this.url}gastronomias/obtenerGastronomiaEmpresario/`;
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
+    });
+  
+    return this.http.get(url, { headers });
+  }
+
+  eliminarEstablecimiento(idEstablecimiento: number): Observable<void> {
+    const url = `${this.url}gastronomias/${idEstablecimiento}`; 
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
+    });
+    return this.http.delete<void>(url, { headers });
+  }
 }

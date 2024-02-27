@@ -106,13 +106,13 @@
           <div class="lg:col-span-4">
             <!-- Alojamientos -->
             <div class="flex  max-w-6xl">
-              <div *ngFor="let alojamiento of getAlojamientosFiltrados()"  class="w-full  lg:w-2/5 px-4 mb-6">
+              <div *ngFor="let alojamiento of getAlojamientosFiltrados()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-10">
                 
-                <div  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl">
-                <div class="relative flex items-end overflow-hidden rounded-xl">
+                
+                <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
                   <img *ngIf="alojamiento.imagenesAlojamientos && alojamiento.imagenesAlojamientos.length > 0"
                   [src]="baseUrl + alojamiento.imagenesAlojamientos[0].imagen"
-                  alt="Imagen del establecimiento">
+                  alt="Imagen del establecimiento" class="w-full h-full object-cover">
               
                   <div class="absolute bottom-3 left-3 inline-flex items-center rounded-lg bg-white p-2 shadow-md">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
@@ -128,8 +128,6 @@
                     </svg>
                   </div>
                 </div>
-
-                
               
                 <div class="mt-1 p-2">
                   <p class="mt-1 text-sm text-slate-400">{{ alojamiento.codTipoAlojamiento.nombre }} {{ alojamiento.codCategoria.nombre }}
@@ -143,15 +141,10 @@
                   <p class="mt-1 text-xs text-slate-500">{{ alojamiento.calle }} {{ alojamiento.altura }}, {{ alojamiento.codCiudad.nombre }}</p>
                   <p class="mt-1 text-sm text-slate-500">Tel. {{ alojamiento.telefono }} </p>
                   <div class="mt-3 flex items-end justify-between">
-                    
-
-                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" [routerLink]="['/detalle-alojamiento', alojamiento.codEstablecimiento]" >Ver más</a>
-                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ alojamiento.web }}" target="_blank" >Página web</a>
-              
-                  
+                    <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" [routerLink]="['/detalle-alojamiento', alojamiento.codEstablecimiento]" >Ver más</a>
+                    <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ alojamiento.web }}" target="_blank" >Página web</a>
                   </div>
                   
-                </div>
                 </div>
 
               </div>

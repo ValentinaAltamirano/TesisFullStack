@@ -42,36 +42,64 @@
           </div>
 
           
-            <div *ngFor="let establecimiento of establecimientos"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl  w-1/4 mx-10">
-            <div class="relative flex items-end overflow-hidden rounded-xl ">
+          <div *ngFor="let alojamiento of establecimientosAlojamiento"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl  mx-10">
+          <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
               
-                <img *ngIf="establecimiento.imagenesAlojamientos && establecimiento.imagenesAlojamientos.length > 0"
-                [src]="baseUrl + establecimiento.imagenesAlojamientos[0].imagen"
-                alt="Imagen del establecimiento">
+            <img *ngIf="alojamiento.imagenesAlojamientos && alojamiento.imagenesAlojamientos.length > 0"
+                [src]="baseUrl + alojamiento.imagenesAlojamientos[0].imagen"
+                alt="Imagen del establecimiento" class="w-full h-full object-cover">
             </div>
           
             <div class="mt-1 p-2">
-              <p class="mt-1 text-sm text-slate-400">{{ establecimiento.codTipoAlojamiento.nombre }} {{ establecimiento.codCategoria.nombre }}
-                <ng-container *ngIf="establecimiento.codCategoria.nombre === '1 estrella'"> &#9733;</ng-container>
-                <ng-container *ngIf="establecimiento.codCategoria.nombre === '2 estrellas'"> &#9733;&#9733;</ng-container>
-                <ng-container *ngIf="establecimiento.codCategoria.nombre === '3 estrellas'"> &#9733;&#9733;&#9733;</ng-container>
-                <ng-container *ngIf="establecimiento.codCategoria.nombre === '4 estrellas'"> &#9733;&#9733;&#9733;&#9733;</ng-container>
-                <ng-container *ngIf="establecimiento.codCategoria.nombre === '5 estrellas'"> &#9733;&#9733;&#9733;&#9733;&#9733;</ng-container>
+              <p class="mt-1 text-sm text-slate-400">{{ alojamiento.codTipoAlojamiento.nombre }} {{ alojamiento.codCategoria.nombre }}
+                <ng-container *ngIf="alojamiento.codCategoria.nombre === '1 estrella'"> &#9733;</ng-container>
+                <ng-container *ngIf="alojamiento.codCategoria.nombre === '2 estrellas'"> &#9733;&#9733;</ng-container>
+                <ng-container *ngIf="alojamiento.codCategoria.nombre === '3 estrellas'"> &#9733;&#9733;&#9733;</ng-container>
+                <ng-container *ngIf="alojamiento.codCategoria.nombre === '4 estrellas'"> &#9733;&#9733;&#9733;&#9733;</ng-container>
+                <ng-container *ngIf="alojamiento.codCategoria.nombre === '5 estrellas'"> &#9733;&#9733;&#9733;&#9733;&#9733;</ng-container>
               </p>
-              <h2 class="text-slate-700 text-lg">{{ establecimiento.nombre }}</h2>
-              <p class="mt-1 text-xs text-slate-500">{{ establecimiento.calle }} {{ establecimiento.altura }}, {{ establecimiento.codCiudad.nombre }}</p>
-              <p class="mt-1 text-sm text-slate-500">Tel. {{ establecimiento.telefono }} </p>
+              <h2 class="text-slate-700 text-lg">{{ alojamiento.nombre }}</h2>
+              <p class="mt-1 text-xs text-slate-500">{{ alojamiento.calle }} {{ alojamiento.altura }}, {{ alojamiento.codCiudad.nombre }}</p>
+              <p class="mt-1 text-sm text-slate-500">Tel. {{ alojamiento.telefono }} </p>
+
               <div class="mt-3 flex items-end justify-between">
-                  <a class="lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200">Eliminar</a>
+                  <a class="lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200" (click)="eliminarAlojamiento(alojamiento.codEstablecimiento)">Eliminar</a>
                   <a class="lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200"
-                    [routerLink]="[establecimiento.codEstablecimiento === 1 ? '/editar-alojamiento' : '/editar-gastronomia', establecimiento.codEstablecimiento]">
+                    [routerLink]="[alojamiento.codEstablecimiento === 1 ? '/editar-alojamiento' : '/editar-gastronomia', alojamiento.codEstablecimiento]">
                     Editar
                   </a>
               </div>
               
             </div>
-            </div>
+          </div>
 
+          <div *ngFor="let gastronomia of establecimientosGastronomia"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-10">
+            <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
+              <img *ngIf="gastronomia.imagenesGastronomia && gastronomia.imagenesGastronomia.length > 0"
+                [src]="baseUrl + gastronomia.imagenesGastronomia[0].imagen"
+                alt="Imagen del establecimiento"
+                class="w-full h-full object-cover"
+              >
+            </div>
+            
+              <div class="mt-1 p-2">
+                <div class="flex">
+                  <div *ngFor="let tipo of gastronomia.tipos_gastronomia" class="mt-1 text-sm text-slate-400 flex-item px-0.5">
+                    {{   tipo.nombre + ' | '   }}
+                  </div>
+                </div>
+              </div>
+              <h2 class="text-slate-700 text-lg">{{ gastronomia.nombre }}</h2>
+              <p class="mt-1 text-xs text-slate-500">{{ gastronomia.calle }} {{ gastronomia.altura }}, {{ gastronomia.ciudad }}</p>
+              <p class="mt-1 text-sm text-slate-500">Tel. {{ gastronomia.telefono }} </p>
+              <div class="mt-3 flex items-end justify-between">
+                    <a class="lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200" (click)="eliminarGastronomia(gastronomia.codEstablecimiento)">Eliminar</a>
+                    <a class="lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200"
+                      [routerLink]="[gastronomia.codEstablecimiento === 1 ? '/editar-alojamiento' : '/editar-gastronomia', gastronomia.codEstablecimiento]">
+                      Editar
+                    </a>
+              </div>
+            </div>
         </div>
 
     

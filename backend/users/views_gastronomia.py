@@ -1,12 +1,14 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from .serializer_establecimientos import ImagenSerializer
 from .models import *
 from .serializer_gastronomia import *
-from .serializer_alojamientos import *
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.http import JsonResponse
-
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 class MetodoDePagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoDePago.objects.all()
@@ -131,6 +133,30 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             print('Error en la creación de gastronomía:', e)
             return Response({'error': 'Error en la creación de gastronomía'}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['GET'])
+    @permission_classes([IsAuthenticated])
+    def obtenerGastronomiaEmpresario(self, request, *args, **kwargs):
+        try:
+            # Obtén el empresario asociado al usuario autenticado
+            empresario = Empresario.objects.get(user=request.user)
+
+            # Obtén los locales gastronomicos asociados al empresario
+            gastronomia = Gastronomia.objects.filter(empresario=empresario)
+
+            if gastronomia.exists():
+                # Serializa la lista de locales gastronomico
+                serializer = GastronomiaSerializer(gastronomia, many=True)
+                return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+            else:
+                return JsonResponse({'error': 'No se encontró ningún local gastronomico asociado al empresario.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Empresario.DoesNotExist:
+            return JsonResponse({'error': 'No se encontró el empresario.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            print('Error al obtener el local gastronomico por ID del empresario:', e)
+            return JsonResponse({'error': 'Error al obtener el local gastronomico.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 class ImagenGastronomiaCreateView(APIView):
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
