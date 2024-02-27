@@ -24,6 +24,7 @@ export class EditarAlojamientoComponent {
   alojamiento: any;
   imagenesAlojamiento: any[] = [];
   baseUrl = 'http://127.0.0.1:8000';
+  descripcion: string = '';
 
   editando = false;
   datosOriginales: any;
@@ -64,9 +65,8 @@ export class EditarAlojamientoComponent {
       codCiudad: [''],
       codProvincia: [''],
       codEstablecimiento: [''],
-      codHorario: [''],
       codTipoAlojamiento: [''],
-      descripcion: [''],
+      descripcion: '',
       idEmpresario: [''],
       metodos_de_pago: this.fb.array([]),
       nombre: [''],
@@ -217,6 +217,24 @@ export class EditarAlojamientoComponent {
     this.editando = !this.editando;
   }
 
+  eliminarImagen(index: number) {
+    // Lógica para eliminar la imagen del array
+    this.imagenesAlojamiento.splice(index, 1);
+  }
+
+  agregarImagen(event: any) {
+    const fileList: FileList = event.target.files;
+    
+    if (fileList.length > 0) {
+      const nuevaImagen = {
+        imagen: fileList[0], // Guarda la referencia al archivo (puedes necesitar procesarla antes de almacenarla)
+        // Otras propiedades relacionadas con la imagen si es necesario
+      };
+  
+      this.imagenesAlojamiento.push(nuevaImagen);
+    }
+  }
+
   cancelarEdicion() {
     this.editando = false;
     // Restaurar los datos editados a los originales
@@ -227,6 +245,10 @@ export class EditarAlojamientoComponent {
     this.router.navigate(['/misEstablecimiento']).then(() => {
       location.reload();
     }); 
+  }
+
+  convertirSaltosDeLinea(texto: string): string {
+    return texto.replace(/\n/g, '<br>');
   }
 
   prevenirAperturaDesplegable(event: Event): void {

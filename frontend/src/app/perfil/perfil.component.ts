@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -62,6 +63,17 @@ export class PerfilComponent  {
 
     this.authService.actualizarDatosEmpresario(nuevosDatos).subscribe(
       response => {
+        Swal.fire({
+          title: "Datos actualizados exitosamente",
+          icon: "success",
+          timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)
+          timerProgressBar: true
+        }).then((result) => {
+          if (result.dismiss === Swal.DismissReason.timer) {
+            // Si el usuario no interactuó y el temporizador se agotó
+            location.reload();
+          }
+        });
         console.log('Datos actualizados exitosamente', response);
         this.editando = false;
 

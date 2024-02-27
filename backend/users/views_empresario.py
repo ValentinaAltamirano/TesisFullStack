@@ -1,4 +1,4 @@
-from .serializer_users import *
+from .serializer_empresario import *
 from .models import *
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -8,8 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from django.contrib.auth.models import Group
 from rest_framework.decorators import action
-from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.hashers import make_password
 
 class EmpresarioViewSet(viewsets.ModelViewSet):
     queryset = Empresario.objects.all()
@@ -36,15 +36,17 @@ class EmpresarioViewSet(viewsets.ModelViewSet):
             
             # Crear el usuario
             user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
-
+            
+            
             # Crear el objeto Empresario
             empresario = Empresario(user=user, razonSocial=razon_social, descripcion=descripcion, telefono=telefono)
             empresario.save()
-            
-            grupo_empresario, creado = Group.objects.get_or_create(name='Empresario')
 
-            # Asigna el grupo Empresario al nuevo empresario
-            empresario.user.groups.add(grupo_empresario)
+            # Obtener o crear el grupo Empresario
+            grupo_empresario, created = Group.objects.get_or_create(name='Empresario')
+
+            # Asignar usuario al grupo de empresarios
+            user.groups.add(grupo_empresario)  # Use 'user' instance, not 'User' class
 
             return JsonResponse({'message': 'Empresario creado exitosamente'}, status=201)
     

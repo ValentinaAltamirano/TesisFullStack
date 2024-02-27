@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class Empresario(User):
+class Empresario(models.Model):
     idEmpresario = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
     razonSocial = models.CharField(max_length=255)
     descripcion = models.TextField()
     telefono = models.CharField(max_length=20)
@@ -127,7 +127,6 @@ class TipoPrefAliment(models.Model):
         return self.nombre
 
 class Gastronomia(Establecimiento):
-    codGastronomia = models.AutoField(primary_key=True)
     tipos_servicio_gastronomico = models.ManyToManyField(TipoServGastro, related_name='Gastronomia')
     tipos_gastronomia = models.ManyToManyField(TipoGastronomia, related_name='Gastronomia')
     tipos_comida = models.ManyToManyField(TipoComida, related_name='Gastronomia')
@@ -164,12 +163,13 @@ class Comentario(models.Model):
         return f"Comentario #{self.codComentario}"
 
 # Define el modelo Turista
-class Turista(User):
+class Turista(models.Model):
     codTurista = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     comentarios = models.ManyToManyField(Comentario, blank=True, related_name='turista_comentarios')  # Relación con Comentarios
 
     def __str__(self):
-        return f"Turista {self.username} - {self.codTurista}"
+        return f"Turista {self.user.username} - {self.codTurista}"
 
 
 

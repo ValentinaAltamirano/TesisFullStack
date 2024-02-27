@@ -11,10 +11,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class MisEstablecimientosComponent {
   idEmpresario: any;
-  establecimiento: any;
+  establecimientos: any;
   baseUrl = 'http://127.0.0.1:8000';
   imagenes: any[] = [];
-  noAlojamientosEncontrados: boolean = false;
+  noEstablecimientosEncontrados: boolean = false;
   dropdownVisible = false;
 
   toggleDropdown() {
@@ -24,16 +24,12 @@ export class MisEstablecimientosComponent {
   constructor(private auth: AuthService, private establecimientoService: AlojamientoService) {}
 
   ngOnInit(): void {
-    this.auth.obtenerDatosEmpresario().subscribe((data: any) => {
-      this.idEmpresario = data.id;
-      console.log(this.idEmpresario);
-      
-      this.establecimientoService.getAlojamientoPorIdEmpresario(this.idEmpresario).subscribe(
+      this.establecimientoService.getAlojamientoPorIdEmpresario().subscribe(
         (data: any[]) => {
-          this.establecimiento = data;
-          console.log('Alojamiento obtenido:', this.establecimiento);
+          this.establecimientos = data;
+          console.log('Alojamiento obtenido:', this.establecimientos);
 
-          const observables: Observable<any>[] = this.establecimiento.map((alojamiento: any) => {
+          const observables: Observable<any>[] = this.establecimientos.map((alojamiento: any) => {
             const establecimientoId = alojamiento.codEstablecimiento;
             return this.establecimientoService.obtenerImagenesAlojamiento(establecimientoId);
           });
@@ -41,9 +37,9 @@ export class MisEstablecimientosComponent {
           forkJoin(observables).subscribe(
             (imagenesArrays: any[]) => {
               imagenesArrays.forEach((imagenesArray: any[], index: number) => {
-                this.establecimiento[index].imagenesAlojamientos = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
+                this.establecimientos[index].imagenesAlojamientos = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
               });
-              console.log('Alojamientos con imágenes:', this.establecimiento);
+              console.log('Alojamientos con imágenes:', this.establecimientos);
             },
             (error: any) => {
               console.error('Error al obtener imágenes de alojamientos', error);
@@ -55,12 +51,11 @@ export class MisEstablecimientosComponent {
           console.error('Error al obtener el alojamiento:', error);
           // Verifica si el error es un HTTP 404 (Not Found)
           if (error instanceof HttpErrorResponse && error.status === 404) {
-            this.noAlojamientosEncontrados = true;
+            this.noEstablecimientosEncontrados = true;
           } else {
 
           }
         }
       );
-    });
   }
 }

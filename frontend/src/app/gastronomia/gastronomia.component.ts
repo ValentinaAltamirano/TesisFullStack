@@ -42,7 +42,7 @@ export class GastronomiaComponent {
         console.log(this.gastronomias)
     
         const observables = this.gastronomias.map(gastronomia => {
-          const establecimientoId = gastronomia.establecimiento_ptr;
+          const establecimientoId = gastronomia.codEstablecimiento;
           return this.gastronomiaService.obtenerImagenesGastronomia(establecimientoId);
         });
 

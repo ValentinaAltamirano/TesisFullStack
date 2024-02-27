@@ -127,8 +127,6 @@ export class RegistroGastronomiaComponent {
       web: ['', Validators.required],
       descripcion: ['', Validators.required],
       imagenes: this.fb.array([]),
-      horaApertura: [''],
-      horaCierre: [''],
 
       // Campos del gastronomia
       tiposGastronomiaSeleccionados: this.fb.array([]),
@@ -217,7 +215,7 @@ export class RegistroGastronomiaComponent {
   submitForm() {
     const descripcionConvertida = this.convertirSaltosDeLineaEnBr(this.gastronomiaForm.get('descripcion')?.value);
     this.gastronomiaForm.get('descripcion')?.setValue(descripcionConvertida);
-    console.log(this.gastronomiaForm.value)
+    
 
     if (this.gastronomiaForm.valid) {
       // Enviar datos al servicio de autenticación

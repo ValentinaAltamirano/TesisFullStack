@@ -40,7 +40,7 @@ export class DetalleGastronomiaComponent {
       (detalles) => {
         this.gastronomia = detalles;
         console.log(this.gastronomia)
-        this.establecimientoId = this.gastronomia.establecimiento_ptr
+        this.establecimientoId = this.gastronomia.codEstablecimiento
         
         this.cargarImagenes(this.establecimientoId);
         this.getLocationCoordinates(`${this.gastronomia.calle } ${this.gastronomia.altura }, Villa Carlos Paz, Córdoba, Argentina`);  

@@ -120,9 +120,6 @@ export class RegistroAlojamientoComponent {
       web: ['', Validators.required],
       descripcion: ['', Validators.required],
       imagenes: this.fb.array([]),
-      horaApertura: [''],
-      horaCierre: [''],
-
       // Campos del alojamiento
       categoria: ['', Validators.required],
       tipoAlojamiento: [null, Validators.required],
@@ -239,9 +236,13 @@ export class RegistroAlojamientoComponent {
         Swal.fire({
           title: "Registro de alojamiento e imágenes exitoso",
           icon: "success",
-          confirmButtonText: "OK"
+          confirmButtonText: "OK",
+          timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)
+          timerProgressBar: true
         }).then((result) => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/']).then(() => {
+            location.reload();
+          });
         });
       },
       (error) => {

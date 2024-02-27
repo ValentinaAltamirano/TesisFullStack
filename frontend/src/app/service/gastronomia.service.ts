@@ -12,6 +12,7 @@ export class GastronomiaService {
 
   private url: string = 'http://127.0.0.1:8000/api/'
 
+
   constructor(private http: HttpClient, 
     private cookieService: CookieService,
     private router: Router,
@@ -19,23 +20,23 @@ export class GastronomiaService {
   }
 
   obtenerTiposGastronomia(): Observable<GastronomiaService[]> {
-    return this.http.get<GastronomiaService[]>(this.url + 'tipogastronomia/');
+    return this.http.get<GastronomiaService[]>(this.url + 'gastronomiasCampos/tipogastronomia/');
   }
 
   obtenerServicioGastronomia(): Observable<GastronomiaService[]> {
-    return this.http.get<GastronomiaService[]>(this.url + 'serviciosGastronomia/');
+    return this.http.get<GastronomiaService[]>(this.url + 'gastronomiasCampos/serviciosGastronomia/');
   }
 
   obtenerTipoComida(): Observable<GastronomiaService[]> {
-    return this.http.get<GastronomiaService[]>(this.url + 'tipocomida/');
+    return this.http.get<GastronomiaService[]>(this.url + 'gastronomiasCampos/tipocomida/');
   }
 
   obtenerPreferenciaAlimentaria(): Observable<GastronomiaService[]> {
-    return this.http.get<GastronomiaService[]>(this.url + 'preferenciaAlimentaria/');
+    return this.http.get<GastronomiaService[]>(this.url + 'gastronomiasCampos/preferenciaAlimentaria/');
   }
 
   obtenerMetodosDePago(): Observable<GastronomiaService[]> {
-    return this.http.get<GastronomiaService[]>(this.url + 'metodospago/');
+    return this.http.get<GastronomiaService[]>(this.url + 'gastronomiasCampos/metodospago/');
   }
 
   registrarGastronomia(data: any): Observable<any> {

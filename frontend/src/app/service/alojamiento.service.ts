@@ -19,19 +19,19 @@ export class AlojamientoService {
   }
 
   obtenerTiposAlojamiento(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'tipoalojamientos/');
+    return this.http.get<AlojamientoService[]>(this.url + 'alojamientosCampos/tipoalojamientos/');
   }
 
   obtenerCategoria(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'categoria/');
+    return this.http.get<AlojamientoService[]>(this.url + 'alojamientosCampos/categoria/');
   }
 
   obtenerServicios(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'tiposervicios/');
+    return this.http.get<AlojamientoService[]>(this.url + 'alojamientosCampos/tiposervicios/');
   }
 
   obtenerMetodosDePago(): Observable<AlojamientoService[]> {
-    return this.http.get<AlojamientoService[]>(this.url + 'metodospago/');
+    return this.http.get<AlojamientoService[]>(this.url + 'alojamientosCampos/metodospago/');
   }
 
 
@@ -63,7 +63,7 @@ obtenerAlojamiento(establecimientoId: number): Observable<any> {
   return this.http.get(url);
 }
 
-getAlojamientoPorIdEmpresario(idEmpresario: number): Observable<any> {
+getAlojamientoPorIdEmpresario(): Observable<any> {
   
   const url = `${this.url}alojamientos/obtenerAlojamientosEmpresario/`;
   const headers = new HttpHeaders({

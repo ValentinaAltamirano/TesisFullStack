@@ -28,20 +28,6 @@
               </svg>
               {{ gastronomia.telefono }}
             </p>
-          
-            <p class="text-gray-600 flex">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 p-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-                Apertura: {{ gastronomia.codHorario.horaApertura }}
-            </p>
-          
-            <p class="text-gray-600 flex">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 p-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-                Cierre: {{ gastronomia.codHorario.horaCierre }}
-            </p>
             <div class="mt-5">
                 <a class="bg-gray-200 hover:bg-gray-400 font-bold py-2 px-4 rounded w-auto max-w-xs mx-auto" href="{{ gastronomia.web }}">
                     Sitio web
@@ -113,7 +99,7 @@
                 <div class="mt-4 grid grid-cols-2 gap-6">
                   <div *ngFor="let tipo of gastronomia.metodos_de_pago">
                     <ul role="list" class="list-disc space-y-2 pl-4 text-sm">
-                      <li class="text-gray-400"><span class="text-gray-600">{{tipo}}</span></li>
+                      <li class="text-gray-400"><span class="text-gray-600">{{tipo.nombre}}</span></li>
                     </ul>
                   </div>
                 </div>

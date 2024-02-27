@@ -73,8 +73,6 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
         try:
             data = json.loads(request.body.decode('utf-8'))
             
-            
-            
             # Datos Establecimiento
             
             #Creo la instancia de TipoEstablecimiento
@@ -172,7 +170,6 @@ class ImagenAlojamientoCreateView(APIView):
             alojamiento = Establecimiento.objects.get(codEstablecimiento=alojamiento_id)  # Utiliza Establecimiento en lugar de Alojamientos
 
             imagenes = request.FILES.getlist('imagenes')
-            print(imagenes)
             for imagen in imagenes:
                 Imagen.objects.create(establecimiento=alojamiento, imagen=imagen)
 

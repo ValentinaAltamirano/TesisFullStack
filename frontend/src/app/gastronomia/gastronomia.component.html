@@ -176,7 +176,7 @@
                 <div  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl">
                 <div class="relative flex items-end overflow-hidden rounded-xl">
                   <img *ngIf="gastronomia.imagenesGastronomia && gastronomia.imagenesGastronomia.length > 0"
-                  [src]="baseUrl + gastronomia.imagenesGastronomia[0].imagen"
+                  [src]="baseUrl + gastronomia.imagenesGastronomia[0].imagen" 
                   alt="Imagen del establecimiento">
               
                   <div class="absolute bottom-3 left-3 inline-flex items-center rounded-lg bg-white p-2 shadow-md">
@@ -208,7 +208,7 @@
                   <div class="mt-3 flex items-end justify-between">
                     
 
-                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" [routerLink]="['/detalle-gastronomia', gastronomia.codGastronomia]" >Ver más</a>
+                  <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" [routerLink]="['/detalle-gastronomia', gastronomia.codEstablecimiento]" >Ver más</a>
                   <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ gastronomia.web }}" target="_blank" >Página web</a>
               
                   

@@ -15,7 +15,7 @@ class MetodoDePagoViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        # Devuelve solo los nombres de los tipos de alojamiento
+        # Devuelve solo los nombres de los tipos de metodos de pago
         return Response([item['nombre'] for item in serializer.data])
 
 
@@ -76,9 +76,6 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             data = request.data
-            print(data)
-            
-            
             # Datos Establecimiento
             
             id_empresario = data.get('idEmpresario', '')
@@ -126,6 +123,7 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             gastronomia.metodos_de_pago.set(idsMetodosDePago)# linea que agregue para solucionar el error de que solo 
                                                             # muestra el id, ahora muestra id y nombre de metodo de pago
             idEstablecimiento = gastronomia.codEstablecimiento
+            print(idEstablecimiento)
             
             return JsonResponse({'establecimientoId': idEstablecimiento, 'mensaje': 'Local Gastronómico creado exitosamente'}, status=200)
         
@@ -138,9 +136,9 @@ class ImagenGastronomiaCreateView(APIView):
     serializer_class = ImagenSerializer
     parser_classes = (MultiPartParser, FormParser)
 
-    def get(self, request, alojamiento_id):
+    def get(self, request, establecimiento_id):
         try:
-            imagenes = Imagen.objects.filter(establecimiento_id=alojamiento_id)
+            imagenes = Imagen.objects.filter(establecimiento_id = establecimiento_id)
             serializer = ImagenSerializer(imagenes, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
@@ -148,13 +146,12 @@ class ImagenGastronomiaCreateView(APIView):
         
     def post(self, request, *args, **kwargs):
         try:
-            establecimiento_id = kwargs.get('establecimiento_id', '')  # Obtén el ID del establecimiento desde la URL
-            establecimientoGastronomico = Establecimiento.objects.get(codEstablecimiento=establecimiento_id)  # Utiliza Establecimiento en lugar de Alojamientos
+            establecimientoID = kwargs.get('establecimiento_id', '')  # Obtén el ID del gastronomia desde la URL
+            gastronomia = Establecimiento.objects.get(codEstablecimiento=establecimientoID)  # Utiliza Establecimiento en lugar de Gastronomia
 
             imagenes = request.FILES.getlist('imagenes')
-            print(imagenes)
             for imagen in imagenes:
-                Imagen.objects.create(establecimiento=establecimientoGastronomico, imagen=imagen)
+                Imagen.objects.create(establecimiento=gastronomia, imagen=imagen)
 
             return Response({'mensaje': 'Imágenes cargadas exitosamente'}, status=status.HTTP_201_CREATED)
 

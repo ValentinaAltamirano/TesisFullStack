@@ -40,7 +40,8 @@ export class InicioSesionComponent {
           Swal.fire({
             title: "Inicio de sesión exitoso",
             icon: "success",
-            confirmButtonText: "OK"
+            timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)
+            timerProgressBar: true
           }).then((result) => {
             this.router.navigate(['/']).then(() => {
               location.reload();

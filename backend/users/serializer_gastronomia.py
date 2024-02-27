@@ -6,7 +6,7 @@ from .models import *
 class MetodoDePagoSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetodoDePago
-        fields = ['codMetodoDePago', 'nombre']
+        fields = ['nombre']
 
 
 class TipoGastronomiaSerializer(serializers.ModelSerializer):
