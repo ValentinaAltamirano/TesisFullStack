@@ -29,6 +29,8 @@ import { EditarAlojamientoComponent } from './editar-alojamiento/editar-alojamie
 import { DetalleGastronomiaComponent } from './detalle-gastronomia/detalle-gastronomia.component';
 import { RegistroTuristaComponent } from './registro-turista/registro-turista.component';
 import { EditarGastronomiaComponent } from './editar-gastronomia/editar-gastronomia.component';
+import { EditarComercioComponent } from './editar-comercio/editar-comercio.component';
+import { DetalleComercioComponent } from './detalle-comercio/detalle-comercio.component';
 
 const appRoutes: Routes=[];
 
@@ -54,7 +56,9 @@ const appRoutes: Routes=[];
     EditarAlojamientoComponent,
     DetalleGastronomiaComponent,
     RegistroTuristaComponent,
-    EditarGastronomiaComponent
+    EditarGastronomiaComponent,
+    EditarComercioComponent,
+    DetalleComercioComponent
   ],
   imports: [
     BrowserModule,

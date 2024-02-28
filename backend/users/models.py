@@ -142,8 +142,7 @@ class TipoComercio(models.Model):
         return self.nombre
 
 class Comercio(Establecimiento):
-    codComercio = models.AutoField(primary_key=True)
-    codTipoComercio = models.ForeignKey(TipoComercio, on_delete=models.CASCADE)
+    codTipoComercio = models.ManyToManyField(TipoComercio, related_name='TipoComercio')
 
     def __str__(self):
         return self.nombre

@@ -6,6 +6,7 @@ from .views_empresario import *
 from .views_alojamientos import *  
 from .views_gastronomia import *  
 from .views_turista import * 
+from .views_comercio import *
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -38,8 +39,12 @@ router_alojamientos = routers.DefaultRouter()
 router_alojamientos.register(r'', AlojamientoViewSet, basename='alojamientos')
 
 # Define el router para las vistas del comercio
+router_comerciosCampos = routers.DefaultRouter()
+router_comerciosCampos.register(r'metodospago', views_comercio.MetodoDePagoViewSet)
+router_comerciosCampos.register(r'tipocomercio', views_comercio.TipoComercioViewSet)
+
 router_comercios = routers.DefaultRouter()
-router_comercios.register(r'tipocomercio', views_comercio.TipoComercioViewSet)
+router_comercios.register(r'', ComercioViewSet, basename='comercio')
 
 # Define el router para las vistas del empresario
 router_user = routers.DefaultRouter()
@@ -69,8 +74,8 @@ urlpatterns = [
     path('empresarios/', include(router_user.urls)),
 
     # Rutas para comercios
-    path('comercios/', views_comercio.ComercioViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('comerciosCampos/', include(router_comercios.urls)),
+     path('comercios/', include(router_comercios.urls)),
+    path('comerciosCampos/', include(router_comerciosCampos.urls)),
 
     # Rutas para el turista
     path('turistas/', include(router_turista.urls)),
@@ -78,7 +83,7 @@ urlpatterns = [
     # Rutas para cargar y obtener imágenes de alojamientos
     path('imagenesAlojamiento/<int:alojamiento_id>/', ImagenAlojamientoCreateView.as_view(), name='imagenes_alojamiento'),
     path('imagenesGastronomia/<int:establecimiento_id>/', ImagenGastronomiaCreateView.as_view(), name='setImagenesGastronomia'),
-    
+    path('imagenesComercios/<int:establecimiento_id>/', ImagenComercioCreateView.as_view(), name='setImagenesComercio'),
 ]
 
 # Si el modo DEBUG está activado, sirve las rutas para los archivos multimedia

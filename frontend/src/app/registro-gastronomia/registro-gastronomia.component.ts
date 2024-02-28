@@ -144,21 +144,26 @@ export class RegistroGastronomiaComponent {
   
   toggleCheckbox(controlName: string): void {
     const control = this.getFormControl(controlName);
-  
+
     if (control instanceof FormControl) {
-      const isChecked = control.value;
-      control.setValue(!isChecked);
-  
-      const formArrayName = controlName.split('.')[0];
-      const formArray = this.gastronomiaForm.get(formArrayName) as FormArray;
-  
-      if (isChecked) {
-        formArray.removeAt(formArray.controls.findIndex(item => item.value === controlName.split('.')[1]));
-      } else {
-        formArray.push(this.fb.control(controlName.split('.')[1]));
-      }
+        const isChecked = control.value;
+        control.setValue(!isChecked);
+
+        const formArrayName = controlName.split('.')[0];
+        const formArray = this.gastronomiaForm.get(formArrayName) as FormArray;
+
+        if (isChecked) {
+            // Elimina el valor del FormArray
+            const indexToRemove = formArray.controls.findIndex(item => item.value.toString() === controlName.split('.')[1]);
+            if (indexToRemove !== -1) {
+                formArray.removeAt(indexToRemove);
+            }
+        } else {
+            // Agrega el valor al FormArray
+            formArray.push(this.fb.control(controlName.split('.')[1]));
+        }
     }
-  }
+}
 
   onFileChange(event: any): void {
     const archivos = event.target.files;

@@ -92,7 +92,7 @@
                                   <label [for]="'preferenciaAlimentaria-' + preferencia" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                     <input 
                                       type="checkbox" 
-                                      [checked]="getFormControl('tipoCpreferenciaAlimentariaSeleccionadasomidaSeleccionados.' + preferencia).value"
+                                      [checked]="getFormControl('preferenciaAlimentariaSeleccionadas.' + preferencia).value"
                                       (change)="toggleCheckbox('preferenciaAlimentariaSeleccionadas.' + preferencia)"
                                       [id]="'preferenciaAlimentaria-' + preferencia"
                                       [name]="'preferenciaAlimentaria-' + preferencia"

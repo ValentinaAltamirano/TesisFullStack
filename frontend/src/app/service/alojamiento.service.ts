@@ -75,7 +75,7 @@ getAlojamientoPorIdEmpresario(): Observable<any> {
 }
 
 eliminarEstablecimiento(idEstablecimiento: number): Observable<void> {
-  const url = `${this.url}gastronomias/${idEstablecimiento}`; 
+  const url = `${this.url}alojamientos/${idEstablecimiento}`; 
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`

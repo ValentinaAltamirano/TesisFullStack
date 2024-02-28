@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@ang
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../service/auth.service';
-import { AlojamientoService } from '../service/alojamiento.service';
 import { ActivatedRoute } from '@angular/router';
 import { GastronomiaService } from '../service/gastronomia.service';
 

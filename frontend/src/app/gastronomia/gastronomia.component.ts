@@ -33,41 +33,35 @@ export class GastronomiaComponent {
 
     }
 
+    ngOnInit() {
+      this.obtenerGastronomias();
+    }
   
-  ngOnInit() {
-
-    this.gastronomiaService.getTodosGastronomia().subscribe(
-      (data) => {
-        this.gastronomias = data;
-        console.log(this.gastronomias)
-    
-        const observables = this.gastronomias.map(gastronomia => {
-          const establecimientoId = gastronomia.codEstablecimiento;
-          return this.gastronomiaService.obtenerImagenesGastronomia(establecimientoId);
-        });
-
-        forkJoin(observables).subscribe(
-          (imagenesArrays) => {
-    
-            // Ahora imagenesArrays contiene un array de imágenes para cada alojamiento
-    
-            // Puedes obtener la primera imagen de cada array
-            imagenesArrays.forEach((imagenesArray, index) => {
-              // Agregar las imágenes al array de imágenes del alojamiento correspondiente
-              this.gastronomias[index].imagenesGastronomia = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
-              
-            });
-            
-          },
-          (error) => {
-            console.error('Error al obtener imágenes del local gastronomico', error);
-          }
-        );
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-
+    obtenerGastronomias() {
+      this.gastronomiaService.getTodosGastronomia().subscribe(
+        (data) => {
+          this.gastronomias = data;
+          console.log(this.gastronomias);
+  
+          const observables = this.gastronomias.map(gastronomia => {
+            const establecimientoId = gastronomia.codEstablecimiento;
+            return this.gastronomiaService.obtenerImagenesGastronomia(establecimientoId);
+          });
+  
+          forkJoin(observables).subscribe(
+            (imagenesArrays) => {
+              imagenesArrays.forEach((imagenesArray, index) => {
+                this.gastronomias[index].imagenesGastronomia = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
+              });
+            },
+            (error) => {
+              console.error('Error al obtener imágenes del local gastronómico', error);
+            }
+          );
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
   }
-}

@@ -19,6 +19,8 @@ import { EditarAlojamientoComponent } from './editar-alojamiento/editar-alojamie
 import { DetalleGastronomiaComponent } from './detalle-gastronomia/detalle-gastronomia.component';
 import { RegistroTuristaComponent } from './registro-turista/registro-turista.component';
 import { EditarGastronomiaComponent } from './editar-gastronomia/editar-gastronomia.component';
+import { DetalleComercioComponent } from './detalle-comercio/detalle-comercio.component';
+import { EditarComercioComponent } from './editar-comercio/editar-comercio.component';
 
 const routes: Routes = [
   {path:'', component: InicioComponent},
@@ -36,8 +38,10 @@ const routes: Routes = [
   {path: 'misEstablecimiento', component: MisEstablecimientosComponent, canActivate: [AuthService] },
   { path: 'detalle-alojamiento/:id', component: DetalleAlojamientoComponent },
   { path: 'editar-alojamiento/:id', component: EditarAlojamientoComponent, canActivate: [AuthService] },
-  { path: 'detalle-gastronomia/:id', component: DetalleGastronomiaComponent, canActivate: [AuthService] },
+  { path: 'detalle-gastronomia/:id', component: DetalleGastronomiaComponent },
   { path: 'editar-gastronomia/:id', component: EditarGastronomiaComponent, canActivate: [AuthService] },
+  { path: 'detalle-comercio/:id', component: DetalleComercioComponent },
+  { path: 'editar-comercio/:id', component: EditarComercioComponent, canActivate: [AuthService] },
   {path: '**', component: ErrorComponent}
 ];
 
