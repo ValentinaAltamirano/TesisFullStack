@@ -31,6 +31,9 @@ import { RegistroTuristaComponent } from './registro-turista/registro-turista.co
 import { EditarGastronomiaComponent } from './editar-gastronomia/editar-gastronomia.component';
 import { EditarComercioComponent } from './editar-comercio/editar-comercio.component';
 import { DetalleComercioComponent } from './detalle-comercio/detalle-comercio.component';
+import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
+import { CanActivateEmpresario } from './service/can-activate-empresario.guard';
+import { canActivateTuristaGuard } from './service/can-activate-turista.guard';
 
 const appRoutes: Routes=[];
 
@@ -58,7 +61,8 @@ const appRoutes: Routes=[];
     RegistroTuristaComponent,
     EditarGastronomiaComponent,
     EditarComercioComponent,
-    DetalleComercioComponent
+    DetalleComercioComponent,
+    MiPerfilComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +74,9 @@ const appRoutes: Routes=[];
     ReactiveFormsModule,
     NgxDropzoneModule
   ],
-  providers: [CookieService],
+  providers: [CookieService, 
+    CanActivateEmpresario,
+    canActivateTuristaGuard,],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

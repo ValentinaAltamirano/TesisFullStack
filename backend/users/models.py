@@ -151,25 +151,29 @@ class Comercio(Establecimiento):
 
 # Define el modelo Comentario
 
+
+
+# Define el modelo Turista
+class ImagenPerfil(models.Model):
+    codImagenPerfil = models.AutoField(primary_key=True)
+    imagen = models.ImageField(upload_to='imagenes_perfil/')
+    
+class Turista(models.Model):
+    codTurista = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE) 
+    codImagenPerfil = models.OneToOneField(ImagenPerfil, on_delete=models.CASCADE, default = 1) 
+    def __str__(self):
+        return f"Turista {self.user.username} - {self.codTurista}"
+
 class Comentario(models.Model):
     codComentario = models.AutoField(primary_key=True)
     comentario = models.TextField(max_length=500)
     calificacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rango de calificación de 1 a 5 estrellas
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)  # Relación con Establecimiento
-    turista = models.ForeignKey('Turista', on_delete=models.CASCADE, related_name='comentarios_turista')  # Relación con Turista
+    turista = models.ForeignKey(Turista, on_delete=models.CASCADE, related_name='comentarios_turista')  # Relación con Turista
 
     def __str__(self):
         return f"Comentario #{self.codComentario}"
 
-# Define el modelo Turista
-class Turista(models.Model):
-    codTurista = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    comentarios = models.ManyToManyField(Comentario, blank=True, related_name='turista_comentarios')  # Relación con Comentarios
-
-    def __str__(self):
-        return f"Turista {self.user.username} - {self.codTurista}"
-
-
-
-
+    
+       

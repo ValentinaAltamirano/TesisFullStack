@@ -53,7 +53,9 @@ router_user.register(r'', views_empresario.EmpresarioViewSet, basename='empresar
 # Define el router para las vistas del turista
 router_turista = routers.DefaultRouter()
 router_turista.register(r'', views_turista.TuristaViewSet, basename='turistas')
-router_turista.register(r'comentario', views_turista.ComentarioViewSet)
+
+router_imagenesPefil = routers.DefaultRouter()
+router_imagenesPefil.register(r'', views_turista.ImagenPerfilViewSet, basename='imagenPerfil')
 
 
 # Lista de URL conf para las vistas de la aplicación
@@ -84,6 +86,8 @@ urlpatterns = [
     path('imagenesAlojamiento/<int:alojamiento_id>/', ImagenAlojamientoCreateView.as_view(), name='imagenes_alojamiento'),
     path('imagenesGastronomia/<int:establecimiento_id>/', ImagenGastronomiaCreateView.as_view(), name='setImagenesGastronomia'),
     path('imagenesComercios/<int:establecimiento_id>/', ImagenComercioCreateView.as_view(), name='setImagenesComercio'),
+    
+    path('imagenesPerfil/', include(router_imagenesPefil.urls)),
 ]
 
 # Si el modo DEBUG está activado, sirve las rutas para los archivos multimedia

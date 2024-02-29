@@ -61,6 +61,31 @@ export class RegistroTuristaComponent {
   }
   
   submitForm() {
+    // Validar formulario
+    if (this.turistaForm.valid) {
+      // Enviar datos al servicio de autenticación
+      this.authService.registrarTurista(this.turistaForm.value).subscribe(
+        (response: any) => {
+          Swal.fire({
+            title: "Registro de turista exitoso",
+            icon: "success",
+            confirmButtonText: "OK"
+          }).then((result) => {
+            this.router.navigate(['/inicioSesion']);
+          });
+        },
+        (error) => {
+          // Manejar el error, mostrar mensajes de error apropiados al usuario
+          console.error(error);
+          // Ejemplo de cómo manejar un error específico
+          if (error.error && error.error.error === 'El nombre de usuario ya está en uso') {
+            this.turistaForm.get('username')?.setErrors({ duplicateUsername: true });
+          } else if (error.error && error.error.error === 'El correo electrónico ya está en uso') {
+            this.turistaForm.get('email')?.setErrors({ duplicateEmail: true });
+          }
+        }
+      );
+    }
   }
 
 }

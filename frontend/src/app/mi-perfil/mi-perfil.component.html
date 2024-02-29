@@ -1,0 +1,108 @@
+<app-navbar></app-navbar>
+
+<div class="bg-gray-50 px-6 py-14">
+    
+  <div class="container max-w-screen-sm mx-auto shadow dark:border p-10">
+        <form [formGroup]="perfilForm">
+            <div class="space-y-12">
+              <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">Mi Perfil</h2>
+          
+                <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 place-content-center">
+
+                  <div class="sm:col-span-4">
+                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Nombre de usuario</label>
+                    <div class="mt-2">
+                      <input type="text" name="username" id="username" autocomplete="username" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="username" formControlName="username" [readonly]="!editando"  >
+                      <div *ngIf="perfilForm.get('username')?.hasError('required') && perfilForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre de usuario es obligatorio.
+                      </div>
+                      <div *ngIf="perfilForm.get('username')?.hasError('pattern') && perfilForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre de usuario no puede contener espacios ni símbolos.
+                      </div>
+                      <div *ngIf="perfilForm.get('username')?.hasError('duplicateUsername')"  class="text-red-500 text-sm">
+                        El nombre de usuario ya está en uso.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="sm:col-span-4">
+                    <label for="nombre" class="block text-sm font-medium leading-6 text-gray-900">Nombre Responsable</label>
+                    <div class="mt-2">
+                      <input type="text" name="nombre" id="nombre" autocomplete="nombre" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="nombre" formControlName="nombre" [readonly]="!editando">
+                      <div *ngIf="perfilForm.get('nombre')?.hasError('required') && perfilForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre del reponsable es obligatorio.
+                    </div>
+                    <div *ngIf="perfilForm.get('nombre')?.hasError('pattern') && perfilForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre del reponsable no puede contener símbolos.
+                     </div>
+                    </div>
+                  </div>
+          
+                  <div class="sm:col-span-4">
+                    <label for="apellido" class="block text-sm font-medium leading-6 text-gray-900">Apellido Responsable</label>
+                    <div class="mt-2">
+                      <input type="text" name="apellido" id="apellido" autocomplete="apellido" class="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="apellido" formControlName="apellido" [readonly]="!editando"  >
+                      <div *ngIf="perfilForm.get('apellido')?.hasError('required') && perfilForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El apellido del reponsable es obligatorio.
+                      </div>
+                      <div *ngIf="perfilForm.get('apellido')?.hasError('pattern') && perfilForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
+                          El apellido del reponsable no puede contener símbolos.
+                      </div>
+                    </div>
+                  </div>
+          
+          
+                  <div class="sm:col-span-4">
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                    <div class="mt-2">
+                      <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="email" formControlName="email" [readonly]="!editando"  >
+                      <div *ngIf="perfilForm.get('email')?.hasError('required') && perfilForm.get('email')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El email es obligatorio.
+                      </div>
+                      <div *ngIf="perfilForm.get('email')?.hasError('email') && perfilForm.get('email')?.touched" class="error-message"  class="text-red-500 text-sm">
+                          El formato del correo electrónico no es válido.
+                      </div>
+                      <div *ngIf="perfilForm.get('email')?.hasError('duplicateEmail')" class="text-red-500 text-sm">
+                          El correo electrónico ya está en uso.
+                        </div>
+                    </div>
+                  </div>
+                  
+                  <div class="sm:col-span-4">
+                    <label for="imagenPefil" class="block text-sm font-medium leading-6 text-gray-900">Icono Perfil</label>
+                    <img class="w-30 h-30 p-2 rounded-full" [src]=" (imagenSeleccionada || baseUrl + imagenPerfil)" />
+                  </div>
+
+                  
+                  <!-- Galeria de iconos -->
+
+                  <div *ngIf="editando" class="sm:col-span-4">
+                    <section class="flex">
+                      <div class="flex flex-wrap flex-row">
+                        <div class="flex flex-wrap flex-row">
+                          <div *ngFor="let imagen of imagenesPerfil; let i = index" (click)="selectImage(imagen)" [class.border-blue-500]="imagen === imagenSeleccionada">
+                            <img class="w-30 h-30 p-2 rounded-full border-2 border-transparent transition duration-300 ease-in-out hover:border-gray-800 cursor-pointer" [src]="imagen.imagen" alt="Imagen del perfil">
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+
+                </div>
+              </div>
+          
+            </div>
+          
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+              <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="volverAlInicio()">Volver</button>
+              <button *ngIf="!editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="toggleEdicion()">Editar</button>
+              <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="guardarCambios()">Guardar</button>
+              <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="cancelarEdicion()">Cancelar</button>        
+    </div>
+          </form>
+  </div>
+    
+</div>
+
+  <app-footer></app-footer>

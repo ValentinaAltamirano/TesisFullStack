@@ -2,18 +2,21 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
-import { catchError, map } from 'rxjs/operators';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {  map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   
   private url: string = 'http://127.0.0.1:8000/api/'
   tokenCookieName = 'access_token';
-
+  groupEmpresario: any;
+  groupTurista: any;
+  
   constructor(private http: HttpClient, 
     private cookieService: CookieService,
     private router: Router) {
@@ -21,6 +24,10 @@ export class AuthService {
 
   registrarEmpresario(data: any): Observable<any> {
     return this.http.post(this.url + 'empresarios/', data);
+  }
+
+  registrarTurista(data: any): Observable<any> {
+    return this.http.post(this.url + 'turistas/', data);
   }
 
   login(credentials: { username: string; password: string }): Observable<any> {
@@ -35,12 +42,55 @@ export class AuthService {
     return this.cookieService.get(this.tokenCookieName);
   }
 
-  canActivate(): boolean {
-    if (this.isAuthenticated()) {
-      return true;  // Permitir el acceso si el usuario está autenticado
-    } else {
-      // Redirigir a la página de inicio de sesión si el usuario no está autenticado
-      this.router.navigate(['/inicioSesion']);
+  obtenerGrupos() {
+    this.obtenerDatosEmpresario().subscribe(
+      (userInfoEmpresario: any) => {
+        
+        this.groupEmpresario = userInfoEmpresario.groups;
+      }
+    );
+  
+    
+  }
+
+  // Función para verificar si el usuario es un empresario
+  async canActivateEmpresario(): Promise<boolean> {
+    try {
+      const zoneAwarePromise: any = await this.obtenerDatosEmpresario().toPromise();
+  
+      // Verifica la estructura del objeto resuelto
+      const userInfoEmpresario: any = zoneAwarePromise;
+  
+      // Verifica que userInfoTurista.groups sea un array
+      if (Array.isArray(userInfoEmpresario.groups) && userInfoEmpresario.groups.includes('Empresario') && this.isAuthenticated()){
+        return true;
+      } else {
+        return false;
+      }
+      
+    } catch (error) {
+      console.error('Error al obtener datos del Empresario:', error);
+      return false;
+    }
+  }
+
+  // Función para verificar si el usuario es un turista
+  async canActivateTurista(): Promise<boolean> {
+    try {
+      const zoneAwarePromise: any = await this.obtenerDatosTurista().toPromise();
+  
+      // Verifica la estructura del objeto resuelto
+      const userInfoTurista: any = zoneAwarePromise;
+  
+      // Verifica que userInfoTurista.groups sea un array
+      if (Array.isArray(userInfoTurista.groups) && userInfoTurista.groups.includes('Turista') && this.isAuthenticated()){
+        return true;
+      } else {
+        return false;
+      }
+      
+    } catch (error) {
+      console.error('Error al obtener datos del turista:', error);
       return false;
     }
   }
@@ -57,8 +107,7 @@ export class AuthService {
   }
 
   obtenerDatosEmpresario(): Observable<any> {
-    
-    const userInfoUrl = `${this.url}empresarios/obtenerDatos/`;
+    const userInfoUrl = `${this.url}empresarios/obtenerDatos`;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.getTokenFromCookie()}`
@@ -75,6 +124,36 @@ export class AuthService {
     });
 
     return this.http.put(url, datos, { headers });
+  }
+
+  obtenerDatosTurista(): Observable<any> {
+    const userInfoUrl = `${this.url}turistas/obtenerDatos`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+  
+    return this.http.get(userInfoUrl, { headers });
+  }
+
+  actualizarDatosTurista(datos: any): Observable<any> {
+    const url = `${this.url}turistas/actualizarDatos/`;
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+
+    return this.http.put(url, datos, { headers });
+  }
+ 
+  obtenerIconoPerfil(): Observable<any> {
+    const iconoPerfil = `${this.url}imagenesPerfil/`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+  
+    return this.http.get(iconoPerfil, { headers });
   }
 
 

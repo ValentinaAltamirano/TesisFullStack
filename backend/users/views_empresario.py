@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from django.contrib.auth.models import Group
 from rest_framework.decorators import action
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group
 
 class EmpresarioViewSet(viewsets.ModelViewSet):
     queryset = Empresario.objects.all()
@@ -58,14 +58,16 @@ class EmpresarioViewSet(viewsets.ModelViewSet):
             'id': empresario.idEmpresario,
             'razonSocial': empresario.razonSocial,
             'descripcion': empresario.descripcion,
-            'telefono': empresario.telefono
+            'telefono': empresario.telefono,
         }
         user = request.user  # No necesitas obtener el objeto User de nuevo, ya lo tienes en request.user
+        group_names = list(user.groups.values_list('name', flat=True))
         data_user = {
             'nombre': user.first_name,
             'apellido': user.last_name,
             'email': user.email,
-            'username': user.username
+            'username': user.username,
+            'groups': group_names,
         }
         # Combina los datos del empresario y del usuario en un solo diccionario
         data = {**data_empresario, **data_user}

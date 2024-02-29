@@ -20,7 +20,10 @@ import { DetalleGastronomiaComponent } from './detalle-gastronomia/detalle-gastr
 import { RegistroTuristaComponent } from './registro-turista/registro-turista.component';
 import { EditarGastronomiaComponent } from './editar-gastronomia/editar-gastronomia.component';
 import { DetalleComercioComponent } from './detalle-comercio/detalle-comercio.component';
-import { EditarComercioComponent } from './editar-comercio/editar-comercio.component';
+import { EditarComercioComponent } from './editar-comercio/editar-comercio.component'; 
+import { canActivateTuristaGuard } from './service/can-activate-turista.guard';
+import { CanActivateEmpresario } from './service/can-activate-empresario.guard';
+import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 
 const routes: Routes = [
   {path:'', component: InicioComponent},
@@ -31,17 +34,18 @@ const routes: Routes = [
   {path: 'registrarse', component: RegistrarseComponent},
   {path: 'registroEmpresario', component: RegistroEmpresarioComponent},
   {path: 'registroTurista', component: RegistroTuristaComponent},
-  {path: 'registroAlojamiento', component: RegistroAlojamientoComponent, canActivate: [AuthService]},
-  {path: 'registroGastronomia', component: RegistroGastronomiaComponent, canActivate: [AuthService]},
-  {path: 'registroComercio', component: RegistroComercioComponent, canActivate: [AuthService]},
-  {path: 'perfil', component: PerfilComponent, canActivate: [AuthService] },
-  {path: 'misEstablecimiento', component: MisEstablecimientosComponent, canActivate: [AuthService] },
+  {path: 'registroAlojamiento', component: RegistroAlojamientoComponent, canActivate: [CanActivateEmpresario]},
+  {path: 'registroGastronomia', component: RegistroGastronomiaComponent, canActivate: [ CanActivateEmpresario]},
+  {path: 'registroComercio', component: RegistroComercioComponent, canActivate: [ CanActivateEmpresario]},
+  {path: 'perfil', component: PerfilComponent, canActivate: [ CanActivateEmpresario] },
+  {path: 'mi-perfil', component: MiPerfilComponent, canActivate: [canActivateTuristaGuard]},
+  {path: 'misEstablecimiento', component: MisEstablecimientosComponent, canActivate: [ CanActivateEmpresario] },
   { path: 'detalle-alojamiento/:id', component: DetalleAlojamientoComponent },
-  { path: 'editar-alojamiento/:id', component: EditarAlojamientoComponent, canActivate: [AuthService] },
+  { path: 'editar-alojamiento/:id', component: EditarAlojamientoComponent, canActivate: [ CanActivateEmpresario] },
   { path: 'detalle-gastronomia/:id', component: DetalleGastronomiaComponent },
-  { path: 'editar-gastronomia/:id', component: EditarGastronomiaComponent, canActivate: [AuthService] },
+  { path: 'editar-gastronomia/:id', component: EditarGastronomiaComponent, canActivate: [ CanActivateEmpresario] },
   { path: 'detalle-comercio/:id', component: DetalleComercioComponent },
-  { path: 'editar-comercio/:id', component: EditarComercioComponent, canActivate: [AuthService] },
+  { path: 'editar-comercio/:id', component: EditarComercioComponent, canActivate: [ CanActivateEmpresario] },
   {path: '**', component: ErrorComponent}
 ];
 

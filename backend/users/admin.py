@@ -32,3 +32,8 @@ admin.site.register(Ciudad)
 
 admin.site.register(Comercio)
 admin.site.register(TipoComercio)
+
+#Turista
+admin.site.register(ImagenPerfil)
+admin.site.register(Turista)
+admin.site.register(Comentario)
