@@ -105,11 +105,11 @@
           
           <div class="lg:col-span-4">
             <!-- Alojamientos -->
-            <div class="flex  max-w-6xl">
-              <div *ngFor="let alojamiento of getAlojamientosFiltrados()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-10">
+            <div class="flex  max-w-6xl flex-wrap justify-start">
+              <div *ngFor="let alojamiento of getAlojamientosFiltrados()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-10 mb-6">
                 
                 
-                <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
+                <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64 ">
                   <img *ngIf="alojamiento.imagenesAlojamientos && alojamiento.imagenesAlojamientos.length > 0"
                   [src]="baseUrl + alojamiento.imagenesAlojamientos[0].imagen"
                   alt="Imagen del establecimiento" class="w-full h-full object-cover">

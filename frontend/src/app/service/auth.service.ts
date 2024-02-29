@@ -156,5 +156,42 @@ export class AuthService {
     return this.http.get(iconoPerfil, { headers });
   }
 
+  registrarComentario(data: any): Observable<any> {
+    const url = `${this.url}comentarios/`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+    
+    // Pasa los encabezados como parte de las opciones, no como parte del cuerpo
+    const options = { headers: headers };
+  
+    return this.http.post<void>(url, data, options);
+  }
+
+  obtenerComentariosPorIdEstablecimiento(establecimientoId: number): Observable<any> {
+    const url = `${this.url}comentarios/comentariosEstablecimiento/?establecimiento_id=${establecimientoId}`;
+    return this.http.get(url);
+  }
+
+  editarComentario(datos: any, comentarioId: number): Observable<any> {
+    const url = `${this.url}comentarios/${comentarioId}/`;
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+
+    return this.http.put(url, datos, { headers });
+  }
+
+  eliminarComentario(idComentario: number): Observable<void> {
+    const url = `${this.url}comentarios/${idComentario}`; 
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getTokenFromCookie()}`
+    });
+    return this.http.delete<void>(url, { headers });
+  }
+     
 
 }
