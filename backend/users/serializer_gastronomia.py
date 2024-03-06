@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from .serializer_establecimientos import *
 
 
 #ultimo cambio para solucionar el error del metododepago en el view

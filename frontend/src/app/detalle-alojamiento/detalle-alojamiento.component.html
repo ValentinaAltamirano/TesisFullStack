@@ -174,10 +174,10 @@
           <div class="mt-4" *ngIf="!comentarios || comentarios.length == 0">
             <p>No hay comentarios disponibles.</p>
           </div>
-      </section>
+        </section>
 
       <!-- Reseña Formulario -->
-      <section *ngIf="esTurista()" class="p-4 m-4 sm:px-6 border-solid border-2 rounded ">
+        <section *ngIf="esTurista()" class="p-4 m-4 sm:px-6 border-solid border-2 rounded ">
         <h3 class="text-2xl font-bold tracking-tight text-gray-900 border-b-2 pb-4 mb-4">Cuéntanos tu experiencia</h3>
 
         <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
@@ -213,7 +213,9 @@
           <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Enviar</button>
         </form>
 
-      </section>
+        </section>
+
+
     </div>
 
 </div>

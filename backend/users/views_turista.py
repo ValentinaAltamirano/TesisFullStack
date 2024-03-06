@@ -28,9 +28,6 @@ class TuristaViewSet(viewsets.ModelViewSet):
             email = data.get('email', '')
             first_name = data.get('nombre', '')
             last_name = data.get('apellido', '')
-            razon_social = data.get('razonSocial', '')
-            descripcion = data.get('descripcion', '')
-            telefono = data.get('telefono', '')
             
             # Verificar si el nombre de usuario ya existe
             if User.objects.filter(username=username).exists():
@@ -67,6 +64,7 @@ class TuristaViewSet(viewsets.ModelViewSet):
             'username': request.user.username,
             'groups': list(request.user.groups.values_list('name', flat=True)),
             'imagenPefil': turista.codImagenPerfil.imagen.url,  # Assuming imagen is a FileField
+            'codTurista': turista.codTurista
         }
 
         # Check if the request wants the image
@@ -136,4 +134,64 @@ class ImagenPerfilViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+       
+class ComentarioViewSet(viewsets.ModelViewSet):
+    queryset = Comentario.objects.all()
+    serializer_class = ComentarioSerializer
+    
+    
+    @permission_classes([IsAuthenticated]) 
+    def create(self, request, *args, **kwargs):
+            data = request.data
+            print(data)
+            titulo = data.get('titulo', '')
+            comentario = data.get('comentario', '')
+            calificacion = data.get('calificacion', '')
+            
+            id_establecimiento = data.get('establecimiento', '')
+            establecimiento = Establecimiento.objects.get(codEstablecimiento=id_establecimiento)
+            
+            id_turista = data.get('turista', '')
+            turista = Turista.objects.get(codTurista=id_turista)
+            
+            # Crear el usuario
+            comentario = Comentario.objects.create(
+            titulo=titulo,
+            comentario=comentario,
+            calificacion=calificacion,
+            establecimiento=establecimiento,
+            turista=turista)
         
+           
+            return JsonResponse({'message': 'Turista creado exitosamente'}, status=201)
+    
+    @action(detail=False, methods=['GET'])
+    def comentariosEstablecimiento(self, request, *args, **kwargs):
+        id_establecimiento = request.query_params.get('establecimiento_id', None)
+        
+        if id_establecimiento is not None:
+            comentarios = Comentario.objects.filter(establecimiento__codEstablecimiento=id_establecimiento)
+            serializer = self.get_serializer(comentarios, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'message': 'Se requiere el parámetro establecimiento_id'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @permission_classes([IsAuthenticated]) 
+    def update(self, request, *args, **kwargs):
+        comentario_id = kwargs.get('pk')
+        if comentario_id is not None:
+            comentario = self.get_object()
+            data = request.data
+            print(data)
+
+            # Actualizar los campos del comentario si están presentes en los datos recibidos
+            comentario.titulo = data.get('titulo', comentario.titulo)
+            comentario.comentario = data.get('comentario', comentario.comentario)
+            comentario.calificacion = data.get('calificacion', comentario.calificacion)
+
+            # Guardar los cambios
+            comentario.save()
+
+            return Response({'message': 'Comentario actualizado exitosamente'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Se requiere el parámetro pk para actualizar el comentario'}, status=status.HTTP_400_BAD_REQUEST)

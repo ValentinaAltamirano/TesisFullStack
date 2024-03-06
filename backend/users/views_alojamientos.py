@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 import json
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from django.core.files.temp import NamedTemporaryFile
 
 class TipoEstablecimientoViewSet(viewsets.ModelViewSet):
     queryset = TipoEstablecimiento.objects.all()
@@ -150,6 +151,53 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print('Error al obtener el alojamiento por ID del empresario:', e)
             return JsonResponse({'error': 'Error al obtener el alojamiento.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    @action(detail=False, methods=['PUT'])
+    @permission_classes([IsAuthenticated])
+    def actualizarDatos(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            
+            alojamiento_id = data.get('codEstablecimiento', '')
+            
+            # Obtén la instancia de Alojamientos
+            alojamiento = Alojamientos.objects.get(codEstablecimiento=alojamiento_id)
+
+            # Actualiza los campos necesarios
+            alojamiento.nombre = data.get('nombre', alojamiento.nombre)
+            alojamiento.calle = data.get('calle', alojamiento.calle)
+            alojamiento.altura = data.get('altura', alojamiento.altura)
+            
+            #Creo la instancia de TipoEstablecimiento
+            alojamiento.tipo_establecimiento_id = int(data.get('tipoEstablecimiento', ''))
+            alojamiento.tipoEstablecimiento = TipoEstablecimiento.objects.get(codTipoEstablecimiento=alojamiento.tipo_establecimiento_id)
+            
+            alojamiento.descripcion = data.get('descripcion', '')
+            alojamiento.telefono = data.get('telefono', '')
+            
+            alojamiento.web = data.get('web', '')
+            
+            nombres_metodos_pago = request.data.get('metodos_de_pago', [])
+            ids_metodos_pago = MetodoDePago.objects.filter(nombre__in=nombres_metodos_pago).values_list('codMetodoDePago', flat=True)
+            
+            #TipoServicio
+            nombres_servicios = request.data.get('servicios', [])
+            ids_servicios = TipoServicio.objects.filter(nombre__in=nombres_servicios).values_list('codTipoServicio', flat=True)
+            
+            # Guarda los cambios
+            alojamiento.save()
+            alojamiento.metodos_de_pago.set(ids_metodos_pago)
+            alojamiento.servicios.set(ids_servicios)
+            
+
+            return JsonResponse({'mensaje': 'Alojamiento actualizado exitosamente'}, status=200)
+
+        except Alojamientos.DoesNotExist:
+            return JsonResponse({'error': 'No se encontró el alojamiento.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            print('Error en la actualización del alojamiento:', e)
+            return JsonResponse({'error': 'Error en la actualización del alojamiento'}, status=status.HTTP_400_BAD_REQUEST)
 
 class ImagenAlojamientoCreateView(APIView):
     queryset = Imagen.objects.all()
@@ -178,6 +226,49 @@ class ImagenAlojamientoCreateView(APIView):
         except Exception as e:
             print('Error en la carga de imágenes:', e)
             return Response({'error': 'Error en la carga de imágenes'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, alojamiento_id):
+        try:
+            alojamiento = Establecimiento.objects.get(codEstablecimiento=alojamiento_id)
+
+            # Accede a las imágenes en la clave 'imagenes'
+            nuevas_imagenes = request.FILES.getlist('imagenes')
+            
+            # Obtén las imágenes existentes del alojamiento
+            imagenes_existentes = Imagen.objects.filter(establecimiento=alojamiento)
+
+            # Lista para almacenar los objetos File de las nuevas imágenes
+            nuevas_imagenes_procesadas = []
+
+            # Recorrer las nuevas imágenes y cargarlas
+            for nueva_imagen in nuevas_imagenes:
+                nuevas_imagenes_procesadas.append(nueva_imagen)
+
+            # Agregar las nuevas imágenes que no estaban presentes
+            for nueva_imagen in nuevas_imagenes_procesadas:
+                if not imagenes_existentes.filter(imagen=nueva_imagen).exists():
+                    Imagen.objects.create(establecimiento=alojamiento, imagen=nueva_imagen)
+
+            # Eliminar imágenes marcadas para eliminación
+           
+            imagenes_a_eliminar_ids = request.data.getlist('imagenesEliminadas', [])
+
+            # Asegúrate de que haya algún valor en la lista antes de intentar acceder al primer elemento
+            if imagenes_a_eliminar_ids:
+                # Extrae el primer elemento del array (ya que parece que solo estás pasando un valor)
+                codImagen = imagenes_a_eliminar_ids[0]
+
+                # Ahora puedes utilizar codImagen como un número
+                imagenes_a_eliminar = Imagen.objects.filter(codImagen=codImagen)
+                imagenes_a_eliminar.delete()
+
+            return Response({'mensaje': 'Imágenes actualizadas exitosamente'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print('Error en la actualización de imágenes:', e)
+            return Response({'error': 'Error en la actualización de imágenes'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 
 class PaisViewSet(viewsets.ModelViewSet):
     queryset = Pais.objects.all()

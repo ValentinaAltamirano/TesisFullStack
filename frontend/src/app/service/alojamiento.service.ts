@@ -49,6 +49,10 @@ export class AlojamientoService {
     return this.http.post<any>(`${this.url}imagenesAlojamiento/${alojamientoId}/`, formData);
   }
 
+  actualizarImagenes(formData: FormData, alojamientoId: number): Observable<any> {
+    return this.http.put<any>(`${this.url}imagenesAlojamiento/${alojamientoId}/`, formData);
+  }
+
   getTodosAlojamientos(): Observable<any> {
     return this.http.get(`${this.url}alojamientos/`);
   }
@@ -72,6 +76,16 @@ getAlojamientoPorIdEmpresario(): Observable<any> {
   });
 
   return this.http.get(url, { headers });
+}
+
+actualizarDatos(datos: any): Observable<any> {
+  const url = `${this.url}alojamientos/actualizarDatos/`;
+  const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
+  });
+
+  return this.http.put(url, datos, { headers });
 }
 
 eliminarEstablecimiento(idEstablecimiento: number): Observable<void> {

@@ -3,6 +3,7 @@ from .models import *
 from .serializer_establecimientos import *
 from .serializer_empresario import *
 
+
 class TipoServicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoServicio

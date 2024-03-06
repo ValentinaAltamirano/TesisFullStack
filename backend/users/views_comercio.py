@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+import json
 
 class MetodoDePagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoDePago.objects.all()
@@ -66,12 +67,12 @@ class ComercioViewSet(viewsets.ModelViewSet):
             # Datos comercio
             nombresTiposComercios = request.data.get('tipoComerciosSeleccionados', [])
             idsTiposComercios= TipoComercio.objects.filter(nombre__in=nombresTiposComercios).values_list('codTipoComercio', flat=True)
-            print('idsTiposComercios:', idsTiposComercios)
+            
             # Crear una instancia de comercio y establecer las relaciones con otros modelos
             comercio = Comercio.objects.create(empresario=empresario, nombre=nombre, calle=calle, altura = altura, codCiudad = codCiudad, tipoEstablecimiento = tipoEstablecimiento, descripcion = descripcion, telefono = telefono,  web = web)
             comercio.metodos_de_pago.set(idsMetodosDePago)
-            comercio.codTipoComercio.set(idsTiposComercios)# linea que agregue para solucionar el error de que solo 
-            print(comercio.codTipoComercio.set(idsTiposComercios))                                                # muestra el id, ahora muestra id y nombre de metodo de pago
+            comercio.codTipoComercio.set(idsTiposComercios)
+            # muestra el id, ahora muestra id y nombre de metodo de pago
             idEstablecimiento = comercio.codEstablecimiento
             
             return JsonResponse({'establecimientoId': idEstablecimiento, 'mensaje': 'Local Comercial creado exitosamente'}, status=200)
@@ -103,6 +104,49 @@ class ComercioViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print('Error al obtener el local comercial por ID del empresario:', e)
             return JsonResponse({'error': 'Error al obtener el local gastronomico.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['PUT'])
+    @permission_classes([IsAuthenticated])
+    def actualizarDatos(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            print(data)
+            
+            comercio_id = data.get('codEstablecimiento', '')
+            
+            # Obtén la instancia de Alojamientos
+            comercio = Comercio.objects.get(codEstablecimiento=comercio_id)
+
+            # Actualiza los campos necesarios
+            comercio.nombre = data.get('nombre', comercio.nombre)
+            comercio.calle = data.get('calle', comercio.calle)
+            comercio.altura = data.get('altura', comercio.altura)
+            
+            comercio.descripcion = data.get('descripcion', '')
+            comercio.telefono = data.get('telefono', '')
+            
+            comercio.web = data.get('web', '')
+            
+            nombres_metodos_pago = request.data.get('metodos_de_pago', [])
+            ids_metodos_pago = MetodoDePago.objects.filter(nombre__in=nombres_metodos_pago).values_list('codMetodoDePago', flat=True)
+            
+            # Datos comercio
+            nombresTiposComercios = request.data.get('codTipoComercio', [])
+            idsTiposComercios= TipoComercio.objects.filter(nombre__in=nombresTiposComercios).values_list('codTipoComercio', flat=True)
+            
+            # Guarda los cambios
+            comercio.save()
+            comercio.metodos_de_pago.set(ids_metodos_pago)
+            comercio.codTipoComercio.set(idsTiposComercios)
+
+            return JsonResponse({'mensaje': 'Alojamiento actualizado exitosamente'}, status=200)
+
+        except Alojamientos.DoesNotExist:
+            return JsonResponse({'error': 'No se encontró el alojamiento.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            print('Error en la actualización del alojamiento:', e)
+            return JsonResponse({'error': 'Error en la actualización del alojamiento'}, status=status.HTTP_400_BAD_REQUEST)
         
 class ImagenComercioCreateView(APIView):
     queryset = Imagen.objects.all()
@@ -131,3 +175,44 @@ class ImagenComercioCreateView(APIView):
         except Exception as e:
             print('Error en la carga de imágenes:', e)
             return Response({'error': 'Error en la carga de imágenes'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, establecimiento_id):
+        try:
+            comercio = Establecimiento.objects.get(codEstablecimiento=establecimiento_id)
+
+            # Accede a las imágenes en la clave 'imagenes'
+            nuevas_imagenes = request.FILES.getlist('imagenes')
+            
+            # Obtén las imágenes existentes del alojamiento
+            imagenes_existentes = Imagen.objects.filter(establecimiento=comercio)
+
+            # Lista para almacenar los objetos File de las nuevas imágenes
+            nuevas_imagenes_procesadas = []
+
+            # Recorrer las nuevas imágenes y cargarlas
+            for nueva_imagen in nuevas_imagenes:
+                nuevas_imagenes_procesadas.append(nueva_imagen)
+
+            # Agregar las nuevas imágenes que no estaban presentes
+            for nueva_imagen in nuevas_imagenes_procesadas:
+                if not imagenes_existentes.filter(imagen=nueva_imagen).exists():
+                    Imagen.objects.create(establecimiento=comercio, imagen=nueva_imagen)
+
+            # Eliminar imágenes marcadas para eliminación
+           
+            imagenes_a_eliminar_ids = request.data.getlist('imagenesEliminadas', [])
+
+            # Asegúrate de que haya algún valor en la lista antes de intentar acceder al primer elemento
+            if imagenes_a_eliminar_ids:
+                # Extrae el primer elemento del array (ya que parece que solo estás pasando un valor)
+                codImagen = imagenes_a_eliminar_ids[0]
+
+                # Ahora puedes utilizar codImagen como un número
+                imagenes_a_eliminar = Imagen.objects.filter(codImagen=codImagen)
+                imagenes_a_eliminar.delete()
+
+            return Response({'mensaje': 'Imágenes actualizadas exitosamente'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print('Error en la actualización de imágenes:', e)
+            return Response({'error': 'Error en la actualización de imágenes'}, status=status.HTTP_400_BAD_REQUEST)

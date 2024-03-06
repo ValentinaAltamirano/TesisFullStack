@@ -238,8 +238,7 @@ export class DetalleAlojamientoComponent {
             timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)
             timerProgressBar: true
           }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.timer) {
-              // Si el usuario no interactuó y el temporizador se agotó
+            if (result) {
               location.reload();
             }
           });;
@@ -253,9 +252,6 @@ export class DetalleAlojamientoComponent {
       }
     );
   }
-
-
-  
 
   eliminarComentario(comentario: any): void {
     // Verificar si el turista actual es el dueño del comentario

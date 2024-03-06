@@ -30,7 +30,7 @@ class MetodoDePagoSerializer(serializers.ModelSerializer):
 class ImagenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Imagen
-        fields = ['imagen']
+        fields = '__all__'
 
 class EstablecimientoSerializer(serializers.ModelSerializer):
     metodos_de_pago = MetodoDePagoSerializer(many=True)

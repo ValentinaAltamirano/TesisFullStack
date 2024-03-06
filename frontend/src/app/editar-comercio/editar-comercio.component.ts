@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../service/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { GastronomiaService } from '../service/gastronomia.service';
 import { ComercioService } from '../service/comercio.service';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-editar-comercio',
@@ -20,9 +20,12 @@ export class EditarComercioComponent {
   establecimientoId: number;
   comercios: any;
   imagenesComercio: any[] = [];
+  imagenesOriginales: any[] = [];
+  imagenesEliminadas: any[] = [];
   baseUrl = 'http://127.0.0.1:8000';
   editando = false;
   datosOriginales: any;
+  nuevasImagenes: any[] = [];
 
 
   constructor(
@@ -63,9 +66,32 @@ export class EditarComercioComponent {
       nombre: ['', Validators.required],
       telefono: ['', Validators.required],
       web: ['', Validators.required],
+      metodos_de_pago: this.fb.array([]),
+      imagenesEliminadas: this.fb.array([]),
 
       // Campos del gastronomia
       codTipoComercio: this.fb.array([]),
+    });
+
+    this.initTipoComercioFormArray();
+    this.initMetodosPagoFormArray();
+  }
+
+  initTipoComercioFormArray(): void {
+    const tipoComercioFormArray = this.comercioForm.get('codTipoComercio') as FormArray;
+  
+    this.tiposComercio.forEach((tipoComercio) => {
+      const isSelected = this.comercios && this.comercios.codTipoComercio.includes(tipoComercio.codTipoServicio);
+      tipoComercioFormArray.push(this.fb.control(isSelected));
+    });
+  }
+
+  initMetodosPagoFormArray(): void {
+    const metodosPagoFormArray = this.comercioForm.get('metodos_de_pago') as FormArray;
+  
+    this.tiposmetodosPago.forEach((metodoPago: { codMetodoDePago: number }) => {
+      const isSelected = this.comercios.metodos_de_pago.includes(metodoPago.codMetodoDePago);
+      metodosPagoFormArray.push(this.fb.control(isSelected));
     });
   }
 
@@ -151,17 +177,38 @@ export class EditarComercioComponent {
     return comercioSeleccionadosArray.at(index) as FormControl | undefined;
   }
 
-  toggleCheckbox(controlPath: string): void {
-    const [formArrayName, indexStr] = controlPath.split('.');
-    const index = parseInt(indexStr, 10);
+  toggleCheckbox(index: number, item: any, formControlName: string): void {
+    const formArray = this.comercioForm.get(formControlName) as FormArray;
   
-    const formArray = this.comercioForm.get(formArrayName) as FormArray;
+    if (!formArray) {
+      console.error(`FormArray ${formControlName} not found in the form.`);
+      return;
+    }
+  
+    // Ensure the FormArray has enough controls
+    while (formArray.length <= index) {
+      formArray.push(new FormControl(false)); // You can set the default value as needed
+    }
+  
     const control = formArray.at(index) as FormControl;
   
     if (control instanceof FormControl) {
       const isChecked = control.value;
+  
       control.setValue(!isChecked);
+    } else {
+      console.error(`Control at index ${index} in FormArray ${formControlName} is not a FormControl.`);
     }
+  }
+
+  getFormControl(formControlName: string, index: number): AbstractControl | null {
+    const formArray = this.comercioForm.get(formControlName) as FormArray;
+  
+    if (formArray && formArray.length > index) {
+      return formArray.at(index);
+    }
+  
+    return null;
   }
 
   toggleEdicion() {
@@ -172,6 +219,7 @@ export class EditarComercioComponent {
     this.comercioService.obtenerImagenesComercio(this.establecimientoId).subscribe(
       (data) => {
         this.imagenesComercio = data;
+        this.imagenesOriginales = [...data];
       },
       (error) => {
         console.error('Error al obtener imágenes:', error);
@@ -180,21 +228,43 @@ export class EditarComercioComponent {
   }
 
   eliminarImagen(index: number) {
-    // Lógica para eliminar la imagen del array
+    // Obtén el codImagen de la imagen que estás eliminando
+    const codImagen = this.imagenesComercio[index].codImagen;
+  
+    // Agrega el codImagen al FormArray 'imagenesEliminadas'
+    const imagenesEliminadasArray = this.comercioForm.get('imagenesEliminadas') as FormArray;
+    imagenesEliminadasArray.push(this.fb.control(codImagen));
+  
+    // Elimina la imagen del array 'imagenesAlojamiento'
     this.imagenesComercio.splice(index, 1);
   }
 
   agregarImagen(event: any) {
     const fileList: FileList = event.target.files;
-    
+  
     if (fileList.length > 0) {
       const nuevaImagen = {
-        imagen: fileList[0], // Guarda la referencia al archivo (puedes necesitar procesarla antes de almacenarla)
+        imagen: fileList[0],
         // Otras propiedades relacionadas con la imagen si es necesario
       };
   
-      this.imagenesComercio.push(nuevaImagen);
+      this.nuevasImagenes.push(nuevaImagen);
+  
+      
     }
+  }
+
+  getUrlFromImageObject(imagen: any): string {
+    if (imagen && imagen.imagen) {
+      // Crea una URL válida para la nueva imagen
+      return URL.createObjectURL(imagen.imagen);
+    }
+    // Si no hay imagen, puedes proporcionar una URL de imagen predeterminada o manejarlo según tus necesidades
+    return 'https://ruta.de.la.imagen.por.defecto/';
+  }
+
+  eliminarNuevaImagen(index: number): void {
+    this.nuevasImagenes.splice(index, 1);
   }
 
   cancelarEdicion() {
@@ -208,11 +278,100 @@ export class EditarComercioComponent {
       location.reload();
     }); 
   }
-
+  
   prevenirAperturaDesplegable(event: Event): void {
     if (!this.editando) {
       event.preventDefault();
       event.stopPropagation();
     }
+  }
+
+  convertirSaltosDeLineaEnBr(texto: string): string {
+    return texto.replace(/\n/g, '<br>');
+  }
+
+  guardarComercio(): void {
+    
+    const descripcionConvertida = this.convertirSaltosDeLineaEnBr(this.comercioForm.get('descripcion')?.value);
+    this.comercioForm.get('descripcion')?.setValue(descripcionConvertida);
+
+    if (this.comercioForm.value) {
+      console.log(this.comercioForm.value.metodos_de_pago)
+      const metodosDePagoSeleccionados = this.comercioForm.value.metodos_de_pago
+      .map((valor: boolean, index: number) => valor ? this.tiposmetodosPago[index] : null)
+      .filter((valor: any) => valor !== null);
+
+      
+      console.log(this.comercioForm.value.codTipoComercio)
+      const tiposComercioSeleccionados = this.comercioForm.value.codTipoComercio
+      .map((valor: boolean, index: number) => valor ? this.tiposComercio[index] : null)
+      .filter((valor: any) => valor !== null);
+
+
+    // Crear el objeto datosEnviar con los valores mapeados
+    const datosEnviar = {
+      ...this.comercioForm.value,
+      metodos_de_pago: metodosDePagoSeleccionados,
+      codTipoComercio: tiposComercioSeleccionados
+    };
+
+      this.comercioService.actualizarDatos(datosEnviar).subscribe(
+        (response: any) => { 
+          this.actualizarImagenes(this.establecimientoId);
+        },
+        (error) => {
+          // Manejar el error, mostrar mensajes de error apropiados al usuario
+          console.error(error);
+        }
+      );
+    }
+  }
+
+  actualizarImagenes(alojamientoId: number) {
+    // Accede a las imágenes directamente desde el FormGroup
+    const formData = new FormData();
+  
+    // Agregar imágenes existentes al FormData
+    this.imagenesOriginales.forEach(imagen => {
+      formData.append('imagenes', imagen.imagen);
+    });
+  
+    // Agregar nuevas imágenes al FormData
+    const nuevasImagenes = this.nuevasImagenes.map(imagen => imagen.imagen);
+    for (const nuevaImagen of nuevasImagenes) {
+      formData.append('imagenes', nuevaImagen);
+    }
+
+    // Agregar imágenes eliminadas al FormData
+    const imagenesEliminadasArray = this.comercioForm.get('imagenesEliminadas') as FormArray;
+
+    imagenesEliminadasArray.getRawValue().forEach((codImagen: any) => {
+      formData.append('imagenesEliminadas', codImagen);
+    });
+    
+  
+    // Envía las imágenes al servicio junto con el ID del alojamiento
+    this.comercioService.actualizarImagenes(formData, alojamientoId).subscribe(
+      (response: any) => {
+        Swal.fire({
+          title: "Datos actualizados correctamente!",
+          icon: "success",
+          confirmButtonText: "OK",
+          timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)
+          timerProgressBar: true
+        });
+        
+        // También puedes realizar otras acciones después de guardar correctamente
+      },
+      (error) => {
+        // Manejar el error, mostrar mensajes de error apropiados al usuario
+        console.error(error);
+      }
+    );
+  }
+  eliminarImagenesEliminadas(alojamientoId: number): void {
+    const idsImagenesAEliminar: number[] = this.imagenesComercio
+      .filter(actual => !this.imagenesOriginales.some(original => original.id === actual.id))
+      .map(imagen => imagen.id);
   }
 }

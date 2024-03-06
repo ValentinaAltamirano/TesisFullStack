@@ -99,6 +99,7 @@ class Alojamientos(Establecimiento):
     
     
 class Imagen(models.Model):
+    codImagen = models.AutoField(primary_key=True)
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name='imagenes',default=0)
     imagen = models.ImageField(upload_to='imagenes_establecimiento/')
 
@@ -167,7 +168,8 @@ class Turista(models.Model):
 
 class Comentario(models.Model):
     codComentario = models.AutoField(primary_key=True)
-    comentario = models.TextField(max_length=500)
+    titulo = models.TextField(max_length=20, default = '')
+    comentario = models.TextField(max_length=100)
     calificacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rango de calificación de 1 a 5 estrellas
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)  # Relación con Establecimiento
     turista = models.ForeignKey(Turista, on_delete=models.CASCADE, related_name='comentarios_turista')  # Relación con Turista

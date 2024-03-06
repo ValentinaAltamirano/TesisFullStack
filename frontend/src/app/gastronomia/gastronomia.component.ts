@@ -10,14 +10,13 @@ import { GastronomiaService } from '../service/gastronomia.service';
 })
 export class GastronomiaComponent {
   // https://www.tripadvisor.com.ar/FindRestaurants?geo=312774&broadened=false
-  tiposGastronomia = ['Restaurante', 'Bares y pubs', 'Cafe y te', 'Panaderia y confiteria'];
-  tiposComida = ['Desayuno', 'Brunch', 'Almuerzo', 'Cena']
-  tipoCocina = ['Parrilla', 'Pizzeria', 'Cafe', 'Comida rápida', 'Sushi', 'Saludable', 'Bar', 'Mexicana']
-  restricciones = ['Apto para vegetarianos', 'Opciones sin gluten', 'Opciones veganas']
-  servicios = ['Asiento', 'Servicio de mesa', 'Reserva', 'Sirve alchohol','Wi-fi gratis', 'Accesibilidad', 'Comida para llevar']
-  metodosDePago = ['Tarjeta de Credito', 'Tarjeta Debito', 'Efectivo', 'Transferencaia']
+  tiposGastronomia: any[] = [];
+  tiposComida: any[] = [];
+  preferenciaAlimentaria: any[] = [];
+  servicios: any[] = [];
+  metodosDePago: any[] = [];
 
-  
+   
   gastronomias: any[] = [];
   imagenes: any[] = [];
   establecimientoId: number = 0;
@@ -33,8 +32,85 @@ export class GastronomiaComponent {
 
     }
 
+    obtenerMetodosPago(): void {
+      this.gastronomiaService.obtenerMetodosDePago().subscribe(
+        (data) => {
+          this.metodosDePago = data;
+        },
+        (error) => {
+          console.error('Error al obtener tipos de categoria', error);
+          // Manejo de errores
+        }
+      );
+    }
+    
+    obtenerTiposGastronomia(): void {
+      this.gastronomiaService.obtenerTiposGastronomia().subscribe(
+        (data) => {
+          this.tiposGastronomia = data;
+        },
+        (error) => {
+          console.error('Error al obtener tipos de Gastronomía', error);
+          // Manejo de errores
+        }
+      );
+    }
+  
+    obtenerServicioGastronomia(): void {
+      this.gastronomiaService.obtenerServicioGastronomia().subscribe(
+        (data) => {
+          this.servicios = data;
+        },
+        (error) => {
+          console.error('Error al obtener tipos servicio de Gastronomía', error);
+          // Manejo de errores
+        }
+      );
+    }
+  
+    obtenerTipoComida(): void {
+      this.gastronomiaService.obtenerTipoComida().subscribe(
+        (data) => {
+          this.tiposComida = data;
+        },
+        (error) => {
+          console.error('Error al obtener tipos de comida', error);
+          // Manejo de errores
+        }
+      );
+    }
+  
+    obtenerPreferenciaAlimentaria(): void {
+      this.gastronomiaService.obtenerPreferenciaAlimentaria().subscribe(
+        (data) => {
+          this.preferenciaAlimentaria = data;
+        },
+        (error) => {
+          console.error('Error al obtener tipos de preferencia alimentaria', error);
+          // Manejo de errores
+        }
+      );
+    }
+  
+    obtenerMetodosDePago(): void {
+      this.gastronomiaService.obtenerMetodosDePago().subscribe(
+        (data) => {
+          this.metodosDePago = data;
+        },
+        (error) => {
+          console.error('Error al obtener métodos de pago', error);
+          // Manejo de errores
+        }
+      );
+    }
+    
     ngOnInit() {
       this.obtenerGastronomias();
+      this.obtenerTiposGastronomia();
+      this.obtenerServicioGastronomia();
+      this.obtenerTipoComida();
+      this.obtenerPreferenciaAlimentaria();
+      this.obtenerMetodosDePago();
     }
   
     obtenerGastronomias() {

@@ -54,6 +54,10 @@ router_user.register(r'', views_empresario.EmpresarioViewSet, basename='empresar
 router_turista = routers.DefaultRouter()
 router_turista.register(r'', views_turista.TuristaViewSet, basename='turistas')
 
+router_comentarios = routers.DefaultRouter()
+router_comentarios.register(r'', views_turista.ComentarioViewSet, basename='comentarios')
+
+
 router_imagenesPefil = routers.DefaultRouter()
 router_imagenesPefil.register(r'', views_turista.ImagenPerfilViewSet, basename='imagenPerfil')
 
@@ -81,6 +85,7 @@ urlpatterns = [
 
     # Rutas para el turista
     path('turistas/', include(router_turista.urls)),
+    path('comentarios/', include(router_comentarios.urls)),
 
     # Rutas para cargar y obtener imágenes de alojamientos
     path('imagenesAlojamiento/<int:alojamiento_id>/', ImagenAlojamientoCreateView.as_view(), name='imagenes_alojamiento'),
@@ -88,7 +93,7 @@ urlpatterns = [
     path('imagenesComercios/<int:establecimiento_id>/', ImagenComercioCreateView.as_view(), name='setImagenesComercio'),
     
     path('imagenesPerfil/', include(router_imagenesPefil.urls)),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Si el modo DEBUG está activado, sirve las rutas para los archivos multimedia
 if settings.DEBUG:
