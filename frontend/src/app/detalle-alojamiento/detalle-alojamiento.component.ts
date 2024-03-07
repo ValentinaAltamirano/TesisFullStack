@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth.service';
 import Swal from 'sweetalert2';
+
+
 @Component({
   selector: 'app-detalle-alojamiento',
   templateUrl: './detalle-alojamiento.component.html',
@@ -22,18 +24,19 @@ export class DetalleAlojamientoComponent {
   stars = [1, 2, 3, 4, 5];
   selectedStars = 0;
   message: string = '';
-  remainingCharacters: number = 100;
+  remainingCharacters: number = 300;
   reviewForm: FormGroup;
   group: any;
   turistaId: any;
   isAuthenticated: boolean = false;
   editarComentarioForm: FormGroup;
+  fecha: any;
 
   constructor(private route: ActivatedRoute, private alojamientoService: AlojamientoService, private http: HttpClient, private fb: FormBuilder, public authService: AuthService,private router: Router ) { 
     this.establecimientoId = 0;
     this.reviewForm = this.fb.group({});
     this.editarComentarioForm = this.fb.group({
-      titulo: ['', [Validators.required, Validators.maxLength(20)]],
+      titulo: ['', [Validators.required, Validators.maxLength(100)]],
       calificacion: [0, Validators.required],
       comentario: ['', [Validators.required, Validators.maxLength(300)]],
     });
@@ -87,6 +90,17 @@ export class DetalleAlojamientoComponent {
     this.authService.obtenerComentariosPorIdEstablecimiento(this.establecimientoId).subscribe(
       (detalles) => {
         this.comentarios = detalles;
+        console.log(detalles)
+      },
+      (error) => {
+        console.error('Error al obtener detalles del comentario', error);
+      }
+    );
+
+    this.authService.obtenerComentariosPorIdEstablecimiento(this.establecimientoId).subscribe(
+      (detalles) => {
+        this.comentarios = detalles;
+        console.log(detalles)
       },
       (error) => {
         console.error('Error al obtener detalles del comentario', error);
@@ -187,8 +201,12 @@ export class DetalleAlojamientoComponent {
     this.remainingCharacters = 300 - this.message.length;
   }
 
-  submitReview(): void {
-
+  onEnviarClick(): void {
+    console.log('Botón "Enviar" clicado');
+    console.log(this.reviewForm.valid)
+    Object.keys(this.reviewForm.controls).forEach(controlName => {
+      console.log(`${controlName}: ${this.reviewForm.get(controlName)?.valid}`);
+    });
     if (this.reviewForm.valid) {
       this.authService.registrarComentario(this.reviewForm.value).subscribe(
         (response: any) => {

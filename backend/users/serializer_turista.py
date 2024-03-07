@@ -1,10 +1,6 @@
 from rest_framework import serializers
 from .models import *
 
-class ComentarioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comentario
-        fields = '__all__'
         
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +17,13 @@ class TuristaSerializer(serializers.ModelSerializer):
     codImagenPerfil = ImagenPerfilSerializer()
     class Meta:
         model = Turista
+        fields = '__all__'
+        
+
+class ComentarioSerializer(serializers.ModelSerializer):
+    turista = TuristaSerializer()
+    class Meta:
+        model = Comentario
         fields = '__all__'
         
 

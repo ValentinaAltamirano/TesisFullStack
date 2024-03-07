@@ -80,8 +80,8 @@ export class EditarComercioComponent {
   initTipoComercioFormArray(): void {
     const tipoComercioFormArray = this.comercioForm.get('codTipoComercio') as FormArray;
   
-    this.tiposComercio.forEach((tipoComercio) => {
-      const isSelected = this.comercios && this.comercios.codTipoComercio.includes(tipoComercio.codTipoServicio);
+    this.tiposComercio.forEach((tipoComercio: { codTipoComercio: number }) => {
+      const isSelected = this.comercios.codTipoComercio.includes(tipoComercio.codTipoComercio);
       tipoComercioFormArray.push(this.fb.control(isSelected));
     });
   }
@@ -312,7 +312,7 @@ export class EditarComercioComponent {
     const datosEnviar = {
       ...this.comercioForm.value,
       metodos_de_pago: metodosDePagoSeleccionados,
-      codTipoComercio: tiposComercioSeleccionados
+      servicios: tiposComercioSeleccionados
     };
 
       this.comercioService.actualizarDatos(datosEnviar).subscribe(

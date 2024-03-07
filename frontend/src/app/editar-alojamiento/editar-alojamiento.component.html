@@ -92,17 +92,16 @@
                         <div class="flex items-center ps-3">
                           <label [for]="'servicio-' + servicio.codTipoServicio" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             <input 
-                            type="checkbox" 
-                            [checked]="getServicioControl(i)?.value"
-                            (change)="toggleCheckbox(i, servicio, 'servicios')"
-                            [disabled]="!editando"
-                            [checked]="getFormControl('servicios', i)?.value"
-                            [id]="'servicio-' + servicio.codTipoServicio"
-                            [name]="'servicio-' + servicio.codTipoServicio"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                          >
+                                type="checkbox" 
+                                [checked]="isServicioSeleccionado(servicio)"
+                                (change)="toggleCheckbox(i, servicio, 'servicios')"
+                                [disabled]="!editando"
+                                [id]="'servicio-' + servicio.codTipoServicio"
+                                [name]="'servicio-' + servicio.codTipoServicio"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                            >
                             {{ servicio }}
-                          </label>
+                        </label>
                         </div>
                       </li>
                     </ul>
@@ -117,9 +116,8 @@
 
                           <input 
                           type="checkbox" 
-                          [checked]="getMetodoPagoControl(i)?.value || false"
+                          [checked]="isMetodoDePagoSeleccionado(metodoPago)"
                           (change)="toggleCheckbox(i, metodoPago, 'metodos_de_pago')"
-                          [checked]="getFormControl('metodos_de_pago', i)?.value"
                           [id]="'metodoPago-' + metodoPago.codMetodoDePago"
                           [name]="'metodoPago-' + metodoPago.codMetodoDePago"
                           [disabled]="!editando"

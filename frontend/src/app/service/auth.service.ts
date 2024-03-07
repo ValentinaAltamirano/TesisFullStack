@@ -136,6 +136,11 @@ export class AuthService {
     return this.http.get(userInfoUrl, { headers });
   }
 
+  obtenerUnTurista(turistaId: number): Observable<any> {
+    const userInfoUrl = `${this.url}turistas/obtenerDatos/${turistaId}`;
+    return this.http.get(userInfoUrl);
+  }
+
   actualizarDatosTurista(datos: any): Observable<any> {
     const url = `${this.url}turistas/actualizarDatos/`;
     const headers = new HttpHeaders({
@@ -171,6 +176,11 @@ export class AuthService {
 
   obtenerComentariosPorIdEstablecimiento(establecimientoId: number): Observable<any> {
     const url = `${this.url}comentarios/comentariosEstablecimiento/?establecimiento_id=${establecimientoId}`;
+    return this.http.get(url);
+  }
+
+  obtenerComentarios(): Observable<any> {
+    const url = `${this.url}comentarios/`;
     return this.http.get(url);
   }
 

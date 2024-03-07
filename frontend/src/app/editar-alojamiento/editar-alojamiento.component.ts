@@ -52,14 +52,12 @@ export class EditarAlojamientoComponent {
     
     this.initForm();
     this.route.params.subscribe(params => {
-      
       this.establecimientoId = params['id'];
-      
       // Llamar al servicio para obtener detalles según el ID del establecimiento
       this.cargarDatos()
       this.cargarImagenes();
-      
     });
+    
   }
 
   initForm(): void {
@@ -89,8 +87,8 @@ export class EditarAlojamientoComponent {
   initServiciosFormArray(): void {
     const serviciosFormArray = this.alojamientoForm.get('servicios') as FormArray;
   
-    this.tiposServicio.forEach((servicio) => {
-      const isSelected = this.alojamiento && this.alojamiento.servicios.includes(servicio.codTipoServicio);
+    this.tiposServicio.forEach((servicio: { codTipoServicio: number, nombre: string }) => {
+      const isSelected = this.alojamiento.servicios.some((selectedServicio: any) => selectedServicio.nombre === servicio.nombre);
       serviciosFormArray.push(this.fb.control(isSelected));
     });
   }
@@ -134,7 +132,7 @@ export class EditarAlojamientoComponent {
         this.tiposServicio = data;
       },
       (error) => {
-        console.error('Error al obtener tipos de categoria', error);
+        console.error('Error al obtener tipos de servicio', error);
         // Manejo de errores
       }
     );
@@ -146,7 +144,7 @@ export class EditarAlojamientoComponent {
         this.tiposmetodosPago = data;
       },
       (error) => {
-        console.error('Error al obtener tipos de categoria', error);
+        console.error('Error al obtener tipos de metodos de pago', error);
         // Manejo de errores
       }
     );
@@ -171,6 +169,7 @@ export class EditarAlojamientoComponent {
     this.alojamientoService.obtenerAlojamiento(this.establecimientoId).subscribe(
       (alojamientoInfo: any) => {
         this.alojamientoForm.patchValue(alojamientoInfo);
+        
         this.alojamiento = alojamientoInfo;  // Asigna el valor de alojamientoInfo a this.alojamiento
         this.cargarMetodosDePago(alojamientoInfo.metodos_de_pago);
         this.cargarServicios(alojamientoInfo.servicios);
@@ -185,13 +184,16 @@ export class EditarAlojamientoComponent {
     );
   }
 
+  isTipoServicioSelected(tipo: any): boolean {
+    return this.arrayServicios.some(servicio => servicio.codTipoServicio === tipo.codTipoServicio);
+  }
 
   cargarServicios(servicios: any[]): void {
-    const serviciosArray = this.alojamientoForm.get('servicios') as FormArray;
-    serviciosArray.clear();  // Limpiar el FormArray antes de agregar nuevos valores
+    const serviciosFormArray = this.alojamientoForm.get('servicios') as FormArray;
+    serviciosFormArray.clear();  // Limpiar el FormArray antes de agregar nuevos valores
   
     servicios.forEach(metodo => {
-      serviciosArray.push(this.fb.control(metodo));
+      serviciosFormArray.push(this.fb.control(metodo));
     });
   }
 
@@ -215,18 +217,6 @@ export class EditarAlojamientoComponent {
       }
     );
   }
-
-
-  getMetodoPagoControl(index: number): FormControl | undefined {
-    const metodosDePagoArray = this.alojamientoForm.get('metodos_de_pago') as FormArray;
-    return metodosDePagoArray.at(index) as FormControl | undefined;
-  }
-
-  getServicioControl(index: number): FormControl | undefined {
-    const serviciosSeleccionadosArray = this.alojamientoForm.get('servicios') as FormArray;
-    const control = serviciosSeleccionadosArray.at(index) as FormControl | undefined;
-    return control;
-  }
   
   toggleCheckbox(index: number, item: any, formControlName: string): void {
     const formArray = this.alojamientoForm.get(formControlName) as FormArray;
@@ -242,9 +232,11 @@ export class EditarAlojamientoComponent {
     }
   
     const control = formArray.at(index) as FormControl;
+    
   
     if (control instanceof FormControl) {
       const isChecked = control.value;
+      console.log(isChecked)
   
       control.setValue(!isChecked);
     } else {
@@ -261,6 +253,14 @@ export class EditarAlojamientoComponent {
     }
   
     return null;
+  }
+
+  isServicioSeleccionado(servicio: string): boolean {
+    return this.arrayServicios.some((s: any) => s.nombre === servicio);
+  }
+
+  isMetodoDePagoSeleccionado(metodoPago: any): boolean {
+    return this.arrayMetodosPago.some((s: any) => s.nombre == metodoPago);
   }
 
   toggleEdicion() {
@@ -289,8 +289,6 @@ export class EditarAlojamientoComponent {
       };
   
       this.nuevasImagenes.push(nuevaImagen);
-  
-      
     }
   }
 
@@ -341,14 +339,16 @@ export class EditarAlojamientoComponent {
 
     if (this.alojamientoForm.value) {
       const metodosDePagoSeleccionados = this.alojamientoForm.value.metodos_de_pago
-      .map((valor: boolean, index: number) => valor ? this.tiposmetodosPago[index] : null)
+      .map((valor: boolean, index: number) => valor! ? this.tiposmetodosPago[index] : null)
       .filter((valor: any) => valor !== null);
+    
+    console.log(this.alojamientoForm.value.servicios)
 
     const serviciosSeleccionados = this.alojamientoForm.value.servicios
       .map((valor: boolean, index: number) => valor ? this.tiposServicio[index] : null)
       .filter((valor: any) => valor !== null);
 
-
+    console.log(serviciosSeleccionados)
     // Crear el objeto datosEnviar con los valores mapeados
     const datosEnviar = {
       ...this.alojamientoForm.value,
@@ -356,6 +356,8 @@ export class EditarAlojamientoComponent {
       servicios: serviciosSeleccionados
     };
 
+    console.log(datosEnviar)
+    
       this.alojamientoService.actualizarDatos(datosEnviar).subscribe(
         (response: any) => { 
           this.actualizarImagenes(this.establecimientoId);
@@ -389,7 +391,6 @@ export class EditarAlojamientoComponent {
     imagenesEliminadasArray.getRawValue().forEach((codImagen: any) => {
       formData.append('imagenesEliminadas', codImagen);
     });
-    
   
     // Envía las imágenes al servicio junto con el ID del alojamiento
     this.alojamientoService.actualizarImagenes(formData, alojamientoId).subscribe(
@@ -398,11 +399,11 @@ export class EditarAlojamientoComponent {
           title: "Datos actualizados correctamente!",
           icon: "success",
           confirmButtonText: "OK",
-          timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)
+          timer: 1000, 
           timerProgressBar: true
+        }).then(() => {
+          location.reload();
         });
-        
-        // También puedes realizar otras acciones después de guardar correctamente
       },
       (error) => {
         // Manejar el error, mostrar mensajes de error apropiados al usuario

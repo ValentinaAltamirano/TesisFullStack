@@ -20,19 +20,25 @@ export class MisEstablecimientosComponent {
   establecimientosAlojamiento: any[] = [];
   establecimientosGastronomia: any[] = [];
   establecimientosComercio: any[] = [];
+  stars = [1, 2, 3, 4, 5];
+  comentarios:any;
+  sumaCalificaciones: number = 0;
+  cantidadComentarios: number = 0;
+  promedioCalificaciones: number = 0;
 
   toggleDropdown() {
     this.dropdownVisible = !this.dropdownVisible;
   }
   
-  constructor(private auth: AuthService, private alojamientoService: AlojamientoService, 
+  constructor(private authService: AuthService, private alojamientoService: AlojamientoService, 
               private gastronomiaService: GastronomiaService,
               private comercioService: ComercioService) {}
 
   ngOnInit(): void {
     this.obtenerAlojamientos();
     this.obtenerGastronomia();
-    this.obtenerComercio()
+    this.obtenerComercio();
+    this.obtenerComentarios();
   }
 
   obtenerAlojamientos(): void {
@@ -142,6 +148,19 @@ export class MisEstablecimientosComponent {
     );
   }
 
+  obtenerComentarios(): void{
+
+    this.authService.obtenerComentarios().subscribe(
+      (detalles) => {
+        this.comentarios = detalles;
+        console.log(detalles)
+      },
+      (error) => {
+        console.error('Error al obtener detalles del comentario', error);
+      }
+    );
+  }
+
   eliminarGastronomia(idEstablecimiento: number): void {
     this.gastronomiaService.eliminarEstablecimiento(idEstablecimiento).subscribe(
       () => {
@@ -245,5 +264,20 @@ export class MisEstablecimientosComponent {
         });
       }
     );
+  }
+
+  actualizarSumaCalificaciones(calificacion: number): void {
+    this.sumaCalificaciones += calificacion;
+    this.cantidadComentarios++;
+    this.actualizarPromedioCalificaciones();
+  }
+  
+  // Agrega esta función para calcular el promedio
+  actualizarPromedioCalificaciones(): void {
+    if (this.cantidadComentarios > 0) {
+      this.promedioCalificaciones = this.sumaCalificaciones / this.cantidadComentarios;
+    } else {
+      this.promedioCalificaciones = 0;
+    }
   }
 }

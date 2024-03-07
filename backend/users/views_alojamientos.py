@@ -157,7 +157,7 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
     def actualizarDatos(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body.decode('utf-8'))
-            
+            print(data)
             alojamiento_id = data.get('codEstablecimiento', '')
             
             # Obtén la instancia de Alojamientos
@@ -168,9 +168,6 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
             alojamiento.calle = data.get('calle', alojamiento.calle)
             alojamiento.altura = data.get('altura', alojamiento.altura)
             
-            #Creo la instancia de TipoEstablecimiento
-            alojamiento.tipo_establecimiento_id = int(data.get('tipoEstablecimiento', ''))
-            alojamiento.tipoEstablecimiento = TipoEstablecimiento.objects.get(codTipoEstablecimiento=alojamiento.tipo_establecimiento_id)
             
             alojamiento.descripcion = data.get('descripcion', '')
             alojamiento.telefono = data.get('telefono', '')
@@ -179,6 +176,15 @@ class AlojamientoViewSet(viewsets.ModelViewSet):
             
             nombres_metodos_pago = request.data.get('metodos_de_pago', [])
             ids_metodos_pago = MetodoDePago.objects.filter(nombre__in=nombres_metodos_pago).values_list('codMetodoDePago', flat=True)
+            
+            nombre_TipoAlojamiento = data.get('codTipoAlojamiento', {}).get('nombre', '')
+            print(nombre_TipoAlojamiento)
+            id_TipoAlojamiento = TipoAlojamiento.objects.filter(nombre__iexact=nombre_TipoAlojamiento).values_list('codTipoAlojamiento', flat=True).first() 
+            alojamiento.codTipoAlojamiento = TipoAlojamiento.objects.get(codTipoAlojamiento=id_TipoAlojamiento)
+            
+            nombre_categoria = data.get('codCategoria', {}).get('nombre', '')
+            id_categoria = Categoria.objects.filter(nombre__iexact=nombre_categoria).values_list('codCategoria', flat=True).first()
+            alojamiento.codCategoria =  Categoria.objects.get(codCategoria=id_categoria)
             
             #TipoServicio
             nombres_servicios = request.data.get('servicios', [])

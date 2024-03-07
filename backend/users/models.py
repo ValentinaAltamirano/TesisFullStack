@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Empresario(models.Model):
     idEmpresario = models.AutoField(primary_key=True)
@@ -172,6 +173,7 @@ class Comentario(models.Model):
     comentario = models.TextField(max_length=100)
     calificacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rango de calificación de 1 a 5 estrellas
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)  # Relación con Establecimiento
+    fecha = models.DateTimeField(default=timezone.now) 
     turista = models.ForeignKey(Turista, on_delete=models.CASCADE, related_name='comentarios_turista')  # Relación con Turista
 
     def __str__(self):
