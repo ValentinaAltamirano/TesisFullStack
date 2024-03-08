@@ -78,7 +78,7 @@ export class RegistroComercioComponent {
       nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
       tipoEstablecimiento: [2],
       codCiudad: [1],
-      calle: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      calle: ['', [Validators.required, Validators.maxLength(50)]],
       altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
       telefono: ['', [Validators.required,, this.validarTelefono]],
       web: [''],

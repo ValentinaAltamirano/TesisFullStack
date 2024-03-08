@@ -62,9 +62,6 @@
                     <div *ngIf="alojamientoForm.get('calle')?.hasError('required') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
                        El nombre de la calle es obligatorio.
                     </div>
-                    <div *ngIf="alojamientoForm.get('calle')?.hasError('pattern') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
-                       El nombre de la calle no puede contener símbolos.
-                    </div>
                     <div *ngIf="alojamientoForm.get('calle')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
                         El nombre de la calle no puede tener más de 50 caracteres.
                     </div>
