@@ -29,18 +29,32 @@
               <div class="pt-6" id="filter-section-0">
                 
                 <div class="space-y-4">
-                  <div *ngFor="let tipo of tiposComercio" class="flex items-center">
+                  <div *ngFor="let tipo of tiposComercio.slice(0, elementosMostrados['tiposComercio'])" class="flex items-center">
                     <input
-                      [id]="'filter-color-' + tipo"
-                      [name]="'color[]'"
-                      [value]="tipo"
-                      type="checkbox"
-                      class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    [id]="'tiposComercio-' + tipo"
+                    [name]="'tiposComercio-' + tipo"
+                    [value]="tipo"
+                    type="checkbox"
+                    [checked]="getFormControl('tiposComercioSeleccionados.' + tipo).value"
+                    (change)="toggleCheckbox('tiposComercioSeleccionados.' + tipo)"
+                    class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
                     />
-                    <label [for]="'filter-color-' + tipo" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                    <label [for]="'tiposComercio-' + tipo" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+
+                  <div *ngIf="tiposComercio.length > elementosMostrados.tiposComercio" >
+                    <button (click)="mostrarMas('tiposComercio')" class="ml-3 text-sm text-red-500 flex font-bold">
+                      Ver más 
+                      <svg class="h-5 w-5 pt-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 9 12 15 18 9" /></svg></button>
+                  </div>
+  
+                  <div *ngIf="elementosMostrados.tiposComercio > 5">
+                    <button (click)="mostrarMenos('tiposComercio')" class="ml-3 text-sm text-red-500 flex font-bold">
+                      Ver menos
+                      <svg class="h-5 w-5 pt-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 15 12 9 18 15" /></svg></button>
                   </div>
                 </div>
-
+                
               </div>
             </div>
 
@@ -51,7 +65,8 @@
           <div class="lg:col-span-3">
             <!-- Alojamientos -->
             <div class="flex  max-w-6xl flex-wrap justify-start">
-              <div *ngFor="let comercio of comercios"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-3 mb-6">
+
+              <div *ngFor="let comercio of getComerciosFiltrados()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-3 mb-6">
                 
                 
                   <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
@@ -69,11 +84,6 @@
                   <span class="ml-1 text-sm text-slate-400">4.9</span>
                   </div>
 
-                  <div class="absolute top-3 right-3 inline-flex items-center rounded-lg bg-white p-2 shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-orange-400 group-hover:text-orange-500" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                    </svg>
-                  </div>
                 </div>
 
                 
@@ -95,8 +105,19 @@
                   </div>
                   
                 </div>
-                </div>
+              </div>
 
+              <div *ngIf="getComerciosFiltrados().length === 0" class="flex flex-col w-full max-w-sm px-4 mx-auto  border rounded-lg p-10 mt-10">
+                <!-- Mostrar un mensaje cuando no hay resultados -->
+                <div class="flex flex-col w-full max-w-sm px-4 mx-auto p-6">
+                  <div class="p-3 mx-auto text-blue-500 bg-blue-100 rounded-full dark:bg-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                  </div>
+                  <h2 class="mt-3 text-lg text-gray-800 dark:text-white">No se encontraron establecimientos</h2>
+                </div>
+              </div>
               </div>
             </div>
 
