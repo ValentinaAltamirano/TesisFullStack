@@ -18,6 +18,10 @@ export class InicioSesionComponent {
   inicioSesionForm: FormGroup;
   mensajeError: string = '';
   tokenCookieName = '';
+  showPassword = false;
+  showConfirmPassword = false;
+  showConfirmPasswordIcon: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,  // Ajusta el nombre del servicio según tu estructura
@@ -25,9 +29,17 @@ export class InicioSesionComponent {
     private cookieService: CookieService, 
   ) {
     this.inicioSesionForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
+  }
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else if (field === 'confirm_password') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
   }
 
   iniciarSesion() {

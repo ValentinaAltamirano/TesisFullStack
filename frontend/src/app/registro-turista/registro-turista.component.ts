@@ -20,12 +20,12 @@ export class RegistroTuristaComponent {
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router,) {
     this.turistaForm = this.fb.group({
       // Campos del usuario
-      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
-      password: ['', [Validators.required, Validators.minLength(6), this.validatePassword]],
+      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      password: ['', [Validators.required, Validators.minLength(6), this.validatePassword, Validators.maxLength(50)]],
       confirm_password: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
+      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
     }, { validators: this.passwordsMatchValidator });
   }
 

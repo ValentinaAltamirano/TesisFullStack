@@ -22,17 +22,17 @@ export class RegistroEmpresarioComponent {
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router,) {
     this.empresarioForm = this.fb.group({
       // Campos del usuario
-      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
-      password: ['', [Validators.required, Validators.minLength(6), this.validatePassword]],
+      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      password: ['', [Validators.required, Validators.minLength(6), this.validatePassword, Validators.maxLength(50)]],
       confirm_password: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
+      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
 
       // Campos del Empresario
-      razonSocial: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      telefono: ['', Validators.required],
+      razonSocial: ['', [Validators.required, Validators.maxLength(50)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(50)]],
+      telefono: ['', [Validators.required, this.validarTelefono]]
     }, { validators: this.passwordsMatchValidator });
   }
 
@@ -46,6 +46,17 @@ export class RegistroEmpresarioComponent {
     }
   
     return null;
+  }
+
+  validarTelefono(control: AbstractControl) {
+    const telefonoRegex = /^[0-9]{10,}$/; // Formato: 10 o más dígitos numéricos
+    const esValido = telefonoRegex.test(control.value);
+  
+    if (!control.value) {
+      return { 'telefonoVacio': true };
+    }
+  
+    return esValido ? null : { 'telefonoInvalido': true };
   }
   
   passwordsMatchValidator(group: FormGroup): { [key: string]: boolean } | null {

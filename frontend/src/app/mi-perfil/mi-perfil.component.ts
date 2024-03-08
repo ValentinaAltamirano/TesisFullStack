@@ -31,11 +31,10 @@ export class MiPerfilComponent {
   ngOnInit() {
     // Inicializar FormGroup y asignar FormControls
     this.perfilForm = this.fb.group({
-      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
-      
+      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
+      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
     });
     this.obtenerDatosUsuario();
     this.obtenerIconosPerfil()

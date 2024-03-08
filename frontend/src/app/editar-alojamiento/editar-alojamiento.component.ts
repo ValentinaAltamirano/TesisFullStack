@@ -63,25 +63,36 @@ export class EditarAlojamientoComponent {
   initForm(): void {
     this.alojamientoForm = this.fb.group({
       // Campos del establecimiento
-      altura: [''],
-      calle: [''],
-      codCategoria: [''],
-      codCiudad: [''],
-      codProvincia: [''],
+      altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
+      calle: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      codCategoria: ['', [Validators.required]],
+      codCiudad: [1],
+      codProvincia: [1],
       codEstablecimiento: [''],
-      codTipoAlojamiento: [''],
-      descripcion: '',
+      codTipoAlojamiento: [null, [Validators.required]],
+      descripcion: ['', [Validators.required, Validators.maxLength(250), Validators.maxLength(250)]],
       idEmpresario: [''],
-      metodos_de_pago: this.fb.array([]),
-      nombre: [''],
-      servicios: this.fb.array([]),
-      telefono: [''],
+      metodos_de_pago: this.fb.array([], [Validators.required]),
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      servicios: this.fb.array([], [Validators.required]),
+      telefono: ['', [Validators.required,, this.validarTelefono]],
       imagenesEliminadas: this.fb.array([]),
-      web: [''],
+      web: ['', ],
     });
 
     this.initServiciosFormArray();
     this.initMetodosPagoFormArray();
+  }
+
+  validarTelefono(control: AbstractControl) {
+    const telefonoRegex = /^[0-9]{10,}$/; // Formato: 10 o más dígitos numéricos
+    const esValido = telefonoRegex.test(control.value);
+  
+    if (!control.value) {
+      return { 'telefonoVacio': true };
+    }
+  
+    return esValido ? null : { 'telefonoInvalido': true };
   }
   
   initServiciosFormArray(): void {

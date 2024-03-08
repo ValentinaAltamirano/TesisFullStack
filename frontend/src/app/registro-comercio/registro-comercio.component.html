@@ -13,12 +13,25 @@
     <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-xl xl:p-0 ">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form [formGroup]="comercioForm" class="space-y-4 md:space-y-6" (ngSubmit)="submitForm()" enctype="multipart/form-data">
-                <div>
-                    <label for="nombreComercio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Comercio*</label>
-                    <input formControlName="nombre" type="nombreComercio" name="nombreComercio" id="nombreComercio" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Comercio" required>
-                </div>
-                <div>
-                    <label for="tiposComercios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Comercio</label>
+                
+              <!-- Nombre -->
+              <div>
+                    <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Comercio*</label>
+                    <input formControlName="nombre" type="nombre" name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Comercio" required>
+                    <div *ngIf="comercioForm.get('nombre')?.hasError('required') && comercioForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El nombre del comercio es obligatorio.
+                    </div>
+                    <div *ngIf="comercioForm.get('nombre')?.hasError('pattern') && comercioForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre del comercio no puede contener símbolos.
+                    </div>
+                    <div *ngIf="comercioForm.get('nombre')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre del comercio no puede tener más de 50 caracteres.
+                    </div>
+              </div>
+
+              <!-- Tipo Comercio -->
+              <div>
+                    <label for="tiposComercios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Comercio*</label>
                     <div class="relative">
                         <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <li *ngFor="let tipo of tiposComercios" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
@@ -37,34 +50,69 @@
                             </li>
                           </ul>    
                     </div>
-                </div>
+                    <div *ngIf="comercioForm.get('tipoComerciosSeleccionados')?.hasError('required') && comercioForm.get('tipoComerciosSeleccionados')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El tipo de comercio es obligatorio.
+                    </div>
+              </div>
 
-                <div>
+              <!-- Ciudad -->
+              <div>
                     <label for="ciudad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ciudad</label>
                     <input  type="ciudad" name="ciudad" id="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Villa Carlos Paz" readonly>
-                </div>
+              </div>
 
-                <div>
+              <!-- Provincia -->
+              <div>
                     <label for="provincia" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Provincia</label>
                     <input  type="provincia" name="provincia" id="provincia" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Córdoba" readonly>
-                </div>
+              </div>
 
-                <div>
+              <!-- Calle -->
+              <div>
                     <label for="calle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Calle*</label>
                     <input formControlName="calle"  type="calle" name="calle" id="calle" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Calle" required>
-                </div>
+                    <div *ngIf="comercioForm.get('calle')?.hasError('required') && comercioForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El nombre de la calle es obligatorio.
+                   </div>
+                   <div *ngIf="comercioForm.get('calle')?.hasError('pattern') && comercioForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El nombre de la calle no puede contener símbolos.
+                   </div>
+                   <div *ngIf="comercioForm.get('calle')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                       El nombre de la calle no puede tener más de 50 caracteres.
+                   </div>
 
-                <div>
+              </div>
+
+              <!-- Altura -->
+              <div>
                     <label for="altura" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Altura*</label>
                     <input formControlName="altura" type="altura" name="altura" id="altura" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Altura" required>
-                </div>
 
-                <div>
+                    <div *ngIf="comercioForm.get('altura')?.hasError('required') && comercioForm.get('altura')?.touched" class="error-message" class="text-red-500 text-sm">
+                      La altura es obligatoria.
+                   </div>
+                   <div *ngIf="comercioForm.get('altura')?.hasError('pattern') && comercioForm.get('altura')?.touched" class="error-message" class="text-red-500 text-sm">
+                    La altura debe ser números.
+                   </div>
+                   <div *ngIf="comercioForm.get('altura')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                    La altura no puede tener más de 50 caracteres.
+                   </div>
+              </div>
+
+              <!-- Teléfono -->
+              <div>
                     <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono*</label>
                     <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Teléfono" >
-                </div>
 
-                  
+                    <div *ngIf="comercioForm.get('telefono')?.hasError('required') && comercioForm.get('telefono')?.touched" class="error-message text-red-500 text-sm">
+                      El telefono es obligatorio.
+                    </div>
+                    <div *ngIf="comercioForm.get('telefono')?.hasError('telefonoInvalido')" class="error-message text-red-500 text-sm">
+                        Por favor, introduce un número de teléfono válido.
+                    </div>
+              </div>
+
+              <!-- Métodos de Pago -->    
               <div>
                     <label for="metodoPago" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Métodos de Pago*</label>
                     <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -83,18 +131,36 @@
                         </div>
                       </li>
                     </ul>
+
+                    <div *ngIf="comercioForm.get('metodosPagoSeleccionados')?.hasError('required') && comercioForm.get('metodosPagoSeleccionados')?.touched" class="error-message" class="text-red-500 text-sm">
+                      Los métodos de pago son obligatorios.
+                    </div>
               </div>
-                  
+              
+              <!-- Sitio web -->    
               <div>
                     <label for="web" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sitio web</label>
                     <input type="web" formControlName="web" name="web" id="web" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sitio web" >
+
+                    <div *ngIf="comercioForm.get('web')?.hasError('pattern')" class="error-message text-red-500 text-sm">
+                      Por favor, un sitio web válido.
+                    </div>
               </div>
 
+              <!-- Descripcion -->
               <div>
                     <label for="descripcion" for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción*</label>
                     <textarea formControlName="descripcion" id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Descripción"></textarea>
+
+                    <div *ngIf="comercioForm.get('descripcion')?.hasError('required') && comercioForm.get('descripcion')?.touched" class="error-message" class="text-red-500 text-sm">
+                      La descripcion es obligatoria.
+                    </div>
+                    <div *ngIf="comercioForm.get('descripcion')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                      La descripcion no puede tener más de 250 caracteres.
+                    </div>
               </div>
-                
+              
+              <!-- Imágenes -->
                 <label for="imagenes" for="imagenes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imágenes*</label>
 
                 <div formArrayName="imagenes" class="flex flex-col items-center justify-center w-full">
@@ -120,7 +186,10 @@
                       </ngx-dropzone-label>
                     </ngx-dropzone>
                   </div>
-
+                  
+                  <div *ngIf="comercioForm.get('imagenes')?.hasError('required') && comercioForm.get('imagenes')?.touched" class="error-message" class="text-red-500 text-sm">
+                    Las imagenes son obligatorias.
+                  </div>
 
                 <div class="flex">
                     <button type="submit" class="flex-1 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrar Local Gastronómico</button>

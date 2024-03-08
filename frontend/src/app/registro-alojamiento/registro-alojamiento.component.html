@@ -13,11 +13,24 @@
     <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-xl xl:p-0 ">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form [formGroup]="alojamientoForm" class="space-y-4 md:space-y-6" (ngSubmit)="submitForm()" enctype="multipart/form-data">
-                <div>
-                    <label for="nombreAlojamiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Alojamiento*</label>
-                    <input formControlName="nombre" type="nombreAlojamiento" name="nombreAlojamiento" id="nombreAlojamiento" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Alojamiento" required>
-                </div>
-                <div>
+              
+              <!-- Nombre -->
+              <div>
+                    <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Alojamiento*</label>
+                    <input formControlName="nombre" type="nombre" name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Alojamiento" required>
+                    <div *ngIf="alojamientoForm.get('nombre')?.hasError('required') && alojamientoForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El nombre del alojamiento es obligatorio.
+                    </div>
+                    <div *ngIf="alojamientoForm.get('nombre')?.hasError('pattern') && alojamientoForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El nombre del alojamiento no puede contener símbolos.
+                    </div>
+                    <div *ngIf="alojamientoForm.get('nombre')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre del alojamiento no puede tener más de 50 caracteres.
+                    </div>
+              </div>
+
+              <!-- Tipo Alojamiento -->
+              <div>
                     <label for="tipoAlojamiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Alojamiento*</label>
                     <div class="relative">
                         <select formControlName="tipoAlojamiento" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
@@ -25,25 +38,55 @@
                             <option *ngFor="let tipo of tiposAlojamiento" [value]="tipo">{{ tipo }}</option>
                         </select>
                       </div>
-                </div>
-                <div>
+                      <div *ngIf="alojamientoForm.get('tipoAlojamiento')?.hasError('required') && alojamientoForm.get('tipoAlojamiento')?.touched" class="error-message" class="text-red-500 text-sm">
+                        El tipo de alojamiento es obligatorio.
+                      </div>
+              </div>
+              
+              <!-- Ciudad -->
+              <div>
                     <label for="ciudad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ciudad</label>
                     <input  type="ciudad" name="ciudad" id="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Villa Carlos Paz" readonly>
-                </div>
-                <div>
+              </div>
+
+              <!-- Provincia -->
+              <div>
                     <label for="provincia" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Provincia</label>
                     <input  type="provincia" name="provincia" id="provincia" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Córdoba" readonly>
-                </div>
-                <div>
+              </div>
+              
+              <!-- Calle -->
+              <div>
                     <label for="calle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Calle*</label>
                     <input formControlName="calle"  type="calle" name="calle" id="calle" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Calle" required>
-                </div>
-                <div>
+                    <div *ngIf="alojamientoForm.get('calle')?.hasError('required') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
+                       El nombre de la calle es obligatorio.
+                    </div>
+                    <div *ngIf="alojamientoForm.get('calle')?.hasError('pattern') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
+                       El nombre de la calle no puede contener símbolos.
+                    </div>
+                    <div *ngIf="alojamientoForm.get('calle')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre de la calle no puede tener más de 50 caracteres.
+                    </div>
+              </div>
+              
+              <!-- Altura -->
+              <div>
                     <label for="altura" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Altura*</label>
                     <input formControlName="altura" type="altura" name="altura" id="altura" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Altura" required>
-                </div>
+                    <div *ngIf="alojamientoForm.get('altura')?.hasError('required') && alojamientoForm.get('altura')?.touched" class="error-message" class="text-red-500 text-sm">
+                      La altura es obligatoria.
+                   </div>
+                   <div *ngIf="alojamientoForm.get('altura')?.hasError('pattern') && alojamientoForm.get('altura')?.touched" class="error-message" class="text-red-500 text-sm">
+                    La altura debe ser números.
+                   </div>
+                   <div *ngIf="alojamientoForm.get('altura')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                    La altura no puede tener más de 50 caracteres.
+                   </div>
+              </div>
 
-                <div>
+              <!-- Categoría -->
+              <div>
                   <label for="categoria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría*</label>
                   <div class="relative">
                       <select formControlName="categoria" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
@@ -51,15 +94,25 @@
                           <option *ngFor="let tipo of tiposCategoria" [value]="tipo">{{ tipo }}</option>
                       </select>
                     </div>
-                </div>
+                    <div *ngIf="alojamientoForm.get('categoria')?.hasError('required') && alojamientoForm.get('categoria')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El tipo de comercio es obligatorio.
+                    </div>
+              </div>
 
-                <div>
+              <!-- Teléfono -->
+              <div>
                     <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono*</label>
                     <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Teléfono" required>
-                </div>
+                    <div *ngIf="alojamientoForm.get('telefono')?.hasError('required') && alojamientoForm.get('telefono')?.touched" class="error-message text-red-500 text-sm">
+                      El telefono es obligatorio.
+                    </div>
+                    <div *ngIf="alojamientoForm.get('telefono')?.hasError('telefonoInvalido')" class="error-message text-red-500 text-sm">
+                        Por favor, introduce un número de teléfono válido.
+                    </div>
+              </div>
                 
-
-                <div>
+              <!-- Servicios -->
+              <div>
                     <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicios*</label>
                     <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                       <li *ngFor="let servicio of tiposServicio" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
@@ -77,9 +130,14 @@
                         </div>
                       </li>
                     </ul>
-                </div>
+
+                    <div *ngIf="alojamientoForm.get('servicioSeleccionados')?.hasError('required') && alojamientoForm.get('servicioSeleccionados')?.touched" class="error-message" class="text-red-500 text-sm">
+                      Los servicios son obligatorios.
+                    </div>
+              </div>
                   
-                <div>
+              <!-- Métodos de Pago -->
+              <div>
                     <label for="metodoPago" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Métodos de Pago*</label>
                     <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                       <li *ngFor="let metodoPago of tiposmetodosPago" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
@@ -97,20 +155,38 @@
                         </div>
                       </li>
                     </ul>
-                </div>
+                    <div *ngIf="alojamientoForm.get('metodosPagoSeleccionados')?.hasError('required') && alojamientoForm.get('metodosPagoSeleccionados')?.touched" class="error-message" class="text-red-500 text-sm">
+                      Los métodos de pago son obligatorios.
+                    </div>
+              </div>
                   
-                <div>
+              <!-- Sitio web -->
+              <div>
                     <label for="web" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sitio web</label>
-                    <input type="web" formControlName="web" name="web" id="web" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sitio web" required>
-                </div>
-                <div>
+                    <input type="web" formControlName="web" name="web" id="web" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sitio web">
+                    
+                    <div *ngIf="alojamientoForm.get('web')?.hasError('pattern')" class="error-message text-red-500 text-sm">
+                      Por favor, un sitio web válido.
+                  </div>
+              </div>
+
+              <!-- Descripcion -->
+              <div>
                     <label for="descripcion" for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción*</label>
                     <textarea formControlName="descripcion" id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Descripción"></textarea>
-                </div>
+                    
+                    <div *ngIf="alojamientoForm.get('descripcion')?.hasError('required') && alojamientoForm.get('descripcion')?.touched" class="error-message" class="text-red-500 text-sm">
+                      La descripcion es obligatoria.
+                    </div>
+                    <div *ngIf="alojamientoForm.get('descripcion')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                      La descripcion no puede tener más de 250 caracteres.
+                    </div>
+              </div>
                 
-                <label for="imagenes" for="imagenes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imágenes*</label>
+              <!-- Imágenes -->  
+              <label for="imagenes" for="imagenes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imágenes*</label>
 
-                <div formArrayName="imagenes" class="flex flex-col items-center justify-center w-full">
+              <div formArrayName="imagenes" class="flex flex-col items-center justify-center w-full">
                     <ngx-dropzone (change)="agregarImagen($event)" class="flex flex-col items-center justify-center w-full border-1 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                       <ngx-dropzone-label>
                         <div class="flex flex-col items-center">
@@ -132,11 +208,14 @@
                         </div>
                       </ngx-dropzone-label>
                     </ngx-dropzone>
-                  </div>
-
+              </div>
+              
+              <div *ngIf="alojamientoForm.get('imagenes')?.hasError('required') && alojamientoForm.get('imagenes')?.touched" class="error-message" class="text-red-500 text-sm">
+                Las imagenes son obligatorias.
+              </div>
 
                 <div class="flex">
-                    <button type="submit" class="flex-1 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrar Alojamiento</button>
+                    <button type="submit" class="flex-1 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" [disabled]="!alojamientoForm.valid">Registrar Alojamiento</button>
                 </div>
             </form>
         </div>

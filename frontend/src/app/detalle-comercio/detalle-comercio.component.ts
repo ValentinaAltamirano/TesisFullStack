@@ -39,9 +39,9 @@ export class DetalleComercioComponent {
     this.establecimientoId = 0;
     this.reviewForm = this.fb.group({});
     this.editarComentarioForm = this.fb.group({
-      titulo: ['', [Validators.required, Validators.maxLength(20)]],
-      calificacion: [0, Validators.required],
-      comentario: ['', [Validators.required, Validators.maxLength(300)]],
+      titulo: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      calificacion: [0, [Validators.required]],
+      comentario: ['', [Validators.required, Validators.maxLength(300), Validators.pattern(/^[a-zA-Z0-9]+$/) ]],
     });
   }
 
@@ -70,9 +70,9 @@ export class DetalleComercioComponent {
 
   async comentarioForm(turistaId: any) {
     this.reviewForm = this.fb.group({
-      titulo: ['', [Validators.required, Validators.maxLength(20)]],
-      calificacion: [0, Validators.required],
-      comentario: ['', [Validators.required, Validators.maxLength(300)]],
+      titulo: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      calificacion: [0, [Validators.required]],
+      comentario: ['', [Validators.required, Validators.maxLength(300), Validators.pattern(/^[a-zA-Z0-9]+$/) ]],
       establecimiento: [this.establecimientoId],
       turista: [turistaId],
     });
@@ -181,8 +181,12 @@ export class DetalleComercioComponent {
     }
   }
 
-  submitReview(): void {
-
+  onEnviarClick(): void {
+    console.log('Botón "Enviar" clicado');
+    console.log(this.reviewForm.valid)
+    Object.keys(this.reviewForm.controls).forEach(controlName => {
+      console.log(`${controlName}: ${this.reviewForm.get(controlName)?.valid}`);
+    });
     if (this.reviewForm.valid) {
       this.authService.registrarComentario(this.reviewForm.value).subscribe(
         (response: any) => {

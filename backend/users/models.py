@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+import random
 
 class Empresario(models.Model):
     idEmpresario = models.AutoField(primary_key=True)
@@ -163,14 +164,14 @@ class ImagenPerfil(models.Model):
 class Turista(models.Model):
     codTurista = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE) 
-    codImagenPerfil = models.OneToOneField(ImagenPerfil, on_delete=models.CASCADE, default = 1) 
+    codImagenPerfil = models.OneToOneField(ImagenPerfil, on_delete=models.CASCADE, default=random.randint(1, 5)) 
     def __str__(self):
         return f"Turista {self.user.username} - {self.codTurista}"
 
 class Comentario(models.Model):
     codComentario = models.AutoField(primary_key=True)
     titulo = models.TextField(max_length=20, default = '')
-    comentario = models.TextField(max_length=100)
+    comentario = models.TextField(max_length=300)
     calificacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rango de calificación de 1 a 5 estrellas
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE)  # Relación con Establecimiento
     fecha = models.DateTimeField(default=timezone.now) 

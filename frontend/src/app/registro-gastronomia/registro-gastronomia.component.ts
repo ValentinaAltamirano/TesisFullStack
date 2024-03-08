@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../service/auth.service';
@@ -118,23 +118,34 @@ export class RegistroGastronomiaComponent {
     this.gastronomiaForm = this.fb.group({
       // Campos del establecimiento
       idEmpresario: [''],
-      nombre: ['', [Validators.required]],
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
       tipoEstablecimiento: [2],
       codCiudad: [1],
-      calle: ['', Validators.required],
-      altura: ['', Validators.required],
-      telefono: ['', [Validators.required,]],
-      web: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      imagenes: this.fb.array([]),
+      calle: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
+      telefono: ['', [Validators.required,, this.validarTelefono]],
+      web: ['', ],
+      descripcion: ['', [Validators.required, Validators.maxLength(250), Validators.maxLength(250)]],
+      imagenes: this.fb.array([], [Validators.required]),
 
       // Campos del gastronomia
-      tiposGastronomiaSeleccionados: this.fb.array([]),
-      servicioSeleccionados: this.fb.array([]),
-      metodosPagoSeleccionados: this.fb.array([]),
-      tipoComidaSeleccionados: this.fb.array([]),
+      tiposGastronomiaSeleccionados: this.fb.array([], Validators.required),
+      servicioSeleccionados: this.fb.array([], Validators.required),
+      metodosPagoSeleccionados: this.fb.array([], Validators.required),
+      tipoComidaSeleccionados: this.fb.array([], Validators.required),
       preferenciaAlimentariaSeleccionadas: this.fb.array([]),
     });
+  }
+
+  validarTelefono(control: AbstractControl) {
+    const telefonoRegex = /^[0-9]{10,}$/; // Formato: 10 o más dígitos numéricos
+    const esValido = telefonoRegex.test(control.value);
+  
+    if (!control.value) {
+      return { 'telefonoVacio': true };
+    }
+  
+    return esValido ? null : { 'telefonoInvalido': true };
   }
 
   getFormControl(formPath: string): FormControl {

@@ -10,6 +10,7 @@
           
                 <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
+                  <!-- Username -->
                   <div class="sm:col-span-4">
                     <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Nombre de usuario</label>
                     <div class="mt-2">
@@ -23,9 +24,13 @@
                       <div *ngIf="perfilForm.get('username')?.hasError('duplicateUsername')"  class="text-red-500 text-sm">
                         El nombre de usuario ya está en uso.
                       </div>
+                      <div *ngIf="perfilForm.get('username')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre de usuario no puede tener más de 50 caracteres.
+                    </div>
                     </div>
                   </div>
 
+                  <!-- Nombre -->
                   <div class="sm:col-span-4">
                     <label for="nombre" class="block text-sm font-medium leading-6 text-gray-900">Nombre Responsable</label>
                     <div class="mt-2">
@@ -36,9 +41,13 @@
                     <div *ngIf="perfilForm.get('nombre')?.hasError('pattern') && perfilForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre del reponsable no puede contener símbolos.
                      </div>
+                     <div *ngIf="perfilForm.get('nombre')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                      El nombre del reponsable no puede tener más de 50 caracteres.
+                   </div>
                     </div>
                   </div>
-          
+                  
+                  <!-- Apellido -->
                   <div class="sm:col-span-4">
                     <label for="apellido" class="block text-sm font-medium leading-6 text-gray-900">Apellido Responsable</label>
                     <div class="mt-2">
@@ -49,9 +58,13 @@
                       <div *ngIf="perfilForm.get('apellido')?.hasError('pattern') && perfilForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
                           El apellido del reponsable no puede contener símbolos.
                       </div>
+                      <div *ngIf="perfilForm.get('apellido')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El apellido del responsable no puede tener más de 50 caracteres.
+                     </div>
                     </div>
                   </div>
-          
+                  
+                  <!-- Razón Social -->
                   <div class="sm:col-span-4">
                     <label for="razonSocial" class="block text-sm font-medium leading-6 text-gray-900">Razón Social</label>
                     <div class="mt-2">
@@ -59,9 +72,13 @@
                       <div *ngIf="perfilForm.get('razonSocial')?.hasError('required') && perfilForm.get('razonSocial')?.touched" class="error-message" class="text-red-500 text-sm">
                         La razon social es obligatoria.
                       </div>
+                      <div *ngIf="perfilForm.get('razonSocial')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        La razon social no puede tener más de 50 caracteres.
+                    </div>
                     </div>
                   </div>
-          
+                  
+                  <!-- Email -->
                   <div class="sm:col-span-4">
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
                     <div class="mt-2">
@@ -76,8 +93,12 @@
                           El correo electrónico ya está en uso.
                         </div>
                     </div>
+                    <div *ngIf="perfilForm.get('email')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                      El email no puede tener más de 50 caracteres.
+                   </div>
                   </div>
-          
+                  
+                  <!-- Teléfono -->
                   <div class="sm:col-span-4">
                     <label for="telefono" class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                     <div class="mt-2">
@@ -85,6 +106,9 @@
                         <div *ngIf="perfilForm.get('telefono')?.hasError('required') && perfilForm.get('telefono')?.touched" class="error-message" class="text-red-500 text-sm">
                           El telefono es obligatorio.
                         </div>
+                        <div *ngIf="perfilForm.get('telefono')?.hasError('telefonoInvalido')" class="error-message text-red-500 text-sm">
+                          Por favor, introduce un número de teléfono válido.
+                      </div>
                       </div>
                   </div>
                   

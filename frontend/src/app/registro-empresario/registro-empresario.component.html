@@ -14,8 +14,10 @@
     <div  class="w-full  rounded-lg  md:mt-0 sm:max-w-md xl:p-0 ">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form  [formGroup]="empresarioForm" (ngSubmit)="submitForm()" class="space-y-4 md:space-y-6" >
+                
+                <!-- Username -->
                 <div>
-                    <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre de Usuario</label>
+                    <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre de Usuario*</label>
                     <input formControlName="username"  name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Usuario" required>
                     <div *ngIf="empresarioForm.get('username')?.hasError('required') && empresarioForm.get('username')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre de usuario es obligatorio.
@@ -26,11 +28,15 @@
                     <div *ngIf="empresarioForm.get('username')?.hasError('duplicateUsername')"  class="text-red-500 text-sm">
                         El nombre de usuario ya está en uso.
                     </div>
+                    <div *ngIf="empresarioForm.get('username')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre de usuario no puede tener más de 50 caracteres.
+                    </div>
                     
                 </div>
                 
+                <!-- Nombre -->
                 <div>
-                    <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Responsable</label>
+                    <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Responsable*</label>
                     <input formControlName="nombre"  name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre" required>
                     <div *ngIf="empresarioForm.get('nombre')?.hasError('required') && empresarioForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre del reponsable es obligatorio.
@@ -38,10 +44,14 @@
                     <div *ngIf="empresarioForm.get('nombre')?.hasError('pattern') && empresarioForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre del reponsable no puede contener símbolos.
                      </div>
+                     <div *ngIf="empresarioForm.get('nombre')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre del reponsable no puede tener más de 50 caracteres.
+                     </div>
                 </div>
                 
+                <!-- Apellido -->
                 <div>
-                    <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido Responsable</label>
+                    <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido Responsable*</label>
                     <input formControlName="apellido"   name="apellido" id="apellido" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Apellido" required>
                     <div *ngIf="empresarioForm.get('apellido')?.hasError('required') && empresarioForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
                         El apellido del reponsable es obligatorio.
@@ -49,9 +59,14 @@
                     <div *ngIf="empresarioForm.get('apellido')?.hasError('pattern') && empresarioForm.get('apellido')?.touched" class="error-message" class="text-red-500 text-sm">
                         El apellido del reponsable no puede contener símbolos.
                      </div>
+                     <div *ngIf="empresarioForm.get('apellido')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El apellido del responsable no puede tener más de 50 caracteres.
+                     </div>
                 </div>
+
+                <!-- Email -->
                 <div>
-                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email*</label>
                     <input formControlName="email" type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email" required>
                     <div *ngIf="empresarioForm.get('email')?.hasError('required') && empresarioForm.get('email')?.touched" class="error-message" class="text-red-500 text-sm">
                         El email es obligatorio.
@@ -62,9 +77,14 @@
                     <div *ngIf="empresarioForm.get('email')?.hasError('duplicateEmail')" class="text-red-500 text-sm">
                         El correo electrónico ya está en uso.
                       </div>
+                      <div *ngIf="empresarioForm.get('email')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El email no puede tener más de 50 caracteres.
+                     </div>
                 </div>
+                
+                <!-- Contraseña -->
                 <div>
-                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
+                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña*</label>
                     <div class="relative">
                         <input formControlName="password" [type]="showPassword ? 'text' : 'password'" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <div class="absolute bottom-0 right-0 pb-2 pr-3 flex items-center">
@@ -77,7 +97,7 @@
                                 </svg>
                               </button>
                           </div>
-                      </div>
+                    </div>
                     
                     <div *ngIf="empresarioForm.get('password')?.hasError('required') && empresarioForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
                         La contraseña es obligatoria.
@@ -88,10 +108,15 @@
                       <div *ngIf="empresarioForm.get('password')?.hasError('passwordRequirements') && empresarioForm.get('password')?.touched" class="error-message" class="text-red-500 text-sm">
                         La contraseña debe contener al menos una letra y un número.
                       </div>
+                      <div *ngIf="empresarioForm.get('password')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        La contraseña no puede tener más de 50 caracteres.
+                     </div>
                     
                 </div>
+                
+                <!--  Confirmar contraseña -->
                 <div>
-                    <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirmar Contraseña</label>
+                    <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirmar Contraseña*</label>
                     <div class="relative">
                         <input  formControlName="confirm_password" [type]="showConfirmPassword ? 'text' : 'password'" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
                         <div class="absolute bottom-0 right-0 pb-2 pr-3 flex items-center">
@@ -105,31 +130,45 @@
                               </button>
                           </div>
                         </div>
-                  </div>
-
-                    <div *ngIf="empresarioForm.hasError('passwordMismatch') && empresarioForm.get('confirm_password')?.touched" class="error-message" class="text-red-500 text-sm">
-                        Las contraseñas no coinciden.
-                    </div>
-
-                <div>
-                    <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefono</label>
-                    <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Telefono" required>
-                    <div *ngIf="empresarioForm.get('telefono')?.hasError('required') && empresarioForm.get('telefono')?.touched" class="error-message" class="text-red-500 text-sm">
-                        El telefono es obligatorio.
-                    </div>
+                        <div *ngIf="empresarioForm.hasError('passwordMismatch') && empresarioForm.get('confirm_password')?.touched" class="error-message" class="text-red-500 text-sm">
+                            Las contraseñas no coinciden.
+                        </div>
                 </div>
+
+                <!-- Telefono -->
                 <div>
-                    <label for="razonSocial" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Razón Social</label>
+                        <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono*</label>
+                        <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Telefono" required>
+                        
+                        <div *ngIf="empresarioForm.get('telefono')?.hasError('required') && empresarioForm.get('telefono')?.touched" class="error-message text-red-500 text-sm">
+                            El telefono es obligatorio.
+                        </div>
+                        <div *ngIf="empresarioForm.get('telefono')?.hasError('telefonoInvalido')" class="error-message text-red-500 text-sm">
+                            Por favor, introduce un número de teléfono válido.
+                        </div>
+                </div>
+
+                <!-- Razon Social -->
+                <div>
+                    <label for="razonSocial" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Razón Social*</label>
                     <input formControlName="razonSocial" type="razonSocial" name="razonSocial" id="razonSocial" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Razón Social" required>
                     <div *ngIf="empresarioForm.get('razonSocial')?.hasError('required') && empresarioForm.get('razonSocial')?.touched" class="error-message" class="text-red-500 text-sm">
                         La razon social es obligatoria.
                     </div>
+                    <div *ngIf="empresarioForm.get('razonSocial')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        La razon social no puede tener más de 50 caracteres.
+                    </div>
                 </div>
+
+                <!-- Nombre Establecimiento -->
                 <div>
-                    <label for="nombreEstablecimiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Establecimiento</label>
+                    <label for="nombreEstablecimiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Establecimiento*</label>
                     <input  formControlName="descripcion" type="nombreEstablecimiento" name="nombreEstablecimiento" id="nombreEstablecimiento" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre Establecimiento" required>
                     <div *ngIf="empresarioForm.get('descripcion')?.hasError('required') && empresarioForm.get('descripcion')?.touched" class="error-message" class="text-red-500 text-sm">
                         El nombre establecimiento es obligatorio.
+                    </div>
+                    <div *ngIf="empresarioForm.get('descripcion')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre establecimiento no puede tener más de 50 caracteres.
                     </div>
                 </div>
                 

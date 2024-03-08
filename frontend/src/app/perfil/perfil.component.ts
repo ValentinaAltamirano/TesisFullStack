@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 
@@ -27,16 +27,29 @@ export class PerfilComponent  {
   ngOnInit() {
     // Inicializar FormGroup y asignar FormControls
     this.perfilForm = this.fb.group({
-      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', Validators.required],
-      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
-      razonSocial: ['', Validators.required],
+      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
+      telefono: ['', [Validators.required, this.validarTelefono]],
+      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      razonSocial: ['', [Validators.required, Validators.maxLength(50)]],
     });
 
     // Obtener y asignar los datos del usuario
     this.obtenerDatosUsuario();
+  }
+
+  validarTelefono(control: AbstractControl): Promise<{ [key: string]: any } | null> {
+    return new Promise((resolve, reject) => {
+      const telefonoRegex = /^[0-9]{10,}$/; // Formato: 10 o más dígitos numéricos
+      const esValido = telefonoRegex.test(control.value);
+  
+      if (!control.value) {
+        resolve({ 'telefonoVacio': true });
+      } else {
+        resolve(esValido ? null : { 'telefonoInvalido': true });
+      }
+    });
   }
 
   obtenerDatosUsuario() {
