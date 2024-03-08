@@ -24,8 +24,8 @@ export class RegistroTuristaComponent {
       password: ['', [Validators.required, Validators.minLength(6), this.validatePassword, Validators.maxLength(50)]],
       confirm_password: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
-      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
-      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
+      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\sáéíóúÁÉÍÓÚüÜñÑ]+$/), Validators.maxLength(50)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\sáéíóúÁÉÍÓÚüÜñÑ]+$/), Validators.maxLength(50)]],
     }, { validators: this.passwordsMatchValidator });
   }
 

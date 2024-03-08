@@ -76,7 +76,7 @@ export class RegistroComercioComponent {
     this.comercioForm = this.fb.group({
       // Campos del establecimiento
       idEmpresario: [''],
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" ]+$/), Validators.maxLength(50)]],
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" \p{L}]+$/u), Validators.maxLength(50)]],
       tipoEstablecimiento: [2],
       codCiudad: [1],
       calle: ['', [Validators.required, Validators.maxLength(50)]],

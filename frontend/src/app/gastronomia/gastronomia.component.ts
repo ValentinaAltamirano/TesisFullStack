@@ -16,11 +16,17 @@ export class GastronomiaComponent {
   servicios: any[] = [];
   metodosDePago: any[] = [];
   gastronomiaForm: FormGroup = new FormGroup({});
-   
   gastronomias: any[] = [];
   imagenes: any[] = [];
   establecimientoId: number = 0;
   baseUrl = 'http://127.0.0.1:8000';
+  
+  elementosMostrados = {
+    tiposGastronomia: 5,
+    tiposComida: 5,
+    preferenciaAlimentaria: 5,
+    servicios: 5
+  };
 
   constructor(
     private gastronomiaService: GastronomiaService, private fb: FormBuilder,
@@ -40,25 +46,42 @@ export class GastronomiaComponent {
     const serviciosSeleccionados = this.gastronomiaForm.get('serviciosSeleccionados')?.value || [];
     
     // Lógica para filtrar gastronomías según las selecciones
-    if (tiposGastronomiaSeleccionados.length === 0 && serviciosSeleccionados.length === 0 && tiposComidaSeleccionados.length === 0 && preferenciaAlimentariaSeleccionada.length === 0 ) {
+    if (tiposGastronomiaSeleccionados.length === 0 &&
+      serviciosSeleccionados.length === 0 &&
+      tiposComidaSeleccionados.length === 0 &&
+      preferenciaAlimentariaSeleccionada.length === 0 ) {
       // Si no se han seleccionado tipos de alojamiento, servicios ni categorías, devolver todos los alojamientos
       return this.gastronomias;
     }
-
-    // const gastronomiasFiltradas = this.gastronomias.filter(gastronomia => {
-    //   return (
-    //     (tiposGastronomiaSeleccionados.length === 0 || gastronomia.tipos_gastronomia.nombre.some((tipo: any) => tiposGastronomiaSeleccionados.includes(tipo.nombre))) &&
-    //     (tiposComidaSeleccionados.length === 0 || gastronomia.tipos_comida.some((tipo: any) => tiposComidaSeleccionados.includes(tipo.nombre))) &&
-    //     (preferenciaAlimentariaSeleccionada.length === 0 || gastronomia.preferencias_alimentarias.some((preferencia: any) => preferenciaAlimentariaSeleccionada.includes(preferencia.nombre))) &&
-    //     (serviciosSeleccionados.length === 0 || gastronomia.servicios.some((servicio: any) => serviciosSeleccionados.includes(servicio.nombre)))
-    //   );
-    // });
     
     const gastronomiasFiltradas = this.gastronomias.filter((gastronomia) => {
-      const cumpleTipos = tiposGastronomiaSeleccionados.length === 0 || tiposGastronomiaSeleccionados.some(
-        (tipo: string) => tipo === `tiposAlojamientoSeleccionados.${gastronomia.tipos_gastronomia.nombre}`
+
+      const cumpleTipos = tiposGastronomiaSeleccionados.length === 0 || tiposGastronomiaSeleccionados.every(
+        (tipo: any) => gastronomia.tipos_gastronomia.some(
+          (gastronomiaTipo: any) => tipo === `tiposGastronomiaSeleccionados.${gastronomiaTipo.nombre}`
+        )
       );
-      return cumpleTipos 
+
+      const cumpleTiposComida = tiposComidaSeleccionados.length === 0 || tiposComidaSeleccionados.every(
+        (tipo: any) => gastronomia.tipos_comida.some(
+          (gastronomiaTipoComida: any) => tipo === `tiposComidaSeleccionados.${gastronomiaTipoComida.nombre}`
+        )
+      );
+
+      const cumplePreferenciaAlimentaria = preferenciaAlimentariaSeleccionada.length === 0 || preferenciaAlimentariaSeleccionada.every(
+        (preferencia: any) => gastronomia.tipos_pref_alimentaria.some(
+          (gastronomiaPreferencia: any) => preferencia === `preferenciaAlimentariaSeleccionada.${gastronomiaPreferencia.nombre}`
+        )
+      );
+
+      const cumpleServicios = serviciosSeleccionados.length === 0 || serviciosSeleccionados.every(
+        (servicio: any) => gastronomia.tipos_servicio_gastronomico.some(
+          (gastronomiaServicio: any) => servicio === `serviciosSeleccionados.${gastronomiaServicio.nombre}`
+        )
+      );
+
+
+      return cumpleTipos && cumpleTiposComida && cumplePreferenciaAlimentaria && cumpleServicios;
     });
     
       return gastronomiasFiltradas;
@@ -164,24 +187,27 @@ export class GastronomiaComponent {
     toggleCheckbox(controlName: string): void {
       const tiposGastronomiaFormArray = this.gastronomiaForm.get('tiposGastronomiaSeleccionados') as FormArray;
       const serviciosFormArray = this.gastronomiaForm.get('serviciosSeleccionados') as FormArray;
-      const categoriasFormArray = this.gastronomiaForm.get('categoriasSeleccionadas') as FormArray;
-    
+      const tiposComidasFormArray = this.gastronomiaForm.get('tiposComidaSeleccionados') as FormArray;
+      const preferenciasAlimentariasFormArray = this.gastronomiaForm.get('preferenciaAlimentariaSeleccionada') as FormArray;
+        
       const control = this.fb.control(controlName);
-    
+        
       // Determinar a cuál FormArray pertenece el control
       let formArray: FormArray;
-    
+        
       if (controlName.includes('tiposGastronomiaSeleccionados')) {
         formArray = tiposGastronomiaFormArray;
       } else if (controlName.includes('serviciosSeleccionados')) {
         formArray = serviciosFormArray;
-      } else if (controlName.includes('categoriasSeleccionadas')) {
-        formArray = categoriasFormArray;
+      } else if (controlName.includes('tiposComidaSeleccionados')) {
+        formArray = tiposComidasFormArray;
+      } else if (controlName.includes('preferenciaAlimentariaSeleccionada')) {
+        formArray = preferenciasAlimentariasFormArray;
       } else {
         // Lógica adicional si es necesario manejar otros casos
         return;
       }
-    
+        
       if (formArray.value.includes(controlName)) {
         const index = formArray.value.findIndex((item: string) => item === controlName);
         formArray.removeAt(index);
@@ -193,5 +219,13 @@ export class GastronomiaComponent {
     getFormControl(formPath: string): FormControl {
       const control = this.gastronomiaForm.get(formPath) as FormControl;
       return control || new FormControl(null);
+    }
+
+    mostrarMas(filtro: keyof typeof GastronomiaComponent.prototype.elementosMostrados) {
+      this.elementosMostrados[filtro] = this[filtro].length;
+    }
+  
+    mostrarMenos(filtro: keyof typeof GastronomiaComponent.prototype.elementosMostrados) {
+      this.elementosMostrados[filtro] = 5; // Puedes ajustar a la cantidad que desees mostrar inicialmente
     }
   }
