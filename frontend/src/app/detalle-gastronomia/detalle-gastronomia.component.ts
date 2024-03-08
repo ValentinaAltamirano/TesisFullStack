@@ -216,7 +216,7 @@ export class DetalleGastronomiaComponent {
 
   editarComentario(comentario: any): void {
     // Verificar si el turista actual es el dueño del comentario
-    if (this.turistaId && comentario.turista === this.turistaId) {
+    if (this.turistaId && comentario.turista.codTurista === this.turistaId) {
       // Marcar el comentario como "editando"
       comentario.editando = true;
 
@@ -261,7 +261,7 @@ export class DetalleGastronomiaComponent {
 
   eliminarComentario(comentario: any): void {
     // Verificar si el turista actual es el dueño del comentario
-    if (this.turistaId && comentario.turista === this.turistaId) {
+    if (this.turistaId && comentario.turista.codTurista === this.turistaId) {
       Swal.fire({
         title: '¿Estás seguro de que quieres eliminar el comentario?',
         icon: 'warning',

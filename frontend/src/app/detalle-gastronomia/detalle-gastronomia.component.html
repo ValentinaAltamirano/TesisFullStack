@@ -29,7 +29,7 @@
               {{ gastronomia.telefono }}
             </p>
             <div class="mt-5">
-                <a class="bg-gray-200 hover:bg-gray-400 font-bold py-2 px-4 rounded w-auto max-w-xs mx-auto" href="{{ gastronomia.web }}">
+                <a  *ngIf="gastronomia.web !== ''" class="bg-gray-200 hover:bg-gray-400 font-bold py-2 px-4 rounded w-auto max-w-xs mx-auto" href="{{ gastronomia.web }}">
                     Sitio web
                 </a>
             </div>
@@ -164,13 +164,13 @@
                   <p class="mt-2 text-md text-gray-600">{{ comentario.comentario }}</p>
 
                   <!-- Mostrar botones de edición y eliminación solo si el turista es el propietario del comentario -->
-                  <div *ngIf="turistaId == comentario.turista" class="mt-3 flex items-end justify-end">
+                  <div *ngIf="turistaId == comentario.turista.codTurista" class="mt-3 flex items-end justify-end">
                     <button *ngIf="!comentario.editando" class="lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200 mx-2" (click)="eliminarComentario(comentario)">Eliminar</button>
                     <button *ngIf="!comentario.editando" class="lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200" (click)="editarComentario(comentario)">Editar</button>
                   </div>
               
             <!-- Mostrar formulario de edición solo si es el dueño del comentario -->
-            <div *ngIf="turistaId == comentario.turista && comentario.editando">
+            <div *ngIf="turistaId == comentario.turista.codTurista && comentario.editando">
               <!-- Formulario de edición -->
               <form [formGroup]="editarComentarioForm" (ngSubmit)="guardarEdicion(comentario)">
                 

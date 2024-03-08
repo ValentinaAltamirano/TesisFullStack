@@ -142,7 +142,7 @@
                   <p class="mt-1 text-sm text-slate-500">Tel. {{ alojamiento.telefono }} </p>
                   <div class="mt-3 flex items-end justify-between">
                     <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" [routerLink]="['/detalle-alojamiento', alojamiento.codEstablecimiento]" >Ver más</a>
-                    <a class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ alojamiento.web }}" target="_blank" >Página web</a>
+                    <a *ngIf="alojamiento.web !== ''" class="hidden lg:inline-block lg:ml-auto  py-2 px-6 bg-red-500 hover:bg-red-800  text-sm text-white font-bold  rounded-xl transition duration-200" href="{{ alojamiento.web }}" target="_blank" >Página web</a>
                   </div>
                   
                 </div>
