@@ -20,6 +20,7 @@ export class RegistroAlojamientoComponent {
   imagenes: File[] = [];
   vistasPrevias: string[] = [];
   idEmpresario: any;
+  submitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -109,12 +110,12 @@ export class RegistroAlojamientoComponent {
     this.alojamientoForm = this.fb.group({
       // Campos del establecimiento
       idEmpresario: [''],
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" ]+$/), Validators.maxLength(50)]],
       tipoEstablecimiento: [1],
       codCiudad: [1],
       calle: ['', [Validators.required, Validators.maxLength(50)]],
       altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
-      telefono: ['', [Validators.required, this.validarTelefono]],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9\s\-\+]+$/), Validators.minLength(10), Validators.maxLength(20)]],
       web: [''],
       descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
       imagenes: this.fb.array([], [Validators.required]),
@@ -126,16 +127,6 @@ export class RegistroAlojamientoComponent {
     });
   }
 
-  validarTelefono(control: AbstractControl) {
-    const telefonoRegex = /^[0-9]{10,}$/; // Formato: 10 o más dígitos numéricos
-    const esValido = telefonoRegex.test(control.value);
-  
-    if (!control.value) {
-      return { 'telefonoVacio': true };
-    }
-  
-    return esValido ? null : { 'telefonoInvalido': true };
-  }
 
   getFormControl(formPath: string): FormControl {
     const control = this.alojamientoForm.get(formPath) as FormControl;
@@ -216,8 +207,7 @@ export class RegistroAlojamientoComponent {
   submitForm() {
     const descripcionConvertida = this.convertirSaltosDeLineaEnBr(this.alojamientoForm.get('descripcion')?.value);
     this.alojamientoForm.get('descripcion')?.setValue(descripcionConvertida);
-    console.log(this.alojamientoForm.valid)
-    console.log(this.alojamientoForm.value)
+    this.submitted = true;
     if (this.alojamientoForm.valid) {
       // Enviar datos al servicio de autenticación
       this.alojamientoService.registrarAlojamiento(this.alojamientoForm.value).subscribe(
@@ -243,7 +233,7 @@ export class RegistroAlojamientoComponent {
     this.alojamientoService.registrarImagenes(imagenes, alojamientoId).subscribe(
       (response: any) => {
         Swal.fire({
-          title: "Registro de alojamiento e imágenes exitoso",
+          title: "Registro de alojamiento exitoso",
           icon: "success",
           confirmButtonText: "OK",
           timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)

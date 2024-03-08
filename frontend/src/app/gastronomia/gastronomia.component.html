@@ -18,7 +18,7 @@
 
         <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
           <!-- Filters -->
-          <form class="hidden lg:block">
+          <form class="hidden lg:block" [formGroup]="gastronomiaForm">
 
             <div class="border-b border-gray-200 py-6">
               <h3 class="-my-3 flow-root">
@@ -31,13 +31,16 @@
                 <div class="space-y-4">
                   <div *ngFor="let tipo of tiposGastronomia" class="flex items-center">
                     <input
-                      [id]="'filter-color-' + tipo"
-                      [name]="'color[]'"
+                      [id]="'tiposGastronomia-' + tipo"
+                      [name]="'tiposGastronomia-' + tipo"
                       [value]="tipo"
                       type="checkbox"
                       class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      [checked]="getFormControl('tiposGastronomiaSeleccionados.' + tipo).value"
+                      (change)="toggleCheckbox('tiposGastronomiaSeleccionados.' + tipo)"
+                      formArrayName="tiposGastronomiaSeleccionados"
                     />
-                    <label [for]="'filter-color-' + tipo" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                    <label [for]="'tiposGastronomia-' + tipo" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
                   </div>
                 </div>
 
@@ -122,7 +125,7 @@
           <div class="lg:col-span-3">
             <!-- Alojamientos -->
             <div class="flex  max-w-6xl flex-wrap justify-start">
-              <div *ngFor="let gastronomia of getAlojamientosFiltrados()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-3 mb-6">
+              <div *ngFor="let gastronomia of getGastronomiaFiltradas()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-3 mb-6">
                 
                 
                   <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
