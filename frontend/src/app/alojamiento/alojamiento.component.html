@@ -30,7 +30,7 @@
                 
                 
                 <div class="space-y-4">
-                  <div *ngFor="let tipo of tiposAlojamiento" class="flex items-center">
+                  <div *ngFor="let tipo of tiposAlojamiento.slice(0, elementosMostrados['tiposAlojamiento'])" class="flex items-center">
                      <input
                       [id]="'tipoAlojamiento-' + tipo"
                       [name]="'tipoAlojamiento-' + tipo"
@@ -41,6 +41,18 @@
                       class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
                     />
                     <label [for]="'tipoAlojamiento-' + tipo" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
+                  </div>
+
+                  <div *ngIf="tiposAlojamiento.length > elementosMostrados.tiposAlojamiento" >
+                    <button (click)="mostrarMas('tiposAlojamiento')" class="ml-3 text-sm text-red-500 flex font-bold">
+                      Ver más 
+                      <svg class="h-5 w-5 pt-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 9 12 15 18 9" /></svg></button>
+                  </div>
+  
+                  <div *ngIf="elementosMostrados.tiposAlojamiento > 5">
+                    <button (click)="mostrarMenos('tiposAlojamiento')" class="ml-3 text-sm text-red-500 flex font-bold">
+                      Ver menos
+                      <svg class="h-5 w-5 pt-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 15 12 9 18 15" /></svg></button>
                   </div>
                 </div>
 
@@ -56,7 +68,7 @@
               <div class="pt-6" id="filter-section-1">
 
                 <div class="space-y-4">
-                  <div *ngFor="let tipo of tiposServicio" class="flex items-center">
+                  <div *ngFor="let tipo of tiposServicio.slice(0, elementosMostrados['tiposServicio'])" class="flex items-center">
                     <input
                       [id]="'tiposServicio-' + tipo"
                       [name]="'tiposServicio-' + tipo"
@@ -68,8 +80,21 @@
                     />
                     <label [for]="'tiposServicio-' + tipo" class="ml-3 text-sm text-gray-800">{{ tipo }}</label>
                   </div>
-                </div>
 
+                  <div *ngIf="tiposServicio.length > elementosMostrados.tiposServicio" >
+                    <button (click)="mostrarMas('tiposServicio')" class="ml-3 text-sm text-red-500 flex font-bold">
+                      Ver más 
+                      <svg class="h-5 w-5 pt-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 9 12 15 18 9" /></svg></button>
+                  </div>
+  
+                  <div *ngIf="elementosMostrados.tiposServicio > 5">
+                    <button (click)="mostrarMenos('tiposServicio')" class="ml-3 text-sm text-red-500 flex font-bold">
+                      Ver menos
+                      <svg class="h-5 w-5 pt-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 15 12 9 18 15" /></svg></button>
+                  </div>
+
+                </div>
+                
               </div>
             </div>
 

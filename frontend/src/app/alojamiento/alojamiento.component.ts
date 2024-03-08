@@ -19,6 +19,11 @@ export class AlojamientoComponent {
   baseUrl = 'http://127.0.0.1:8000';
   alojamientoForm: FormGroup = new FormGroup({});
 
+  elementosMostrados = {
+    tiposAlojamiento: 5,
+    tiposServicio: 5
+  };
+
   obtenerTiposAlojamiento(): void {
     this.alojamientoService.obtenerTiposAlojamiento().subscribe(
       (data) => {
@@ -82,11 +87,6 @@ export class AlojamientoComponent {
     return control || new FormControl(null);
   }
 
-  getTiposAlojamientoSeleccionados(): string[] {
-    const formArray = this.alojamientoForm.get('tiposAlojamientoSeleccionados') as FormArray;
-    return formArray.value;
-  }
-
   toggleCheckbox(controlName: string): void {
     const tiposAlojamientoFormArray = this.alojamientoForm.get('tiposAlojamientoSeleccionados') as FormArray;
     const serviciosFormArray = this.alojamientoForm.get('serviciosSeleccionados') as FormArray;
@@ -145,8 +145,6 @@ export class AlojamientoComponent {
     return cumpleTipos && cumpleCategorias && cumpleServicios;
   });
   
-    console.log('Alojamientos Filtrados:', alojamientosFiltrados);
-  
     return alojamientosFiltrados;
   }
 
@@ -194,5 +192,11 @@ export class AlojamientoComponent {
 
   }
 
-  
+  mostrarMas(filtro: keyof typeof AlojamientoComponent.prototype.elementosMostrados) {
+    this.elementosMostrados[filtro] = this[filtro].length;
+  }
+
+  mostrarMenos(filtro: keyof typeof AlojamientoComponent.prototype.elementosMostrados) {
+    this.elementosMostrados[filtro] = 5; // Puedes ajustar a la cantidad que desees mostrar inicialmente
+  }
 }

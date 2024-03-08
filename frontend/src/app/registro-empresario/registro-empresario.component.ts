@@ -26,12 +26,12 @@ export class RegistroEmpresarioComponent {
       password: ['', [Validators.required, Validators.minLength(6), this.validatePassword, Validators.maxLength(50)]],
       confirm_password: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
-      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
-      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/), Validators.maxLength(50)]],
+      nombre:  ['', [Validators.required, Validators.pattern(/^[a-zA-Z\sáéíóúÁÉÍÓÚüÜñÑ]+$/), Validators.maxLength(50)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\sáéíóúÁÉÍÓÚüÜñÑ]+$/), Validators.maxLength(50)]],
 
       // Campos del Empresario
-      razonSocial: ['', [Validators.required, Validators.maxLength(50)]],
-      descripcion: ['', [Validators.required, Validators.maxLength(50)]],
+      razonSocial: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" \p{L}]+$/u), Validators.maxLength(50)]],
+      descripcion: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" \p{L}]+$/u), Validators.maxLength(50)]],
       telefono: ['', [Validators.required, this.validarTelefono]]
     }, { validators: this.passwordsMatchValidator });
   }
