@@ -94,7 +94,7 @@
                         La altura debe ser números.
                        </div>
                        <div *ngIf="gastronomiaForm.get('altura')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
-                        La altura no puede tener más de 50 caracteres.
+                        La altura no puede tener más de 50 números.
                        </div>
                     </div>
 
@@ -106,9 +106,15 @@
                         <div *ngIf="gastronomiaForm.get('telefono')?.hasError('required') && gastronomiaForm.get('telefono')?.touched" class="error-message text-red-500 text-sm">
                           El telefono es obligatorio.
                         </div>
-                        <div *ngIf="gastronomiaForm.get('telefono')?.hasError('telefonoInvalido')" class="error-message text-red-500 text-sm">
-                            Por favor, introduce un número de teléfono válido.
-                        </div>
+                        <div *ngIf="gastronomiaForm.get('telefono')?.hasError('maxlength') && gastronomiaForm.get('telefono')?.touched" class="error-message text-red-500 text-sm">
+                          El telefono no puede tener más de 20 caracteres.
+                         </div>
+                         <div *ngIf="gastronomiaForm.get('telefono')?.hasError('minLength') && gastronomiaForm.get('telefono')?.touched" class="error-message text-red-500 text-sm">
+                          El telefono no puede tener menos de 10 caracteres.
+                         </div>
+                         <div *ngIf="gastronomiaForm.get('telefono')?.hasError('pattern') && gastronomiaForm.get('telefono')?.touched" class="error-message" class="text-red-500 text-sm">
+                          El telefono no puede contener símbolos.
+                          </div>
                     </div>
 
                     <!-- Tipo de Comida -->
@@ -260,7 +266,11 @@
                         Las imagenes son obligatorias.
                       </div>
     
-                    <div class="flex">
+                      <div class="flex flex-col">
+
+                        <div *ngIf="(gastronomiaForm.invalid ) && submitted" class="error-message text-red-500 text-sm mb-4">
+                          Por favor, complete todos los campos obligatorios antes de enviar el formulario.
+                        </div>
                         <button type="submit" class="flex-1 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrar Local Gastronómico</button>
                     </div>
                 </form>

@@ -18,6 +18,7 @@ export class RegistroComercioComponent {
   imagenes: File[] = [];
   vistasPrevias: string[] = [];
   idEmpresario: any;
+  submitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -75,12 +76,12 @@ export class RegistroComercioComponent {
     this.comercioForm = this.fb.group({
       // Campos del establecimiento
       idEmpresario: [''],
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" ]+$/), Validators.maxLength(50)]],
       tipoEstablecimiento: [2],
       codCiudad: [1],
       calle: ['', [Validators.required, Validators.maxLength(50)]],
       altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
-      telefono: ['', [Validators.required, this.validarTelefono]],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9\s\-\+]+$/), Validators.minLength(10), Validators.maxLength(20)]],
       web: [''],
       descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
       imagenes: this.fb.array([], [Validators.required]),
@@ -185,7 +186,7 @@ export class RegistroComercioComponent {
   submitForm() {
     const descripcionConvertida = this.convertirSaltosDeLineaEnBr(this.comercioForm.get('descripcion')?.value);
     this.comercioForm.get('descripcion')?.setValue(descripcionConvertida);
-    
+    this.submitted = true;
 
     if (this.comercioForm.valid) {
       // Enviar datos al servicio de autenticación

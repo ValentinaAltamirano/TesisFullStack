@@ -15,7 +15,7 @@ export class GastronomiaComponent {
   preferenciaAlimentaria: any[] = [];
   servicios: any[] = [];
   metodosDePago: any[] = [];
-
+  gastronomiaForm: FormGroup = new FormGroup({});
    
   gastronomias: any[] = [];
   imagenes: any[] = [];
@@ -24,27 +24,47 @@ export class GastronomiaComponent {
 
   constructor(
     private gastronomiaService: GastronomiaService, private fb: FormBuilder,
-  ) {}
+  ) {
+    this.gastronomiaForm = this.fb.group({
+      tiposGastronomiaSeleccionados: this.fb.array([]),
+      tiposComidaSeleccionados: this.fb.array([]),
+      preferenciaAlimentariaSeleccionada: this.fb.array([]),
+      serviciosSeleccionados: this.fb.array([]),
+    });
+  }
 
-  getAlojamientosFiltrados(): any[] {
+  getGastronomiaFiltradas(): any[] {
+    const tiposGastronomiaSeleccionados = this.gastronomiaForm.get('tiposGastronomiaSeleccionados')?.value || [];
+    const tiposComidaSeleccionados = this.gastronomiaForm.get('tiposComidaSeleccionados')?.value || [];
+    const preferenciaAlimentariaSeleccionada = this.gastronomiaForm.get('preferenciaAlimentariaSeleccionada')?.value || [];
+    const serviciosSeleccionados = this.gastronomiaForm.get('serviciosSeleccionados')?.value || [];
     
-    return this.gastronomias;
-
+    // Lógica para filtrar gastronomías según las selecciones
+    if (tiposGastronomiaSeleccionados.length === 0 && serviciosSeleccionados.length === 0 && tiposComidaSeleccionados.length === 0 && preferenciaAlimentariaSeleccionada.length === 0 ) {
+      // Si no se han seleccionado tipos de alojamiento, servicios ni categorías, devolver todos los alojamientos
+      return this.gastronomias;
     }
 
-    obtenerMetodosPago(): void {
-      this.gastronomiaService.obtenerMetodosDePago().subscribe(
-        (data) => {
-          this.metodosDePago = data;
-        },
-        (error) => {
-          console.error('Error al obtener tipos de categoria', error);
-          // Manejo de errores
-        }
+    // const gastronomiasFiltradas = this.gastronomias.filter(gastronomia => {
+    //   return (
+    //     (tiposGastronomiaSeleccionados.length === 0 || gastronomia.tipos_gastronomia.nombre.some((tipo: any) => tiposGastronomiaSeleccionados.includes(tipo.nombre))) &&
+    //     (tiposComidaSeleccionados.length === 0 || gastronomia.tipos_comida.some((tipo: any) => tiposComidaSeleccionados.includes(tipo.nombre))) &&
+    //     (preferenciaAlimentariaSeleccionada.length === 0 || gastronomia.preferencias_alimentarias.some((preferencia: any) => preferenciaAlimentariaSeleccionada.includes(preferencia.nombre))) &&
+    //     (serviciosSeleccionados.length === 0 || gastronomia.servicios.some((servicio: any) => serviciosSeleccionados.includes(servicio.nombre)))
+    //   );
+    // });
+    
+    const gastronomiasFiltradas = this.gastronomias.filter((gastronomia) => {
+      const cumpleTipos = tiposGastronomiaSeleccionados.length === 0 || tiposGastronomiaSeleccionados.some(
+        (tipo: string) => tipo === `tiposAlojamientoSeleccionados.${gastronomia.tipos_gastronomia.nombre}`
       );
+      return cumpleTipos 
+    });
+    
+      return gastronomiasFiltradas;
     }
     
-    obtenerTiposGastronomia(): void {
+  obtenerTiposGastronomia(): void {
       this.gastronomiaService.obtenerTiposGastronomia().subscribe(
         (data) => {
           this.tiposGastronomia = data;
@@ -56,7 +76,7 @@ export class GastronomiaComponent {
       );
     }
   
-    obtenerServicioGastronomia(): void {
+  obtenerServicioGastronomia(): void {
       this.gastronomiaService.obtenerServicioGastronomia().subscribe(
         (data) => {
           this.servicios = data;
@@ -68,7 +88,7 @@ export class GastronomiaComponent {
       );
     }
   
-    obtenerTipoComida(): void {
+  obtenerTipoComida(): void {
       this.gastronomiaService.obtenerTipoComida().subscribe(
         (data) => {
           this.tiposComida = data;
@@ -92,7 +112,7 @@ export class GastronomiaComponent {
       );
     }
   
-    obtenerMetodosDePago(): void {
+  obtenerMetodosDePago(): void {
       this.gastronomiaService.obtenerMetodosDePago().subscribe(
         (data) => {
           this.metodosDePago = data;
@@ -139,5 +159,39 @@ export class GastronomiaComponent {
           console.error(error);
         }
       );
+    }
+
+    toggleCheckbox(controlName: string): void {
+      const tiposGastronomiaFormArray = this.gastronomiaForm.get('tiposGastronomiaSeleccionados') as FormArray;
+      const serviciosFormArray = this.gastronomiaForm.get('serviciosSeleccionados') as FormArray;
+      const categoriasFormArray = this.gastronomiaForm.get('categoriasSeleccionadas') as FormArray;
+    
+      const control = this.fb.control(controlName);
+    
+      // Determinar a cuál FormArray pertenece el control
+      let formArray: FormArray;
+    
+      if (controlName.includes('tiposGastronomiaSeleccionados')) {
+        formArray = tiposGastronomiaFormArray;
+      } else if (controlName.includes('serviciosSeleccionados')) {
+        formArray = serviciosFormArray;
+      } else if (controlName.includes('categoriasSeleccionadas')) {
+        formArray = categoriasFormArray;
+      } else {
+        // Lógica adicional si es necesario manejar otros casos
+        return;
+      }
+    
+      if (formArray.value.includes(controlName)) {
+        const index = formArray.value.findIndex((item: string) => item === controlName);
+        formArray.removeAt(index);
+      } else {
+        formArray.push(control);
+      }
+    }
+
+    getFormControl(formPath: string): FormControl {
+      const control = this.gastronomiaForm.get(formPath) as FormControl;
+      return control || new FormControl(null);
     }
   }
