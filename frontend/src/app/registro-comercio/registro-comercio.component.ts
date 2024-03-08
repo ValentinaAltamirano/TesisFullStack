@@ -82,7 +82,7 @@ export class RegistroComercioComponent {
       altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
       telefono: ['', [Validators.required,, this.validarTelefono]],
       web: [''],
-      descripcion: ['', [Validators.required, Validators.maxLength(250), Validators.maxLength(250)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(500), Validators.maxLength(250)]],
       imagenes: this.fb.array([], [Validators.required]),
       metodosPagoSeleccionados: this.fb.array([], [Validators.required]),
 
