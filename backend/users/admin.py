@@ -12,9 +12,11 @@ admin.site.register(Imagen)
 admin.site.register(TipoEstablecimiento)
 admin.site.register(TipoAlojamiento)
 admin.site.register(TipoServicio)
+admin.site.register(Categoria)
 
 # Alojamientos y servicios
 admin.site.register(Alojamientos)
+
 
 # Gastronomía
 admin.site.register(TipoGastronomia)
@@ -37,3 +39,4 @@ admin.site.register(TipoComercio)
 admin.site.register(ImagenPerfil)
 admin.site.register(Turista)
 admin.site.register(Comentario)
+
