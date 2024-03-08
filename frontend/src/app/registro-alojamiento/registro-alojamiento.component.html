@@ -62,9 +62,6 @@
                     <div *ngIf="alojamientoForm.get('calle')?.hasError('required') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
                        El nombre de la calle es obligatorio.
                     </div>
-                    <div *ngIf="alojamientoForm.get('calle')?.hasError('pattern') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
-                       El nombre de la calle no puede contener símbolos.
-                    </div>
                     <div *ngIf="alojamientoForm.get('calle')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
                         El nombre de la calle no puede tener más de 50 caracteres.
                     </div>
@@ -179,7 +176,7 @@
                       La descripcion es obligatoria.
                     </div>
                     <div *ngIf="alojamientoForm.get('descripcion')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
-                      La descripcion no puede tener más de 250 caracteres.
+                      La descripcion no puede tener más de 1000 caracteres.
                     </div>
               </div>
                 
@@ -215,7 +212,7 @@
               </div>
 
                 <div class="flex">
-                    <button type="submit" class="flex-1 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" [disabled]="!alojamientoForm.valid">Registrar Alojamiento</button>
+                    <button type="submit" class="flex-1 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" >Registrar Alojamiento</button>
                 </div>
             </form>
         </div>

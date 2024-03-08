@@ -59,7 +59,7 @@ class Establecimiento(models.Model):
     nombre = models.CharField(max_length=255)
     calle = models.CharField(max_length=255)
     altura = models.CharField(max_length=255, default='0')
-    descripcion = models.TextField(max_length=500, default='Sin descripcion')
+    descripcion = models.TextField(max_length=1000, default='Sin descripcion')
     tipoEstablecimiento = models.ForeignKey(TipoEstablecimiento, on_delete=models.CASCADE)
     telefono = models.CharField(max_length=255)
     web = models.TextField(max_length=255, default='')

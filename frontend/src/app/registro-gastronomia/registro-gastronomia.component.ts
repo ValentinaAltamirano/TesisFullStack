@@ -121,11 +121,11 @@ export class RegistroGastronomiaComponent {
       nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
       tipoEstablecimiento: [2],
       codCiudad: [1],
-      calle: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/), Validators.maxLength(50)]],
+      calle: ['', [Validators.required, Validators.maxLength(50)]],
       altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
-      telefono: ['', [Validators.required,, this.validarTelefono]],
+      telefono: ['', [Validators.required, this.validarTelefono]],
       web: ['', ],
-      descripcion: ['', [Validators.required, Validators.maxLength(250), Validators.maxLength(250)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
       imagenes: this.fb.array([], [Validators.required]),
 
       // Campos del gastronomia
