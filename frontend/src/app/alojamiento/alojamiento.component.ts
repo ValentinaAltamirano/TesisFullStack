@@ -127,6 +127,7 @@ export class AlojamientoComponent {
   }
 
   const alojamientosFiltrados = this.alojamientos.filter((alojamiento) => {
+    
     const cumpleTipos = tiposSeleccionados.length === 0 || tiposSeleccionados.some(
       (tipo: string) => tipo === `tiposAlojamientoSeleccionados.${alojamiento.codTipoAlojamiento.nombre}`
     );

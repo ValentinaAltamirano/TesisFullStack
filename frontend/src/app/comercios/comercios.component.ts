@@ -16,10 +16,45 @@ export class ComerciosComponent {
   imagenes: any[] = [];
   establecimientoId: number = 0;
   baseUrl = 'http://127.0.0.1:8000';
+  comercioForm: FormGroup = new FormGroup({});
+  elementosMostrados = {
+    tiposComercio: 5
+  };
 
   constructor(
     private comercioService: ComercioService, private fb: FormBuilder,
   ) {
+    this.comercioForm = this.fb.group({
+      tiposComercioSeleccionados: this.fb.array([])
+    });
+  }
+
+  getFormControl(formPath: string): FormControl {
+    const control = this.comercioForm.get(formPath) as FormControl;
+    return control || new FormControl(null);
+  }
+
+  toggleCheckbox(controlName: string): void {
+    const tiposComercioFormArray = this.comercioForm.get('tiposComercioSeleccionados') as FormArray;
+  
+    const control = this.fb.control(controlName);
+  
+    // Determinar a cuál FormArray pertenece el control
+    let formArray: FormArray;
+  
+    if (controlName.includes('tiposComercioSeleccionados')) {
+      formArray = tiposComercioFormArray;
+    } else {
+      // Lógica adicional si es necesario manejar otros casos
+      return;
+    }
+  
+    if (formArray.value.includes(controlName)) {
+      const index = formArray.value.findIndex((item: string) => item === controlName);
+      formArray.removeAt(index);
+    } else {
+      formArray.push(control);
+    }
   }
 
   obtenerTiposComercios(): void {
@@ -45,6 +80,31 @@ export class ComerciosComponent {
       }
     );
   }
+
+  getComerciosFiltrados(): any[] {
+    const tiposSeleccionados  = this.comercioForm.get('tiposComercioSeleccionados')?.value;
+    
+    if (tiposSeleccionados.length === 0 ) {
+      return this.comercios;
+    }
+  
+    const comerciosFiltrados = this.comercios.filter((comercio) => {
+
+      const cumpleTipos = tiposSeleccionados.length === 0 || 
+      tiposSeleccionados.every(
+        (tipo: string) => comercio.codTipoComercio.some(
+          (comercioTipo: { nombre: string }) => tipo.includes(`tiposComercioSeleccionados.${comercioTipo.nombre}`)
+        )
+      );
+
+      console.log(cumpleTipos)
+      console.log(tiposSeleccionados)
+  
+      return cumpleTipos;
+    });
+    
+      return comerciosFiltrados;
+    }
 
 
   ngOnInit() {
@@ -80,5 +140,13 @@ export class ComerciosComponent {
         console.error(error);
       }
     );
+  }
+
+  mostrarMas(filtro: keyof typeof ComerciosComponent.prototype.elementosMostrados) {
+    this.elementosMostrados[filtro] = this[filtro].length;
+  }
+
+  mostrarMenos(filtro: keyof typeof ComerciosComponent.prototype.elementosMostrados) {
+    this.elementosMostrados[filtro] = 5; // Puedes ajustar a la cantidad que desees mostrar inicialmente
   }
 }
