@@ -39,9 +39,9 @@ export class DetalleGastronomiaComponent {
     this.establecimientoId = 0;
     this.reviewForm = this.fb.group({});
     this.editarComentarioForm = this.fb.group({
-      titulo: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      titulo: ['', [Validators.required, Validators.maxLength(50)]],
       calificacion: [0, [Validators.required]],
-      comentario: ['', [Validators.required, Validators.maxLength(300), Validators.pattern(/^[a-zA-Z0-9]+$/) ]],
+      comentario: ['', [Validators.required, Validators.maxLength(300) ]],
     });
   }
 
@@ -71,9 +71,9 @@ export class DetalleGastronomiaComponent {
 
   async comentarioForm(turistaId: any) {
     this.reviewForm = this.fb.group({
-      titulo: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      titulo: ['', [Validators.required, Validators.maxLength(50)]],
       calificacion: [0, [Validators.required]],
-      comentario: ['', [Validators.required, Validators.maxLength(300), Validators.pattern(/^[a-zA-Z0-9]+$/) ]],
+      comentario: ['', [Validators.required, Validators.maxLength(300)]],
       establecimiento: [this.establecimientoId],
       turista: [turistaId],
     });

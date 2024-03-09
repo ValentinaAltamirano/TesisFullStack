@@ -6,7 +6,7 @@
     
     <div class="sm:mx-auto sm:w-full sm:max-w-4xl shadow dark:border bg-white p-2">
         <img class="mx-auto h-auto w-auto" src="../../assets/logo3.png" alt="Your Company">
-        <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">Editar Local Gastronómico</h1>
+        <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">Editar Comercio</h1>
     
     
     
@@ -14,26 +14,26 @@
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form [formGroup]="comercioForm" class="space-y-4 md:space-y-6"  enctype="multipart/form-data">
                 <div>
-                    <label for="nombreAlojamiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Local Gastronómico*</label>
+                    <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Comercio*</label>
                     <input type="text" name="nombre" id="nombre" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="nombre" formControlName="nombre" [readonly]="!editando"  >
                 </div>
 
                 
                 <div class="p-2">
-                    <label for="tipoComercio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Local Gastronómico*</label>
+                    <label for="codTipoComercio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Comercio*</label>
                     <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                       <li *ngFor="let tipo of tiposComercio; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                         <div class="flex items-center ps-3">
-                          <label [for]="'tipoComercio-' + tipo.codTipoGastronomia" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                          <label [for]="'codTipoComercio-' + tipo.codTipoComercio" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             <input 
-                              type="checkbox" 
-                              [checked]="getTiposComercio(i)?.value || false"
-                              [disabled]="!editando"
-                              (change)="toggleCheckbox(i, tipo, 'codTipoComercio')"
-                              [id]="'tipoComercio-' + tipo.codTipoComercio"
-                              [name]="'tipoComercio-' + tipo.codTipoComercio"
-                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                            >
+                            type="checkbox" 
+                            [checked]="isTipoComercioSeleccionado(tipo)"
+                            [disabled]="!editando"
+                            (change)="toggleCheckbox(i, tipo, 'codTipoComercio')"
+                            [id]="'codTipoComercio-' + tipo.codTipoComercio"
+                            [name]="'codTipoComercio-' + tipo.codTipoComercio"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                          >
                             {{ tipo }}
                           </label>
                         </div>
@@ -74,12 +74,12 @@
                                 <label [for]="'metodoPago-' + metodoPago.codMetodoDePago" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
 
                                  <input 
-                          type="checkbox" 
-                          [checked]="getMetodoPagoControl(i)?.value || false"
-                          (change)="toggleCheckbox(i, metodoPago, 'metodos_de_pago')"
-                          [checked]="getFormControl('metodos_de_pago', i)?.value"
-                          [id]="'metodoPago-' + metodoPago.codMetodoDePago"
-                          [name]="'metodoPago-' + metodoPago.codMetodoDePago"
+                                 type="checkbox" 
+                                 [checked]="isMetodoDePagoSeleccionado(metodoPago)"
+                                 (change)="toggleCheckbox(i, metodoPago, 'metodos_de_pago')"
+                                 [id]="'metodoPago-' + metodoPago.codMetodoDePago"
+                                 [name]="'metodoPago-' + metodoPago.codMetodoDePago"
+                                 [disabled]="!editando"
                                 [disabled]="!editando"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                 {{ metodoPago }}
