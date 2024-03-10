@@ -4,14 +4,14 @@
 
 <div class="bg-gray-50 px-6 py-14">
     
-    <div class="sm:mx-auto sm:w-full sm:max-w-xl shadow dark:border ">
-        <img class="mx-auto h-auto w-auto" src="../../assets/logo3.png" alt="Your Company">
-        <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">Registro Nuevo Local Gastronómico</h1>
-    
-    
-    
-        <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-xl xl:p-0 ">
-            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+      <div class="sm:mx-auto sm:w-full sm:max-w-4xl shadow dark:border bg-white">
+          <img class="mx-auto h-auto w-auto" src="../../assets/logo3.png" alt="Your Company">
+          <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700"> Registro Nuevo Local Gastronomico</h1>
+      
+      
+      
+      <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-4xl xl:p-0 ">
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <form [formGroup]="gastronomiaForm" class="space-y-4 md:space-y-6" (ngSubmit)="submitForm()" enctype="multipart/form-data">
                   
                   <!-- Nombre -->
@@ -34,7 +34,7 @@
                     <div>
                         <label for="tipoLocalGastronomico" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Local Gastronómico*</label>
                         <div class="relative">
-                            <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-4 grid grid-cols-2 ">
                                 <li *ngFor="let tipo of tiposGastronomia" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                                   <div class="flex items-center ps-3">
                                     <label [for]="'tiposGastronomia-' + tipo" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -120,7 +120,7 @@
                     <!-- Tipo de Comida -->
                     <div>
                       <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de Comida*</label>
-                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-4 grid grid-cols-2 ">
                           <li *ngFor="let tipo of tipoComida" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                             <div class="flex items-center ps-3">
                               <label [for]="'tipoComida-' + tipo" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -141,33 +141,12 @@
                           El tipo de comida es obligatorio.
                         </div>
                   </div>
-
-                  <!-- Preferencia Alimentaria -->
-                  <div>
-                        <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Preferencia Alimentaria</label>
-                            <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                              <li *ngFor="let preferencia of preferenciaAlimentaria" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                <div class="flex items-center ps-3">
-                                  <label [for]="'preferenciaAlimentaria-' + preferencia" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                    <input 
-                                      type="checkbox" 
-                                      [checked]="getFormControl('preferenciaAlimentariaSeleccionadas.' + preferencia).value"
-                                      (change)="toggleCheckbox('preferenciaAlimentariaSeleccionadas.' + preferencia)"
-                                      [id]="'preferenciaAlimentaria-' + preferencia"
-                                      [name]="'preferenciaAlimentaria-' + preferencia"
-                                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    {{ preferencia }}
-                                  </label>
-                                </div>
-                              </li>
-                            </ul>
-                  </div>
                     
                   
                   <!-- Servicios -->
                   <div>
                         <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicios*</label>
-                            <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-4 grid grid-cols-2 ">
                             <li *ngFor="let servicio of tiposServicio" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                                 <div class="flex items-center ps-3">
                                 <label [for]="'servicio-' + servicio" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -214,6 +193,29 @@
                           Los métodos de pago son obligatorios.
                         </div>
                   </div>
+
+                  
+
+                  <!-- Preferencia Alimentaria -->
+                  <div>
+                    <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Preferencia Alimentaria</label>
+                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                          <li *ngFor="let preferencia of preferenciaAlimentaria" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                            <div class="flex items-center ps-3">
+                              <label [for]="'preferenciaAlimentaria-' + preferencia" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                <input 
+                                  type="checkbox" 
+                                  [checked]="getFormControl('preferenciaAlimentariaSeleccionadas.' + preferencia).value"
+                                  (change)="toggleCheckbox('preferenciaAlimentariaSeleccionadas.' + preferencia)"
+                                  [id]="'preferenciaAlimentaria-' + preferencia"
+                                  [name]="'preferenciaAlimentaria-' + preferencia"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                {{ preferencia }}
+                              </label>
+                            </div>
+                          </li>
+                        </ul>
+              </div>
                       
                   <div>
                         <label for="web" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sitio web</label>

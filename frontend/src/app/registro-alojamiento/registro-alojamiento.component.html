@@ -4,13 +4,13 @@
 
 <div class="bg-gray-50 px-6 py-14">
     
-    <div class="sm:mx-auto sm:w-full sm:max-w-xl shadow dark:border ">
+    <div class="sm:mx-auto sm:w-full sm:max-w-4xl shadow dark:border bg-white">
         <img class="mx-auto h-auto w-auto" src="../../assets/logo3.png" alt="Your Company">
-        <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">Registro Nuevo Alojamiento</h1>
+        <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700"> Registro Nuevo Alojamiento</h1>
     
     
     
-    <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-xl xl:p-0 ">
+    <div class="w-full bg-white rounded-lg  md:mt-0 sm:max-w-4xl xl:p-0 ">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form [formGroup]="alojamientoForm" class="space-y-4 md:space-y-6" (ngSubmit)="submitForm()" enctype="multipart/form-data">
               
@@ -117,7 +117,7 @@
               <!-- Servicios -->
               <div>
                     <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicios*</label>
-                    <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-4 grid grid-cols-2 ">
                       <li *ngFor="let servicio of tiposServicio" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                         <div class="flex items-center ps-3">
                           <label [for]="'servicio-' + servicio" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">

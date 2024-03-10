@@ -4,7 +4,7 @@
 
 <div class="bg-gray-50 px-6 py-14">
     
-    <div class="sm:mx-auto sm:w-full sm:max-w-4xl shadow dark:border ">
+    <div class="sm:mx-auto sm:w-full sm:max-w-4xl shadow dark:border bg-white">
         <img class="mx-auto h-auto w-auto" src="../../assets/logo3.png" alt="Your Company">
         <h1 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">Editar Alojamiento</h1>
     
@@ -139,7 +139,7 @@
               <!-- Servicios -->
               <div>
                     <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicios*</label>
-                    <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-4 grid grid-cols-2 ">
                       <li *ngFor="let servicio of tiposServicio; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                         <div class="flex items-center ps-3">
                           <label [for]="'servicio-' + servicio.codTipoServicio" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
