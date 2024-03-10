@@ -34,6 +34,7 @@ export class EditarAlojamientoComponent {
   arrayMetodosPago:any[] = [];
   editando = false;
   datosOriginales: any;
+  submitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -79,25 +80,7 @@ export class EditarAlojamientoComponent {
       servicios: this.fb.array([], [Validators.required]),
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9\s\-\+]+$/), Validators.minLength(10), Validators.maxLength(20)]],
       imagenesEliminadas: this.fb.array([]),
-      web: ['', ],
-    });
-  }
-
-  initMetodosPagoFormArray(metodos: any): void {
-
-    const metodosPagoFormArray = this.alojamientoForm.get('metodos_de_pago') as FormArray;
-  
-    metodos.forEach((metodoPago: { codMetodoDePago: number }) => {
-      const isSelected = this.alojamiento.metodos_de_pago.includes(metodoPago.codMetodoDePago);
-      metodosPagoFormArray.push(this.fb.control(isSelected));
-    });
-  }
-
-  initServiciosFormArray(metodos: any): void {
-    const serviciosFormArray = this.alojamientoForm.get('servicios') as FormArray;
-    metodos.forEach((servicio: { codTipoServicio: number }) => {  // Especifica el tipo de servicio
-      const isSelected = this.alojamiento.servicios.includes(servicio.codTipoServicio);
-      serviciosFormArray.push(this.fb.control(isSelected));
+      web: ['', [Validators.pattern(/^(ftp|http|https):\/\/[^ "]+$/)]],
     });
   }
 
@@ -129,7 +112,6 @@ export class EditarAlojamientoComponent {
     this.alojamientoService.obtenerServicios().subscribe(
       (data: any[]) => {  // Asegúrate de especificar el tipo de datos
         this.tiposServicio = data;
-        this.initServiciosFormArray(data);
       },
       (error) => {
         console.error('Error al obtener tipos de servicio', error);
@@ -142,7 +124,6 @@ export class EditarAlojamientoComponent {
     this.alojamientoService.obtenerMetodosDePago().subscribe(
       (data) => {
         this.tiposmetodosPago = data;
-        this.initMetodosPagoFormArray(data)
       },
       (error) => {
         console.error('Error al obtener tipos de metodos de pago', error);
@@ -179,6 +160,20 @@ export class EditarAlojamientoComponent {
         // Cargar servicios
         this.cargarServicios(alojamientoInfo.servicios);
         this.arrayServicios = alojamientoInfo.servicios;
+
+        const metodosPagoFormArray = this.alojamientoForm.get('metodos_de_pago') as FormArray;
+          this.tiposmetodosPago.forEach((nombre: string) => {
+              const metrodoDePagoSeleccionado = alojamientoInfo.metodos_de_pago.find((s: any) => s.nombre === nombre);
+              const isSelected = !!metrodoDePagoSeleccionado;
+              metodosPagoFormArray.push(this.fb.control(isSelected));
+          });
+
+          const serviciosFormArray = this.alojamientoForm.get('servicios') as FormArray;
+          this.tiposServicio.forEach((nombre: string) => {
+              const tipoComercioSeleccionado = alojamientoInfo.servicios.find((s: any) => s.nombre === nombre);
+              const isSelected = !!tipoComercioSeleccionado; // true si se encuentra, false si no se encuentra
+              serviciosFormArray.push(this.fb.control(isSelected));
+          });
   
         this.datosOriginales = { ...alojamientoInfo };
       },
@@ -355,20 +350,20 @@ export class EditarAlojamientoComponent {
         ...this.alojamientoForm.value,
         servicios: serviciosSeleccionados,
         metodos_de_pago: metodosDePagoSeleccionados
-      };
+      }; 
 
-      console.log(datosEnviar);   
-
-      this.alojamientoService.actualizarDatos(datosEnviar).subscribe(
-        (response: any) => { 
-          this.actualizarImagenes(this.establecimientoId);
-        },
-        (error) => {
-          // Manejar el error, mostrar mensajes de error apropiados al usuario
-          console.error(error);
+      if (this.alojamientoForm.valid) {
+          this.alojamientoService.actualizarDatos(datosEnviar).subscribe(
+            (response: any) => { 
+              this.actualizarImagenes(this.establecimientoId);
+            },
+            (error) => {
+              // Manejar el error, mostrar mensajes de error apropiados al usuario
+              console.error(error);
+            }
+          );
         }
-      );
-    }
+      }
   }
 
   actualizarImagenes(alojamientoId: number) {

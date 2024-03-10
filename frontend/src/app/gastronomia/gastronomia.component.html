@@ -167,7 +167,7 @@
           <div class="lg:col-span-3">
             <!-- Alojamientos -->
             <div class="flex  max-w-6xl flex-wrap justify-start">
-              <div *ngFor="let gastronomia of getGastronomiaFiltradas()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-3 mb-6">
+              <div *ngFor="let gastronomia of getGastronomiaFiltradas()"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-3 mb-6 w-72">
                 
                 
                   <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
@@ -190,7 +190,7 @@
                 
               
                 <div class="mt-1 p-2">
-                  <div class="flex">
+                  <div class="flex flex-wrap">
                     <div *ngFor="let tipo of gastronomia.tipos_gastronomia" class="mt-1 text-sm text-slate-400 flex-item px-0.5">
                         {{   tipo.nombre + ' | '   }}
                     </div>

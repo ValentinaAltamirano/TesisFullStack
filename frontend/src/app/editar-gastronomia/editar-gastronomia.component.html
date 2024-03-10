@@ -13,15 +13,27 @@
     <div class="w-full  rounded-lg  md:mt-0 sm:max-w-4xl xl:p-0 ">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form [formGroup]="gastronomiaForm" class="space-y-4 md:space-y-6"  enctype="multipart/form-data">
+                
+                <!-- Nombre -->
                 <div>
-                    <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Local Gastronómico*</label>
-                    <input type="text" name="nombre" id="nombre" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="nombre" formControlName="nombre" [readonly]="!editando"  >
+                  <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Local Gastronomico*</label>
+                  <input type="text" name="nombre" id="nombre" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="nombre" formControlName="nombre" [readonly]="!editando"  >
+                  
+                  <div *ngIf="gastronomiaForm.get('nombre')?.hasError('required') && gastronomiaForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                    El nombre del local gastronomico es obligatorio.
+                  </div>
+                  <div *ngIf="gastronomiaForm.get('nombre')?.hasError('pattern') && gastronomiaForm.get('nombre')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El nombre del local gastronomico no puede contener símbolos.
+                  </div>
+                  <div *ngIf="gastronomiaForm.get('nombre')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                      El nombre del local gastronomico no puede tener más de 50 caracteres.
+                  </div>
               </div>
 
-                
+              <!-- Tipo Gastronomia -->
               <div class="p-2">
                     <label for="tipoLocal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Local Gastronómico*</label>
-                    <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white  mt-4 grid grid-cols-2 ">
                       <li *ngFor="let tipo of tiposGastronomia; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                         <div class="flex items-center ps-3">
                           <label [for]="'tipoGastronomico-' + tipo.codTipoGastronomia" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -41,37 +53,64 @@
                     </ul>
               </div>
 
+              <!-- Ciudad -->
               <div>
                     <label for="ciudad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ciudad</label>
                     <input  type="ciudad" name="ciudad" id="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Villa Carlos Paz" readonly>
               </div>
 
+              <!-- Provincia -->
               <div>
                     <label for="provincia" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Provincia</label>
                     <input  type="provincia" name="provincia" id="provincia" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="Córdoba" readonly>
               </div>
 
+              <!-- Calle -->
               <div>
                     <label for="calle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Calle*</label>
                     <input formControlName="calle"  type="calle" name="calle" id="calle" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Calle" [readonly]="!editando">
+
+                    <div *ngIf="gastronomiaForm.get('calle')?.hasError('required') && gastronomiaForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
+                      El nombre de la calle es obligatorio.
+                    </div>
+                    <div *ngIf="gastronomiaForm.get('calle')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        El nombre de la calle no puede tener más de 50 caracteres.
+                    </div>
               </div>
 
               <div>
                     <label for="altura" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Altura*</label>
                     <input formControlName="altura" type="altura" name="altura" id="altura" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Altura"  [readonly]="!editando">
+
+                    <div *ngIf="gastronomiaForm.get('altura')?.hasError('required') && gastronomiaForm.get('altura')?.touched" class="error-message" class="text-red-500 text-sm">
+                      La altura es obligatoria.
+                  </div>
+                  <div *ngIf="gastronomiaForm.get('altura')?.hasError('pattern') && gastronomiaForm.get('altura')?.touched" class="error-message" class="text-red-500 text-sm">
+                    La altura debe ser números.
+                  </div>
+                  <div *ngIf="gastronomiaForm.get('altura')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                    La altura no puede tener más de 50 caracteres.
+                  </div>
               </div>
 
               <div>
                     <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono*</label>
                     <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Teléfono"  [readonly]="!editando">
+
+                    <div *ngIf="gastronomiaForm.get('telefono')?.hasError('required') && gastronomiaForm.get('telefono')?.touched" class="error-message text-red-500 text-sm">
+                      El telefono es obligatorio.
+                    </div>
+                    <div *ngIf="gastronomiaForm.get('telefono')?.hasError('telefonoInvalido')" class="error-message text-red-500 text-sm">
+                        Por favor, introduce un número de teléfono válido.
+                    </div>
               </div>
                
-              <div class="flex justify-evenly">
+              <div class="flex justify-start">
 
                     <!-- Tipos Preferencia Alimentaria --> 
-                    <div class="p-2">
+                    <div class="p-2  mr-16">
                         <label for="prefAlimentaria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipos Preferencia Alimentaria*</label>
-                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <ul class="w-60 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                           <li *ngFor="let tipo of preferenciaAlimentaria; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                             <div class="flex items-center ps-3">
                               <label [for]="'prefAlimentaria-' + tipo.codTipoPrefAliment" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -94,7 +133,7 @@
                     <!-- Métodos de Pago -->        
                     <div class="p-2">
                         <label for="metodoPago" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Métodos de Pago*</label>
-                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <ul class="w-60 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <li *ngFor="let metodoPago of tiposmetodosPago; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                             <div class="flex items-center ps-3">
                                 <label [for]="'metodoPago-' + metodoPago.codMetodoDePago" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -119,12 +158,10 @@
                
               </div>
 
-              <div class="flex justify-evenly">
-                    
                     <!-- Tipos de Comida -->
-                    <div class="p-2">
+                    <div class="p-2 ">
                         <label for="tipoComida" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipos de Comida*</label>
-                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white  mt-4 grid grid-cols-2">
                         <li *ngFor="let tipo of tipoComida; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                             <div class="flex items-center ps-3">
                             <label [for]="'tipoComida-' + tipo.codTipoComida" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -146,7 +183,7 @@
 
                     <div class="p-2">
                         <label for="servicios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servicios*</label>
-                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <ul class="w-4/5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white  mt-4 grid grid-cols-2">
                         <li *ngFor="let servicio of tiposServicio; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                         <div class="flex items-center ps-3">
                             <label [for]="'servicio-' + servicio.codTipoServicio" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -166,17 +203,27 @@
                         </ul>
                     </div>
 
-              </div>
 
               <div>
                       <label for="web" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sitio web</label>
                       <input type="web" formControlName="web" name="web" id="web" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sitio web"  [readonly]="!editando">
+
+                      <div *ngIf="gastronomiaForm.get('web')?.hasError('pattern')" class="error-message text-red-500 text-sm">
+                        Por favor, ingrese un sitio web válido. Debe comenzar con 'http'.
+                    </div>
               </div>
                   
               <div>
                     <label for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción*</label>
                     <textarea formControlName="descripcion" id="message" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Descripción" [readonly]="!editando" >
                     </textarea>
+
+                    <div *ngIf="gastronomiaForm.get('descripcion')?.hasError('required') && gastronomiaForm.get('descripcion')?.touched" class="error-message" class="text-red-500 text-sm">
+                      La descripcion es obligatoria.
+                    </div>
+                    <div *ngIf="gastronomiaForm.get('descripcion')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                      La descripcion no puede tener más de 250 caracteres.
+                    </div>
               </div>
                 
               <label for="imagenes" for="imagenes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imágenes*</label>
@@ -184,7 +231,7 @@
               <section class="flex flex-col ">
                 <div class="flex flex-wrap flex-row">
                   <div class="rounded w-1/3 p-2 pt-0" *ngFor="let imagen of imagenesGastronomia; let i = index">
-                    <img [src]="baseUrl + imagen.imagen" alt="Imagen del alojamiento">
+                    <img [src]="baseUrl + imagen.imagen" alt="Imagen del local gastronomico">
                     
                     
                     <!-- Botón para eliminar imagen, solo visible en modo edición -->
@@ -194,7 +241,7 @@
               
                 <!-- Botón para agregar más imágenes, solo visible en modo edición -->
                 <div class="rounded w-1/3 p-2 pt-0" *ngFor="let nuevaImagen of nuevasImagenes; let i = index">
-                  <img [src]="getUrlFromImageObject(nuevaImagen)" alt="Nueva imagen del alojamiento">
+                  <img [src]="getUrlFromImageObject(nuevaImagen)" alt="Nueva imagen del local gastronomico">
                   <!-- Botón para eliminar imagen agregada dinámicamente -->
                   <button *ngIf="editando" type="button" (click)="eliminarNuevaImagen(i)" class="mt-2 py-2 px-6 bg-red-500 hover:bg-red-800 text-sm text-white font-bold rounded-xl transition duration-200" >Eliminar</button>
                 
@@ -204,6 +251,9 @@
               </section>
 
 
+              <div *ngIf="(gastronomiaForm.invalid ) && submitted" class="error-message text-red-500 text-sm mb-4">
+                Por favor, complete todos los campos obligatorios antes de enviar el formulario.
+              </div>
 
                 <div class="mt-6 flex items-center justify-end gap-x-6">
                   <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="volverMisEstablecimiento()">Volver</button>

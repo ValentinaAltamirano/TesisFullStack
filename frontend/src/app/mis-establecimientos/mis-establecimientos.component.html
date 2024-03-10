@@ -73,7 +73,7 @@
             </div>
           </div>
 
-          <div *ngFor="let gastronomia of establecimientosGastronomia"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-10 mb-6">
+          <div *ngFor="let gastronomia of establecimientosGastronomia"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-10 mb-6 w-72">
             <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
               <img *ngIf="gastronomia.imagenesGastronomia && gastronomia.imagenesGastronomia.length > 0"
                 [src]="baseUrl + gastronomia.imagenesGastronomia[0].imagen"
@@ -83,12 +83,13 @@
             </div>
             
               <div class="mt-1 p-2">
-                <div class="flex">
+                <div class="flex flex-wrap">
                   <div *ngFor="let tipo of gastronomia.tipos_gastronomia" class="mt-1 text-sm text-slate-400 flex-item px-0.5">
-                    {{   tipo.nombre + ' | '   }}
+                    {{ tipo.nombre + ' | ' }}
                   </div>
                 </div>
               </div>
+
               <h2 class="text-slate-700 text-lg">{{ gastronomia.nombre }}</h2>
               <p class="mt-1 text-xs text-slate-500">{{ gastronomia.calle }} {{ gastronomia.altura }}, Villa Carlos Paz</p>
               <p class="mt-1 text-sm text-slate-500">Tel. {{ gastronomia.telefono }} </p>
@@ -99,7 +100,7 @@
                       Editar
                     </a>
               </div>
-            </div>
+          </div>
 
             <div *ngFor="let comercio of establecimientosComercio"  class="cursor-pointer rounded-xl bg-white p-3 shadow-lg hover:shadow-xl mx-10 mb-6">
               <div class="relative flex items-end overflow-hidden rounded-xl h-44 w-64">
@@ -111,9 +112,9 @@
               </div>
               
                 <div class="mt-1 p-2">
-                  <div class="flex">
+                  <div class="flex flex-wrap flex-col">
                     <div *ngFor="let tipo of comercio.codTipoComercio" class="mt-1 text-sm text-slate-400 flex-item px-0.5">
-                      {{   tipo.nombre + ' | '   }}
+                      {{ tipo.nombre + ' | ' }}
                     </div>
                   </div>
                 </div>
@@ -192,11 +193,6 @@
                     
                   </div>
 
-                  <div class="mt-4" *ngIf="!comentarios || comentarios.length == 0">
-                    <h2 class=" m-2 text-2xl font-bold leading-9 tracking-tight text-gray-900">{{ alojamiento.nombre }}</h2>
-                    <hr>
-                    <p>No hay comentarios disponibles.</p>
-                  </div>
 
               </div>
             </div>
@@ -208,7 +204,7 @@
           
                   <div class="mt-4" *ngIf="comentarios && comentarios.length > 0"> 
 
-                    <div class="flex">
+                    <div class="flex" >
                       <h2 class=" m-2 text-2xl font-bold leading-9 tracking-tight text-gray-900">{{ gastronomia.nombre }}</h2>
                       
                       <div class="flex items-center rounded-lg">
@@ -222,6 +218,12 @@
                         </div>
                       </div>
 
+                      <div class="flex mx-2">
+                        <div *ngFor="let tipo of gastronomia.tipos_gastronomia" class="1 text-sm  px-0.5">
+                          {{   tipo.nombre + ' | '   }}
+                        </div>
+                      </div>
+                      
                       <hr>
 
                           <div class="mt-6 flex justify-start items-center flex-row space-x-2.5">
@@ -253,11 +255,6 @@
                     
                   </div>
 
-                  <div class="mt-4" *ngIf="!comentarios || comentarios.length == 0">
-                    <h2 class=" m-2 text-2xl font-bold leading-9 tracking-tight text-gray-900">{{ gastronomia.nombre }}</h2>
-                    <hr>
-                    <p>No hay comentarios disponibles.</p>
-                  </div>
 
               </div>
             </div>
@@ -283,6 +280,11 @@
                         </div>
                       </div>
                       
+                      <div class="flex mx-2">
+                        <div *ngFor="let tipo of comercio.codTipoComercio" class="1 text-sm  px-0.5">
+                          {{   tipo.nombre + ' | '   }}
+                        </div>
+                      </div>
 
                       <hr>
 
@@ -319,12 +321,6 @@
 
               </div>
 
-              <div class="p-4 m-4 sm:px-6 border-solid border-2 rounded " *ngIf="comentario.establecimiento  != comercio.codEstablecimiento">
-                
-                  <h2 class=" m-2 text-2xl font-bold leading-9 tracking-tight text-gray-900">{{ comercio.nombre }}</h2>
-                  <hr>
-                  <p class="m-2">No hay comentarios disponibles.</p>
-                </div>
             </div>
           </div>
 

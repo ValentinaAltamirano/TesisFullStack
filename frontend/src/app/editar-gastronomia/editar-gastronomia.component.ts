@@ -35,6 +35,7 @@ export class EditarGastronomiaComponent {
   arrayMetodosPago:any[] = [];
   nuevasImagenes: any[] = [];
   imagenesOriginales: any[] = [];
+  submitted = false;
 
   editando = false;
   datosOriginales: any;
@@ -72,24 +73,21 @@ export class EditarGastronomiaComponent {
   initForm(): void {
     this.gastronomiaForm = this.fb.group({
       // Campos del establecimiento
-      altura: ['', Validators.required],
-      calle: ['', Validators.required],
-      codCategoria: ['', Validators.required],
-      codCiudad: ['', Validators.required],
-      codProvincia: ['', Validators.required],
-      codEstablecimiento: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
+      calle: ['', [Validators.required, Validators.maxLength(50)]],
+      codEstablecimiento: [''],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
       idEmpresario: [''],
-      nombre: ['', Validators.required],
-      telefono: ['', Validators.required],
-      web: [''],
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" \p{L}]+$/u), Validators.maxLength(50)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9\s\-\+]+$/), Validators.minLength(10), Validators.maxLength(20)]],
+      web: ['', [Validators.pattern(/^(ftp|http|https):\/\/[^ "]+$/)]],
 
       // Campos del gastronomia
-      tipos_servicio_gastronomico: this.fb.array([]),
-      tipos_gastronomia: this.fb.array([]),
-      metodos_de_pago: this.fb.array([]),
-      tipos_comida: this.fb.array([]),
-      tipos_pref_alimentaria: this.fb.array([]),
+      tipos_servicio_gastronomico: this.fb.array([], [Validators.required]),
+      tipos_gastronomia: this.fb.array([], [Validators.required]),
+      metodos_de_pago: this.fb.array([], [Validators.required]),
+      tipos_comida: this.fb.array([], [Validators.required]),
+      tipos_pref_alimentaria: this.fb.array([], [Validators.required]),
       imagenesEliminadas: this.fb.array([]),
     });
   }
@@ -490,18 +488,20 @@ cargarTiposPrefAlimentaria(tiposPrefAlimentaria: any) {
         tipos_pref_alimentaria: tiposPrefAlimentariaSeleccionados
       };
 
-      console.log(datosEnviar);   
+      
 
-      this.gastronomiaService.actualizarDatos(datosEnviar).subscribe(
-        (response: any) => { 
-          this.actualizarImagenes(this.establecimientoId);
-        },
-        (error) => {
-          // Manejar el error, mostrar mensajes de error apropiados al usuario
-          console.error(error);
+      if (this.gastronomiaForm.valid) {
+          this.gastronomiaService.actualizarDatos(datosEnviar).subscribe(
+            (response: any) => { 
+              this.actualizarImagenes(this.establecimientoId);
+            },
+            (error) => {
+              // Manejar el error, mostrar mensajes de error apropiados al usuario
+              console.error(error);
+            }
+          );
         }
-      );
-    }
+      }
   }
 
   actualizarImagenes(alojamientoId: number) {

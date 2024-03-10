@@ -77,9 +77,6 @@
                     <div *ngIf="alojamientoForm.get('calle')?.hasError('required') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
                       El nombre de la calle es obligatorio.
                    </div>
-                   <div *ngIf="alojamientoForm.get('calle')?.hasError('pattern') && alojamientoForm.get('calle')?.touched" class="error-message" class="text-red-500 text-sm">
-                      El nombre de la calle no puede contener símbolos.
-                   </div>
                    <div *ngIf="alojamientoForm.get('calle')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
                        El nombre de la calle no puede tener más de 50 caracteres.
                    </div>
@@ -201,7 +198,7 @@
                     <input type="web" formControlName="web" name="web" id="web" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sitio web"  [readonly]="!editando">
 
                     <div *ngIf="alojamientoForm.get('web')?.hasError('pattern')" class="error-message text-red-500 text-sm">
-                      Por favor, un sitio web válido.
+                      Por favor, un sitio web válido. Debe comenzar con 'http'.
                   </div>
               </div>
               

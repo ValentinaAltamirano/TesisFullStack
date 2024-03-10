@@ -29,6 +29,7 @@ export class EditarComercioComponent {
   nuevasImagenes: any[] = [];
   arrayMetodosPago:any[] = [];
   arrayTipoComercio:any[] = [];
+  submitted = false;
 
 
   constructor(
@@ -59,22 +60,19 @@ export class EditarComercioComponent {
   initForm(): void {
     this.comercioForm = this.fb.group({
       // Campos del establecimiento
-      altura: ['', Validators.required],
-      calle: ['', Validators.required],
-      codCategoria: ['', Validators.required],
-      codCiudad: ['', Validators.required],
-      codProvincia: ['', Validators.required],
+      altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
+      calle: ['', [Validators.required, Validators.maxLength(50)]],
       codEstablecimiento: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
       idEmpresario: [''],
-      nombre: ['', Validators.required],
-      telefono: ['', Validators.required],
-      web: ['', Validators.required],
-      metodos_de_pago: this.fb.array([]),
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" \p{L}]+$/u), Validators.maxLength(50)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9\s\-\+]+$/), Validators.minLength(10), Validators.maxLength(20)]],
+      web: ['', [Validators.pattern(/^(ftp|http|https):\/\/[^ "]+$/)]],
+      metodos_de_pago: this.fb.array([], [Validators.required]),
       imagenesEliminadas: this.fb.array([]),
 
       // Campos del gastronomia
-      codTipoComercio: this.fb.array([]),
+      codTipoComercio: this.fb.array([], [Validators.required]),
     });
   }
 
@@ -144,7 +142,7 @@ export class EditarComercioComponent {
         this.datosOriginales = { ...comercioInfo };
       },
       error => {
-        console.error('Error al obtener la información del alojamiento', error);
+        console.error('Error al obtener la información del comercio', error);
       }
     );
   }
@@ -153,8 +151,8 @@ export class EditarComercioComponent {
     this.arrayMetodosPago = metodosPago;
   }
 
-  cargarTiposComercio(tiposGastronomia: any) {
-    this.arrayTipoComercio = tiposGastronomia;
+  cargarTiposComercio(tiposComercio: any) {
+    this.arrayTipoComercio = tiposComercio;
   }
 
   getMetodoPagoControl(index: number): FormControl | undefined {
@@ -240,7 +238,7 @@ export class EditarComercioComponent {
     const imagenesEliminadasArray = this.comercioForm.get('imagenesEliminadas') as FormArray;
     imagenesEliminadasArray.push(this.fb.control(codImagen));
   
-    // Elimina la imagen del array 'imagenesGastronomia'
+    // Elimina la imagen del array 'imagenesComercio'
     this.imagenesComercio.splice(index, 1);
   }
 
@@ -307,23 +305,37 @@ export class EditarComercioComponent {
     const metodosDePagoSeleccionados = this.getSelectedData('metodos_de_pago', this.tiposmetodosPago);
     const tiposComercioSeleccionados = this.getSelectedData('codTipoComercio', this.tiposComercio);
 
-    
+    this.submitted = true;
+
+
     // Crear el objeto datosEnviar con los valores mapeados
     const datosEnviar = {
       ...this.comercioForm.value,
       metodos_de_pago: metodosDePagoSeleccionados,
       codTipoComercio: tiposComercioSeleccionados
     };
+    
+    Object.keys(this.comercioForm.controls).forEach(key => {
+      const control = this.comercioForm.get(key);
+    
+      // Verifica el estado y los errores de cada control
+      console.log(`Control: ${key}`);
+      console.log(`Estado: ${control?.status}`);
+      console.log(`Errores: ${JSON.stringify(control?.errors)}`);
+    });
+    
 
-      this.comercioService.actualizarDatos(datosEnviar).subscribe(
-        (response: any) => { 
-          this.actualizarImagenes(this.establecimientoId);
-        },
-        (error) => {
-          // Manejar el error, mostrar mensajes de error apropiados al usuario
-          console.error(error);
+    if (this.comercioForm.valid) {
+          this.comercioService.actualizarDatos(datosEnviar).subscribe(
+            (response: any) => { 
+              this.actualizarImagenes(this.establecimientoId);
+            },
+            (error) => {
+              // Manejar el error, mostrar mensajes de error apropiados al usuario
+              console.error(error);
+            }
+          );
         }
-      );
     }
 
   actualizarImagenes(establecimientoId: number) {
@@ -357,7 +369,7 @@ export class EditarComercioComponent {
           timer: 1000, 
           timerProgressBar: true
         }).then(() => {
-          // location.reload();
+          location.reload();
         });
       },
       (error) => {
