@@ -6,6 +6,7 @@ import { AuthService } from '../service/auth.service';
 import { AlojamientoService } from '../service/alojamiento.service';
 import { ActivatedRoute } from '@angular/router';
 import { AbstractControl } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser'; 
 
 @Component({
   selector: 'app-editar-alojamiento',
@@ -40,6 +41,7 @@ export class EditarAlojamientoComponent {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
+    private sanitizer: DomSanitizer
   ) {this.establecimientoId = 0;
   }
   
@@ -290,12 +292,12 @@ export class EditarAlojamientoComponent {
     }
   }
 
-  getUrlFromImageObject(imagen: any): string {
+  getUrlFromImageObject(imagen: any): SafeUrl {
     if (imagen && imagen.imagen) {
-      // Crea una URL válida para la nueva imagen
-      return URL.createObjectURL(imagen.imagen);
+      // Sanitize the URL to avoid the ExpressionChangedAfterItHasBeenCheckedError
+      return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imagen.imagen));
     }
-    // Si no hay imagen, puedes proporcionar una URL de imagen predeterminada o manejarlo según tus necesidades
+    // If no image, you can provide a default safe URL or handle it based on your needs
     return 'https://ruta.de.la.imagen.por.defecto/';
   }
 

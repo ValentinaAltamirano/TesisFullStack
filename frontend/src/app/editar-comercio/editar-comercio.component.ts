@@ -6,6 +6,7 @@ import { AuthService } from '../service/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { ComercioService } from '../service/comercio.service';
 import { AbstractControl } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editar-comercio',
@@ -27,6 +28,7 @@ export class EditarComercioComponent {
   datosOriginales: any;
   nuevasImagenes: any[] = [];
   arrayMetodosPago:any[] = [];
+  arrayTipoComercio:any[] = [];
 
 
   constructor(
@@ -35,6 +37,7 @@ export class EditarComercioComponent {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
+    private sanitizer: DomSanitizer
   ) {this.establecimientoId = 0;
   }
 
@@ -69,31 +72,9 @@ export class EditarComercioComponent {
       web: ['', Validators.required],
       metodos_de_pago: this.fb.array([]),
       imagenesEliminadas: this.fb.array([]),
-      
 
       // Campos del gastronomia
       codTipoComercio: this.fb.array([]),
-    });
-
-    this.initTipoComercioFormArray();
-    this.initMetodosPagoFormArray();
-  }
-
-  initTipoComercioFormArray(): void {
-    const tipoComercioFormArray = this.comercioForm.get('codTipoComercio') as FormArray;
-  
-    this.tiposComercio.forEach((tipoComercio: { codTipoComercio: number }) => {
-      const isSelected = this.comercios.codTipoComercio.includes(tipoComercio.codTipoComercio);
-      tipoComercioFormArray.push(this.fb.control(isSelected));
-    });
-  }
-
-  initMetodosPagoFormArray(): void {
-    const metodosPagoFormArray = this.comercioForm.get('metodos_de_pago') as FormArray;
-  
-    this.tiposmetodosPago.forEach((metodoPago: { codMetodoDePago: number }) => {
-      const isSelected = this.comercios.metodos_de_pago.includes(metodoPago.codMetodoDePago);
-      metodosPagoFormArray.push(this.fb.control(isSelected));
     });
   }
 
@@ -145,8 +126,21 @@ export class EditarComercioComponent {
         // Cargar métodos de pago
         this.cargarMetodosDePago(comercioInfo.metodos_de_pago);
         this.arrayMetodosPago = comercioInfo.metodos_de_pago;
-        
-        console.log(comercioInfo)
+
+        const metodosPagoFormArray = this.comercioForm.get('metodos_de_pago') as FormArray;
+          this.tiposmetodosPago.forEach((nombre: string) => {
+              const metrodoDePagoSeleccionado = comercioInfo.metodos_de_pago.find((s: any) => s.nombre === nombre);
+              const isSelected = !!metrodoDePagoSeleccionado;
+              metodosPagoFormArray.push(this.fb.control(isSelected));
+          });
+
+          const tiposComercioFormArray = this.comercioForm.get('codTipoComercio') as FormArray;
+          this.tiposComercio.forEach((nombre: string) => {
+              const tipoComercioSeleccionado = comercioInfo.codTipoComercio.find((s: any) => s.nombre === nombre);
+              const isSelected = !!tipoComercioSeleccionado; // true si se encuentra, false si no se encuentra
+              tiposComercioFormArray.push(this.fb.control(isSelected));
+          });
+          
         this.datosOriginales = { ...comercioInfo };
       },
       error => {
@@ -155,22 +149,12 @@ export class EditarComercioComponent {
     );
   }
 
-  cargarMetodosDePago(metodos_de_pago: any[]): void {
-    const metodosDePagoArray = this.comercioForm.get('metodos_de_pago') as FormArray;
-    metodosDePagoArray.clear();
-  
-    metodos_de_pago.forEach(metodo => {
-      metodosDePagoArray.push(this.fb.control(metodo));
-    });
+  cargarMetodosDePago(metodosPago: any) {
+    this.arrayMetodosPago = metodosPago;
   }
 
-  cargarTiposComercio(comercioSeleccionados: any[]): void {
-    const comercioSeleccionadosArray = this.comercioForm.get('codTipoComercio') as FormArray;
-    comercioSeleccionadosArray.clear();
-    
-    comercioSeleccionados.forEach(codTipoComercio => {
-      comercioSeleccionadosArray.push(this.fb.control(codTipoComercio));
-    });
+  cargarTiposComercio(tiposGastronomia: any) {
+    this.arrayTipoComercio = tiposGastronomia;
   }
 
   getMetodoPagoControl(index: number): FormControl | undefined {
@@ -178,9 +162,9 @@ export class EditarComercioComponent {
     return metodosDePagoArray.at(index) as FormControl | undefined;
   }
 
-  getTiposComercio(index: number): FormControl | undefined {
-    const comercioSeleccionadosArray = this.comercioForm.get('codTipoComercio') as FormArray;
-    return comercioSeleccionadosArray.at(index) as FormControl | undefined;
+  getTipoComercioControl(index: number): FormControl | undefined {
+    const tiposComercioArray = this.comercioForm.get('codTipoComercio') as FormArray;
+    return tiposComercioArray.at(index) as FormControl | undefined;
   }
 
   toggleCheckbox(index: number, item: any, formControlName: string): void {
@@ -191,17 +175,18 @@ export class EditarComercioComponent {
       return;
     }
   
-    // Ensure the FormArray has enough controls
-    while (formArray.length <= index) {
-      formArray.push(new FormControl(false)); // You can set the default value as needed
-    }
+    // Buscar el ítem específico en el FormArray
+    const control = formArray.controls[index] as FormControl;
   
-    const control = formArray.at(index) as FormControl;
-  
-    if (control instanceof FormControl) {
+    if (control) {
       const isChecked = control.value;
+      console.log('isChecked', isChecked);
   
+      // Cambiar el valor del control usando el valor del ítem
       control.setValue(!isChecked);
+      console.log('index', index);
+      console.log('formControlName', formControlName);
+      console.log('item', item);
     } else {
       console.error(`Control at index ${index} in FormArray ${formControlName} is not a FormControl.`);
     }
@@ -220,6 +205,10 @@ export class EditarComercioComponent {
   isMetodoDePagoSeleccionado(metodoPago: any): boolean {
     return this.arrayMetodosPago.some((s: any) => s.nombre == metodoPago);
   }
+
+  isTipoComercioSeleccionado(tipoComercio: any): boolean {
+    return this.arrayTipoComercio.some((s: any) => s.nombre == tipoComercio);
+    }
 
   toggleEdicion() {
     this.editando = !this.editando;
@@ -241,11 +230,17 @@ export class EditarComercioComponent {
     // Obtén el codImagen de la imagen que estás eliminando
     const codImagen = this.imagenesComercio[index].codImagen;
   
+    // Verifica si el FormArray 'imagenesEliminadas' existe
+    if (!this.comercioForm.get('imagenesEliminadas')) {
+      // Si no existe, inicialízalo como un FormArray vacío
+      this.comercioForm.setControl('imagenesEliminadas', this.fb.array([]));
+    }
+  
     // Agrega el codImagen al FormArray 'imagenesEliminadas'
     const imagenesEliminadasArray = this.comercioForm.get('imagenesEliminadas') as FormArray;
     imagenesEliminadasArray.push(this.fb.control(codImagen));
   
-    // Elimina la imagen del array 'imagenesAlojamiento'
+    // Elimina la imagen del array 'imagenesGastronomia'
     this.imagenesComercio.splice(index, 1);
   }
 
@@ -259,17 +254,15 @@ export class EditarComercioComponent {
       };
   
       this.nuevasImagenes.push(nuevaImagen);
-  
-      
     }
   }
 
-  getUrlFromImageObject(imagen: any): string {
+  getUrlFromImageObject(imagen: any): SafeUrl {
     if (imagen && imagen.imagen) {
-      // Crea una URL válida para la nueva imagen
-      return URL.createObjectURL(imagen.imagen);
+      // Sanitize the URL to avoid the ExpressionChangedAfterItHasBeenCheckedError
+      return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imagen.imagen));
     }
-    // Si no hay imagen, puedes proporcionar una URL de imagen predeterminada o manejarlo según tus necesidades
+    // If no image, you can provide a default safe URL or handle it based on your needs
     return 'https://ruta.de.la.imagen.por.defecto/';
   }
 
@@ -288,16 +281,22 @@ export class EditarComercioComponent {
       location.reload();
     }); 
   }
-  
-  prevenirAperturaDesplegable(event: Event): void {
-    if (!this.editando) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }
 
   convertirSaltosDeLineaEnBr(texto: string): string {
     return texto.replace(/\n/g, '<br>');
+  }
+
+  getSelectedData(formControlName: string, sourceArray: any[]): any[] {
+    const formArray = this.comercioForm.get(formControlName) as FormArray;
+  
+    if (!formArray) {
+      console.error(`FormArray ${formControlName} not found in the form.`);
+      return [];
+    }
+  
+    return formArray.controls
+      .map((control: AbstractControl, index: number) => control.value ? sourceArray[index] : null)
+      .filter((value: any) => value !== null);
   }
 
   guardarComercio(): void {
@@ -305,24 +304,15 @@ export class EditarComercioComponent {
     const descripcionConvertida = this.convertirSaltosDeLineaEnBr(this.comercioForm.get('descripcion')?.value);
     this.comercioForm.get('descripcion')?.setValue(descripcionConvertida);
 
-    if (this.comercioForm.value) {
-      console.log(this.comercioForm.value.metodos_de_pago)
-      const metodosDePagoSeleccionados = this.comercioForm.value.metodos_de_pago
-      .map((valor: boolean, index: number) => valor ? this.tiposmetodosPago[index] : null)
-      .filter((valor: any) => valor !== null);
+    const metodosDePagoSeleccionados = this.getSelectedData('metodos_de_pago', this.tiposmetodosPago);
+    const tiposComercioSeleccionados = this.getSelectedData('codTipoComercio', this.tiposComercio);
 
-      
-      console.log(this.comercioForm.value.codTipoComercio)
-      const tiposComercioSeleccionados = this.comercioForm.value.codTipoComercio
-      .map((valor: boolean, index: number) => valor ? this.tiposComercio[index] : null)
-      .filter((valor: any) => valor !== null);
-
-
+    
     // Crear el objeto datosEnviar con los valores mapeados
     const datosEnviar = {
       ...this.comercioForm.value,
       metodos_de_pago: metodosDePagoSeleccionados,
-      servicios: tiposComercioSeleccionados
+      codTipoComercio: tiposComercioSeleccionados
     };
 
       this.comercioService.actualizarDatos(datosEnviar).subscribe(
@@ -335,9 +325,8 @@ export class EditarComercioComponent {
         }
       );
     }
-  }
 
-  actualizarImagenes(alojamientoId: number) {
+  actualizarImagenes(establecimientoId: number) {
     // Accede a las imágenes directamente desde el FormGroup
     const formData = new FormData();
   
@@ -358,20 +347,18 @@ export class EditarComercioComponent {
     imagenesEliminadasArray.getRawValue().forEach((codImagen: any) => {
       formData.append('imagenesEliminadas', codImagen);
     });
-    
-  
-    // Envía las imágenes al servicio junto con el ID del alojamiento
-    this.comercioService.actualizarImagenes(formData, alojamientoId).subscribe(
+
+    this.comercioService.actualizarImagenes(formData, establecimientoId).subscribe(
       (response: any) => {
         Swal.fire({
           title: "Datos actualizados correctamente!",
           icon: "success",
           confirmButtonText: "OK",
-          timer: 1000,  // Duración en milisegundos (3 segundos en este ejemplo)
+          timer: 1000, 
           timerProgressBar: true
+        }).then(() => {
+          // location.reload();
         });
-        
-        // También puedes realizar otras acciones después de guardar correctamente
       },
       (error) => {
         // Manejar el error, mostrar mensajes de error apropiados al usuario
@@ -379,9 +366,18 @@ export class EditarComercioComponent {
       }
     );
   }
+  
   eliminarImagenesEliminadas(alojamientoId: number): void {
-    const idsImagenesAEliminar: number[] = this.imagenesComercio
-      .filter(actual => !this.imagenesOriginales.some(original => original.id === actual.id))
-      .map(imagen => imagen.id);
+    const imagenesEliminadasArray = this.comercioForm.get('imagenesEliminadas') as FormArray;
+  
+    if (imagenesEliminadasArray) {
+      const idsImagenesAEliminar: number[] = imagenesEliminadasArray.getRawValue()
+        .filter((codImagen: any) => codImagen !== null)
+        .map((codImagen: any) => codImagen);
+  
+      // Now you can use idsImagenesAEliminar as needed
+    } else {
+      console.error('FormArray imagenesEliminadas not found in the form.');
+    }
   }
 }

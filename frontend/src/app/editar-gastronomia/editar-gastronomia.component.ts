@@ -6,6 +6,7 @@ import { AuthService } from '../service/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { GastronomiaService } from '../service/gastronomia.service';
 import { AbstractControl } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editar-gastronomia',
@@ -44,6 +45,7 @@ export class EditarGastronomiaComponent {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
+    private sanitizer: DomSanitizer
   ) {this.establecimientoId = 0;
   }
   
@@ -88,6 +90,7 @@ export class EditarGastronomiaComponent {
       metodos_de_pago: this.fb.array([]),
       tipos_comida: this.fb.array([]),
       tipos_pref_alimentaria: this.fb.array([]),
+      imagenesEliminadas: this.fb.array([]),
     });
   }
 
@@ -194,9 +197,6 @@ export class EditarGastronomiaComponent {
               const isSelected = !!metrodoDePagoSeleccionado;
               metodosPagoFormArray.push(this.fb.control(isSelected));
           });
-          
-          console.log( this.tiposmetodosPago)
-          console.log(metodosPagoFormArray)
 
           // Initialize the tipos_servicio_gastronomico FormArray with the obtained data
           const tiposServicioFormArray = this.gastronomiaForm.get('tipos_servicio_gastronomico') as FormArray;
@@ -249,27 +249,23 @@ export class EditarGastronomiaComponent {
 
   cargarMetodosDePago(metodosPago: any) {
   this.arrayMetodosPago = metodosPago;
-  // Puedes realizar otras acciones específicas si es necesario
 }
 
 cargarServicios(servicios: any) {
   this.arrayServicios = servicios;
-  // Puedes realizar otras acciones específicas si es necesario
+  
 }
 
 cargarTiposGastronomia(tiposGastronomia: any) {
   this.arrayTipoGastronomia = tiposGastronomia;
-  // Puedes realizar otras acciones específicas si es necesario
 }
 
 cargarTiposComida(tiposComida: any) {
   this.arrayTiposComida = tiposComida;
-  // Puedes realizar otras acciones específicas si es necesario
 }
 
 cargarTiposPrefAlimentaria(tiposPrefAlimentaria: any) {
   this.arrayTipoPreferencia = tiposPrefAlimentaria;
-  // Puedes realizar otras acciones específicas si es necesario
 }
 
   getFormControl(formControlName: string, index: number): AbstractControl | null {
@@ -374,11 +370,17 @@ cargarTiposPrefAlimentaria(tiposPrefAlimentaria: any) {
     // Obtén el codImagen de la imagen que estás eliminando
     const codImagen = this.imagenesGastronomia[index].codImagen;
   
+    // Verifica si el FormArray 'imagenesEliminadas' existe
+    if (!this.gastronomiaForm.get('imagenesEliminadas')) {
+      // Si no existe, inicialízalo como un FormArray vacío
+      this.gastronomiaForm.setControl('imagenesEliminadas', this.fb.array([]));
+    }
+  
     // Agrega el codImagen al FormArray 'imagenesEliminadas'
     const imagenesEliminadasArray = this.gastronomiaForm.get('imagenesEliminadas') as FormArray;
     imagenesEliminadasArray.push(this.fb.control(codImagen));
   
-    // Elimina la imagen del array 'imagenesAlojamiento'
+    // Elimina la imagen del array 'imagenesGastronomia'
     this.imagenesGastronomia.splice(index, 1);
   }
 
@@ -395,12 +397,12 @@ cargarTiposPrefAlimentaria(tiposPrefAlimentaria: any) {
     }
   }
 
-  getUrlFromImageObject(imagen: any): string {
+  getUrlFromImageObject(imagen: any): SafeUrl {
     if (imagen && imagen.imagen) {
-      // Crea una URL válida para la nueva imagen
-      return URL.createObjectURL(imagen.imagen);
+      // Sanitize the URL to avoid the ExpressionChangedAfterItHasBeenCheckedError
+      return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imagen.imagen));
     }
-    // Si no hay imagen, puedes proporcionar una URL de imagen predeterminada o manejarlo según tus necesidades
+    // If no image, you can provide a default safe URL or handle it based on your needs
     return 'https://ruta.de.la.imagen.por.defecto/';
   }
 
@@ -459,28 +461,23 @@ cargarTiposPrefAlimentaria(tiposPrefAlimentaria: any) {
       const metodosDePagoSeleccionados = this.getSelectedData('metodos_de_pago', this.tiposmetodosPago);
     
       // Obtener servicios gastronómicos seleccionados
-      console.log(this.gastronomiaForm.value.tipos_servicio_gastronomico)
-      console.log(this.tiposServicio)
       const serviciosGastronomicosSeleccionados = this.gastronomiaForm.value.tipos_servicio_gastronomico
         .map((valor: boolean, index: number) => valor ? this.tiposServicio[index] : null)
         .filter((valor: any) => valor !== null);
     
       // Obtener tipos de gastronomía seleccionados
-      console.log(this.tiposGastronomia)
       const tiposGastronomiaSeleccionados = this.gastronomiaForm.value.tipos_gastronomia
         .map((valor: boolean, index: number) => valor ? this.tiposGastronomia[index] : null)
         .filter((valor: any) => valor !== null);
     
       // Obtener tipos de comida seleccionados
-      console.log(this.tipoComida)
-      console.log(this.gastronomiaForm.value.tipos_comida)
       const tiposComidaSeleccionados = this.gastronomiaForm.value.tipos_comida
         .map((valor: boolean, index: number) => valor ? this.tipoComida[index] : null)
         .filter((valor: any) => valor !== null);
     
       // Obtener tipos de preferencia alimentaria seleccionados
       const tiposPrefAlimentariaSeleccionados = this.gastronomiaForm.value.tipos_pref_alimentaria
-        .map((valor: boolean, index: number) => valor ? this.arrayTipoPreferencia[index] : null)
+        .map((valor: boolean, index: number) => valor ? this.preferenciaAlimentaria[index] : null)
         .filter((valor: any) => valor !== null);
     
       // Crear el objeto datosEnviar con los valores mapeados
@@ -549,9 +546,16 @@ cargarTiposPrefAlimentaria(tiposPrefAlimentaria: any) {
   }
   
   eliminarImagenesEliminadas(alojamientoId: number): void {
-    const idsImagenesAEliminar: number[] = this.imagenesGastronomia
-      .filter(actual => !this.imagenesOriginales.some(original => original.id === actual.id))
-      .map(imagen => imagen.id);
-    
+    const imagenesEliminadasArray = this.gastronomiaForm.get('imagenesEliminadas') as FormArray;
+  
+    if (imagenesEliminadasArray) {
+      const idsImagenesAEliminar: number[] = imagenesEliminadasArray.getRawValue()
+        .filter((codImagen: any) => codImagen !== null)
+        .map((codImagen: any) => codImagen);
+  
+      // Now you can use idsImagenesAEliminar as needed
+    } else {
+      console.error('FormArray imagenesEliminadas not found in the form.');
+    }
   }
 }

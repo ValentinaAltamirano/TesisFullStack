@@ -12,8 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 import json
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
-from django.core.files.temp import NamedTemporaryFile
+from rest_framework.decorators import permission_classes
 
 class TipoEstablecimientoViewSet(viewsets.ModelViewSet):
     queryset = TipoEstablecimiento.objects.all()

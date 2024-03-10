@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+import json
 
 class MetodoDePagoViewSet(viewsets.ModelViewSet):
     queryset = MetodoDePago.objects.all()
@@ -122,8 +123,8 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             gastronomia.tipos_gastronomia.set(idsTiposGastronomia)
             gastronomia.tipos_comida.set(idsTiposComida)
             gastronomia.tipos_pref_alimentaria.set(idsTiposPrefAliment)
-            gastronomia.metodos_de_pago.set(idsMetodosDePago)# linea que agregue para solucionar el error de que solo 
-                                                            # muestra el id, ahora muestra id y nombre de metodo de pago
+            gastronomia.metodos_de_pago.set(idsMetodosDePago)
+            
             idEstablecimiento = gastronomia.codEstablecimiento
             print(idEstablecimiento)
             
@@ -157,6 +158,63 @@ class GastronomiaViewSet(viewsets.ModelViewSet):
             print('Error al obtener el local gastronomico por ID del empresario:', e)
             return JsonResponse({'error': 'Error al obtener el local gastronomico.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+    @action(detail=False, methods=['PUT'])
+    @permission_classes([IsAuthenticated])
+    def actualizarDatos(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            GastronomiaId = data.get('codEstablecimiento', '')
+            
+            # Obtén la instancia de Local Gastronomico
+            gastronomia = Gastronomia.objects.get(codEstablecimiento=GastronomiaId)
+
+            # Actualiza los campos necesarios
+            gastronomia.nombre = data.get('nombre', gastronomia.nombre)
+            gastronomia.calle = data.get('calle', gastronomia.calle)
+            gastronomia.altura = data.get('altura', gastronomia.altura)
+            
+            
+            gastronomia.descripcion = data.get('descripcion', '')
+            gastronomia.telefono = data.get('telefono', '')
+            
+            gastronomia.web = data.get('web', '')
+            
+            nombresMetodosPago = request.data.get('metodos_de_pago', [])
+            idsMetodosDePago = MetodoDePago.objects.filter(nombre__in=nombresMetodosPago).values_list('codMetodoDePago', flat=True)
+            
+            # Datos Gastronomia
+            nombresTiposServicios = request.data.get('tipos_servicio_gastronomico', [])
+            idsTiposServicios = TipoServGastro.objects.filter(nombre__in=nombresTiposServicios).values_list('codTipoServGastro', flat=True)
+            
+            nombresTiposGastronomia = request.data.get('tipos_gastronomia', [])
+            idsTiposGastronomia = TipoGastronomia.objects.filter(nombre__in=nombresTiposGastronomia).values_list('codTipoGastronomia', flat=True)
+            
+            nombresTiposComida = request.data.get('tipos_comida', [])
+            idsTiposComida = TipoComida.objects.filter(nombre__in=nombresTiposComida).values_list('codTipoComida', flat=True)
+            
+            nombresTiposPrefAliment = request.data.get('tipos_pref_alimentaria', [])
+            idsTiposPrefAliment = TipoPrefAliment.objects.filter(nombre__in=nombresTiposPrefAliment).values_list('codTipoPrefAliment', flat=True)
+            
+            # Guarda los cambios
+            gastronomia.save()
+            gastronomia.metodos_de_pago.set(idsMetodosDePago)
+            gastronomia.tipos_servicio_gastronomico.set(idsTiposServicios)
+            gastronomia.tipos_gastronomia.set(idsTiposGastronomia)
+            gastronomia.tipos_comida.set(idsTiposComida)
+            gastronomia.tipos_pref_alimentaria.set(idsTiposPrefAliment)
+            
+
+            return JsonResponse({'mensaje': 'Local gastronomico actualizado exitosamente'}, status=200)
+
+        except Gastronomia.DoesNotExist:
+            return JsonResponse({'error': 'No se encontró el local gastronomico.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            print('Error en la actualización del local gastronomico:', e)
+            return JsonResponse({'error': 'Error en la actualización del local gastronomico'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+        
 class ImagenGastronomiaCreateView(APIView):
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
@@ -184,3 +242,45 @@ class ImagenGastronomiaCreateView(APIView):
         except Exception as e:
             print('Error en la carga de imágenes:', e)
             return Response({'error': 'Error en la carga de imágenes'}, status=status.HTTP_400_BAD_REQUEST)
+            
+    def put(self, request, establecimiento_id):
+        try:
+            establecimiento = Establecimiento.objects.get(codEstablecimiento=establecimiento_id)
+
+            # Accede a las imágenes en la clave 'imagenes'
+            nuevas_imagenes = request.FILES.getlist('imagenes')
+            print(nuevas_imagenes)
+            
+            # Obtén las imágenes existentes del alojamiento
+            imagenes_existentes = Imagen.objects.filter(establecimiento=establecimiento)
+            print(imagenes_existentes)
+            # Lista para almacenar los objetos File de las nuevas imágenes
+            nuevas_imagenes_procesadas = []
+
+            # Recorrer las nuevas imágenes y cargarlas
+            for nueva_imagen in nuevas_imagenes:
+                nuevas_imagenes_procesadas.append(nueva_imagen)
+
+            # Agregar las nuevas imágenes que no estaban presentes
+            for nueva_imagen in nuevas_imagenes_procesadas:
+                if not imagenes_existentes.filter(imagen=nueva_imagen).exists():
+                    Imagen.objects.create(establecimiento=establecimiento, imagen=nueva_imagen)
+
+            # Eliminar imágenes marcadas para eliminación
+           
+            imagenes_a_eliminar_ids = request.data.getlist('imagenesEliminadas', [])
+
+            # Asegúrate de que haya algún valor en la lista antes de intentar acceder al primer elemento
+            if imagenes_a_eliminar_ids:
+                # Extrae el primer elemento del array (ya que parece que solo estás pasando un valor)
+                codImagen = imagenes_a_eliminar_ids[0]
+
+                # Ahora puedes utilizar codImagen como un número
+                imagenes_a_eliminar = Imagen.objects.filter(codImagen=codImagen)
+                imagenes_a_eliminar.delete()
+
+            return Response({'mensaje': 'Imágenes actualizadas exitosamente'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print('Error en la actualización de imágenes:', e)
+            return Response({'error': 'Error en la actualización de imágenes'}, status=status.HTTP_400_BAD_REQUEST)
