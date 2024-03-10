@@ -53,6 +53,10 @@ export class GastronomiaService {
     return this.http.post<any>(`${this.url}imagenesGastronomia/${estbalecimientoID}/`, formData);
   }
 
+  actualizarImagenes(formData: FormData, estbalecimientoID: number): Observable<any> {
+    return this.http.put<any>(`${this.url}imagenesGastronomia/${estbalecimientoID}/`, formData);
+  }
+
   getTodosGastronomia(): Observable<any> {
     return this.http.get(`${this.url}gastronomias/`);
   }
@@ -76,6 +80,16 @@ export class GastronomiaService {
     });
   
     return this.http.get(url, { headers });
+  }
+
+  actualizarDatos(datos: any): Observable<any> {
+    const url = `${this.url}gastronomias/actualizarDatos/`;
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.auth.getTokenFromCookie()}`
+    });
+  
+    return this.http.put(url, datos, { headers });
   }
 
   eliminarEstablecimiento(idEstablecimiento: number): Observable<void> {

@@ -79,23 +79,21 @@ export class EditarAlojamientoComponent {
       imagenesEliminadas: this.fb.array([]),
       web: ['', ],
     });
-    this.initMetodosPagoFormArray();
-    this.initServiciosFormArray();
   }
 
-  initMetodosPagoFormArray(): void {
+  initMetodosPagoFormArray(metodos: any): void {
+
     const metodosPagoFormArray = this.alojamientoForm.get('metodos_de_pago') as FormArray;
   
-    this.tiposmetodosPago.forEach((metodoPago: { codMetodoDePago: number }) => {
+    metodos.forEach((metodoPago: { codMetodoDePago: number }) => {
       const isSelected = this.alojamiento.metodos_de_pago.includes(metodoPago.codMetodoDePago);
       metodosPagoFormArray.push(this.fb.control(isSelected));
     });
   }
 
-  initServiciosFormArray(): void {
+  initServiciosFormArray(metodos: any): void {
     const serviciosFormArray = this.alojamientoForm.get('servicios') as FormArray;
-  
-    this.tiposServicio.forEach((servicio: { codTipoServicio: number }) => {  // Especifica el tipo de servicio
+    metodos.forEach((servicio: { codTipoServicio: number }) => {  // Especifica el tipo de servicio
       const isSelected = this.alojamiento.servicios.includes(servicio.codTipoServicio);
       serviciosFormArray.push(this.fb.control(isSelected));
     });
@@ -129,6 +127,7 @@ export class EditarAlojamientoComponent {
     this.alojamientoService.obtenerServicios().subscribe(
       (data: any[]) => {  // Asegúrate de especificar el tipo de datos
         this.tiposServicio = data;
+        this.initServiciosFormArray(data);
       },
       (error) => {
         console.error('Error al obtener tipos de servicio', error);
@@ -141,6 +140,7 @@ export class EditarAlojamientoComponent {
     this.alojamientoService.obtenerMetodosDePago().subscribe(
       (data) => {
         this.tiposmetodosPago = data;
+        this.initMetodosPagoFormArray(data)
       },
       (error) => {
         console.error('Error al obtener tipos de metodos de pago', error);

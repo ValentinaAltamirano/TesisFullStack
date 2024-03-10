@@ -26,6 +26,7 @@ export class EditarComercioComponent {
   editando = false;
   datosOriginales: any;
   nuevasImagenes: any[] = [];
+  arrayMetodosPago:any[] = [];
 
 
   constructor(
@@ -68,6 +69,7 @@ export class EditarComercioComponent {
       web: ['', Validators.required],
       metodos_de_pago: this.fb.array([]),
       imagenesEliminadas: this.fb.array([]),
+      
 
       // Campos del gastronomia
       codTipoComercio: this.fb.array([]),
@@ -139,6 +141,10 @@ export class EditarComercioComponent {
         this.comercioForm.patchValue(comercioInfo);
         this.cargarMetodosDePago(comercioInfo.metodos_de_pago);
         this.cargarTiposComercio(comercioInfo.codTipoComercio);
+
+        // Cargar métodos de pago
+        this.cargarMetodosDePago(comercioInfo.metodos_de_pago);
+        this.arrayMetodosPago = comercioInfo.metodos_de_pago;
         
         console.log(comercioInfo)
         this.datosOriginales = { ...comercioInfo };
@@ -151,7 +157,7 @@ export class EditarComercioComponent {
 
   cargarMetodosDePago(metodos_de_pago: any[]): void {
     const metodosDePagoArray = this.comercioForm.get('metodos_de_pago') as FormArray;
-    metodosDePagoArray.clear();  // Limpiar el FormArray antes de agregar nuevos valores
+    metodosDePagoArray.clear();
   
     metodos_de_pago.forEach(metodo => {
       metodosDePagoArray.push(this.fb.control(metodo));
@@ -209,6 +215,10 @@ export class EditarComercioComponent {
     }
   
     return null;
+  }
+
+  isMetodoDePagoSeleccionado(metodoPago: any): boolean {
+    return this.arrayMetodosPago.some((s: any) => s.nombre == metodoPago);
   }
 
   toggleEdicion() {

@@ -14,7 +14,7 @@
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form [formGroup]="gastronomiaForm" class="space-y-4 md:space-y-6"  enctype="multipart/form-data">
                 <div>
-                    <label for="nombreAlojamiento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Local Gastronómico*</label>
+                    <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre Local Gastronómico*</label>
                     <input type="text" name="nombre" id="nombre" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" autocomplete="nombre" formControlName="nombre" [readonly]="!editando"  >
               </div>
 
@@ -27,9 +27,9 @@
                           <label [for]="'tipoGastronomico-' + tipo.codTipoGastronomia" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             <input 
                               type="checkbox" 
-                              [checked]="getTipoGastronomiaControl(i)?.value || false"
+                              [checked]="isTipoGastronomiaSeleccionado(tipo)"
                               [disabled]="!editando"
-                              (change)="toggleCheckbox('tipos_gastronomia.' + i)"
+                              (change)="toggleCheckbox(i, tipo, 'tipos_gastronomia')"
                               [id]="'tipoGastronomico-' + tipo.codTipoGastronomia"
                               [name]="'tipoGastronomico-' + tipo.codTipoGastronomia"
                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
@@ -77,9 +77,9 @@
                               <label [for]="'prefAlimentaria-' + tipo.codTipoPrefAliment" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                 <input 
                                   type="checkbox" 
-                                  [checked]="getTipoPrefAlimentariaControl(i)?.value || false"
+                                  [checked]="isPrefAlimentariaSeleccionada(tipo)"
                                   [disabled]="!editando"
-                                  (change)="toggleCheckbox('tipos_pref_alimentaria.' + i)"
+                                  (change)="toggleCheckbox(i, tipo, 'tipos_pref_alimentaria')"
                                   [id]="'prefAlimentaria-' + tipo.codTipoPrefAliment"
                                   [name]="'prefAlimentaria-' + tipo.codTipoPrefAliment"
                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
@@ -99,15 +99,16 @@
                             <div class="flex items-center ps-3">
                                 <label [for]="'metodoPago-' + metodoPago.codMetodoDePago" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
 
-                                <input 
-                                type="checkbox" 
-                                [checked]="getMetodoPagoControl(i)?.value || false"
-                                (change)="toggleCheckbox('metodos_de_pago.' + i)"
-                                [id]="'metodoPago-' + metodoPago.codMetodoDePago"
-                                [name]="'metodoPago-' + metodoPago.codMetodoDePago"
-                                [disabled]="!editando"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                {{ metodoPago }}
+                                  <input 
+                                  type="checkbox" 
+                                  [checked]="isMetodoDePagoSeleccionado(metodoPago)"
+                                  (change)="toggleCheckbox(i, metodoPago, 'metodos_de_pago')"
+                                  [id]="'metodoPago-' + metodoPago.codMetodoDePago"
+                                  [name]="'metodoPago-' + metodoPago.codMetodoDePago"
+                                  [disabled]="!editando"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                  >
+                                  {{ metodoPago }}
 
                                 </label>
                             </div>
@@ -129,9 +130,9 @@
                             <label [for]="'tipoComida-' + tipo.codTipoComida" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                 <input 
                                 type="checkbox" 
-                                [checked]="getTipoComidaControl(i)?.value || false"
+                                [checked]="isTipoComidaSeleccionado(tipo)"
                                 [disabled]="!editando"
-                                (change)="toggleCheckbox('tipos_comida.' + i)"
+                                (change)="toggleCheckbox(i, tipo, 'tipos_comida')"
                                 [id]="'tipoComida-' + tipo.codTipoComida"
                                 [name]="'tipoComida-' + tipo.codTipoComida"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
@@ -153,7 +154,7 @@
                                     type="checkbox" 
                                     [checked]="getServicioControl(i)?.value || false"
                                     [disabled]="!editando"
-                                    (change)="toggleCheckbox('servicios.' + i)"
+                                    (change)="toggleCheckbox(i, servicio, 'tipos_servicio_gastronomico')"
                                     [id]="'servicio-' + servicio.codTipoServicio"
                                     [name]="'servicio-' + servicio.codTipoServicio"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
@@ -199,7 +200,7 @@
                 <div class="mt-6 flex items-center justify-end gap-x-6">
                   <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="volverMisEstablecimiento()">Volver</button>
                   <button *ngIf="!editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="toggleEdicion()">Editar</button>
-                  <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" >Guardar</button>
+                  <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="guardarGastronomia()">Guardar</button>
                   <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="cancelarEdicion()">Cancelar</button>        
               </div>
             </form>
