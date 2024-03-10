@@ -6,6 +6,7 @@ from .serializer_empresario import *
 class MetodoDePagoSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetodoDePago
+        fields = ['codMetodoDePago','nombre']
         fields = ['codMetodoDePago', 'nombre'] 
         
 class TipoComercioSerializer(serializers.ModelSerializer):
@@ -15,6 +16,7 @@ class TipoComercioSerializer(serializers.ModelSerializer):
 
 class ComercioSerializer(serializers.ModelSerializer):
     codTipoComercio = TipoComercioSerializer(many=True)
+    metodos_de_pago = MetodoDePagoSerializer(many=True)
     metodos_de_pago = MetodoDePagoSerializer(many=True, read_only=True)
     class Meta:
         model = Comercio
