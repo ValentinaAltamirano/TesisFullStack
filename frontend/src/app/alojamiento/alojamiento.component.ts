@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { AlojamientoService } from '../service/alojamiento.service';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../service/auth.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-alojamiento',
@@ -18,6 +20,10 @@ export class AlojamientoComponent {
   establecimientoId: number = 0;
   baseUrl = 'http://127.0.0.1:8000';
   alojamientoForm: FormGroup = new FormGroup({});
+  comentarios:any;
+  sumaCalificaciones: number = 0;
+  cantidadComentarios: number = 0;
+  promedioCalificaciones: number = 0;
 
   elementosMostrados = {
     tiposAlojamiento: 5,
@@ -74,6 +80,7 @@ export class AlojamientoComponent {
 
   constructor(
     private alojamientoService: AlojamientoService, private fb: FormBuilder,
+    private authService: AuthService,
   ) {
     this.alojamientoForm = this.fb.group({
       tiposAlojamientoSeleccionados: this.fb.array([]),
@@ -154,35 +161,41 @@ export class AlojamientoComponent {
     this.obtenerCategoria();
     this.obtenerServicio();
     this.obtenerMetodosPago();
+    this.cargarAlojamientos();
 
+  }
+
+  cargarAlojamientos(): void {
     this.alojamientoService.getTodosAlojamientos().subscribe(
-      (data) => {
-        this.alojamientos = data;
-        console.log(this.alojamientos)
-    
-        const observables = this.alojamientos.map(alojamiento => {
+      (alojamientos) => {
+        this.alojamientos = alojamientos;
+        
+        // Crear un array de observables para las imágenes y comentarios de cada alojamiento
+        const observables = this.alojamientos.map((alojamiento) => {
           const establecimientoId = alojamiento.codEstablecimiento;
-          return this.alojamientoService.obtenerImagenesAlojamiento(establecimientoId);
+  
+          // Observable para obtener imágenes
+          const imagenesObservable = this.alojamientoService.obtenerImagenesAlojamiento(establecimientoId);
+          
+          // Observable para obtener comentarios
+          const comentariosObservable = this.authService.obtenerComentariosPorIdEstablecimiento(establecimientoId);
+  
+          // Utilizar forkJoin para combinar las solicitudes de imágenes y comentarios
+          return forkJoin([imagenesObservable, comentariosObservable]).pipe(
+            map(([imagenes, comentarios]) => {
+              alojamiento.imagenesAlojamientos = imagenes.length > 0 ? [imagenes[0]] : [];
+              alojamiento.comentarios = comentarios;
+            })
+          );
         });
-
-        console.log(this.alojamientos);
-
-    
+  
+        // Utilizar forkJoin para esperar a que todas las solicitudes se completen
         forkJoin(observables).subscribe(
-          (imagenesArrays) => {
-    
-            // Ahora imagenesArrays contiene un array de imágenes para cada alojamiento
-    
-            // Puedes obtener la primera imagen de cada array
-            imagenesArrays.forEach((imagenesArray, index) => {
-              // Agregar las imágenes al array de imágenes del alojamiento correspondiente
-              this.alojamientos[index].imagenesAlojamientos = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
-              
-            });
-            
+          () => {
+             this.calcularPromedioCalificaciones(this.alojamientos[0]?.comentarios || []);
           },
           (error) => {
-            console.error('Error al obtener imágenes de alojamientos', error);
+            console.error('Error al obtener imágenes y comentarios de alojamientos', error);
           }
         );
       },
@@ -190,7 +203,6 @@ export class AlojamientoComponent {
         console.error(error);
       }
     );
-
   }
 
   mostrarMas(filtro: keyof typeof AlojamientoComponent.prototype.elementosMostrados) {
@@ -200,4 +212,25 @@ export class AlojamientoComponent {
   mostrarMenos(filtro: keyof typeof AlojamientoComponent.prototype.elementosMostrados) {
     this.elementosMostrados[filtro] = 5; // Puedes ajustar a la cantidad que desees mostrar inicialmente
   }
+// Agrega esta función para calcular el promedio
+
+
+calcularPromedioCalificaciones(establecimientoId: number): number {
+  const comentariosEstablecimiento = this.alojamientos.find(alojamiento => alojamiento.codEstablecimiento === establecimientoId)?.comentarios || [];
+
+  if (comentariosEstablecimiento.length > 0) {
+    const sumaCalificaciones = comentariosEstablecimiento.reduce((suma:number, comentario: any) => suma + comentario.calificacion, 0);
+    const promedioCalificaciones = sumaCalificaciones / comentariosEstablecimiento.length;
+    
+    // Update the promedioCalificaciones property for the specific establishment
+    const index = this.alojamientos.findIndex(alojamiento => alojamiento.codEstablecimiento === establecimientoId);
+    if (index !== -1) {
+      this.alojamientos[index].promedioCalificaciones = promedioCalificaciones;
+    }
+
+    return promedioCalificaciones;
+  } else {
+    return 0;
+  }
+}
 }

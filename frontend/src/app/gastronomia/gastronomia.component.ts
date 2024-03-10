@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { GastronomiaService } from '../service/gastronomia.service';
+import { AuthService } from '../service/auth.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-gastronomia',
@@ -20,6 +22,7 @@ export class GastronomiaComponent {
   imagenes: any[] = [];
   establecimientoId: number = 0;
   baseUrl = 'http://127.0.0.1:8000';
+  promedioCalificaciones: number = 0;
   
   elementosMostrados = {
     tiposGastronomia: 5,
@@ -29,7 +32,7 @@ export class GastronomiaComponent {
   };
 
   constructor(
-    private gastronomiaService: GastronomiaService, private fb: FormBuilder,
+    private gastronomiaService: GastronomiaService, private fb: FormBuilder,private authService: AuthService,
   ) {
     this.gastronomiaForm = this.fb.group({
       tiposGastronomiaSeleccionados: this.fb.array([]),
@@ -50,7 +53,7 @@ export class GastronomiaComponent {
       serviciosSeleccionados.length === 0 &&
       tiposComidaSeleccionados.length === 0 &&
       preferenciaAlimentariaSeleccionada.length === 0 ) {
-      // Si no se han seleccionado tipos de alojamiento, servicios ni categorías, devolver todos los alojamientos
+      // Si no se han seleccionado tipos de gastronomia, servicios ni categorías, devolver todos los gastronomia
       return this.gastronomias;
     }
     
@@ -158,23 +161,35 @@ export class GastronomiaComponent {
   
     obtenerGastronomias() {
       this.gastronomiaService.getTodosGastronomia().subscribe(
-        (data) => {
-          this.gastronomias = data;
-          console.log(this.gastronomias);
-  
-          const observables = this.gastronomias.map(gastronomia => {
+        (gastronomias) => {
+          this.gastronomias = gastronomias;
+    
+          // Crear un array de observables para las imágenes y comentarios de cada gastronomía
+          const observables = this.gastronomias.map((gastronomia) => {
             const establecimientoId = gastronomia.codEstablecimiento;
-            return this.gastronomiaService.obtenerImagenesGastronomia(establecimientoId);
+    
+            // Observable para obtener imágenes
+            const imagenesObservable = this.gastronomiaService.obtenerImagenesGastronomia(establecimientoId);
+            
+            // Observable para obtener comentarios
+            const comentariosObservable = this.authService.obtenerComentariosPorIdEstablecimiento(establecimientoId);
+    
+            // Utilizar forkJoin para combinar las solicitudes de imágenes y comentarios
+            return forkJoin([imagenesObservable, comentariosObservable]).pipe(
+              map(([imagenes, comentarios]) => {
+                gastronomia.imagenesGastronomia = imagenes.length > 0 ? [imagenes[0]] : [];
+                gastronomia.comentarios = comentarios;
+              })
+            );
           });
-  
+    
+          // Utilizar forkJoin para esperar a que todas las solicitudes se completen
           forkJoin(observables).subscribe(
-            (imagenesArrays) => {
-              imagenesArrays.forEach((imagenesArray, index) => {
-                this.gastronomias[index].imagenesGastronomia = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
-              });
+            () => {
+              this.calcularPromedioCalificaciones(this.gastronomias[0]?.comentarios || []);
             },
             (error) => {
-              console.error('Error al obtener imágenes del local gastronómico', error);
+              console.error('Error al obtener imágenes y comentarios de los locales gastronómicos', error);
             }
           );
         },
@@ -227,5 +242,24 @@ export class GastronomiaComponent {
   
     mostrarMenos(filtro: keyof typeof GastronomiaComponent.prototype.elementosMostrados) {
       this.elementosMostrados[filtro] = 5; // Puedes ajustar a la cantidad que desees mostrar inicialmente
+    }
+
+    calcularPromedioCalificaciones(establecimientoId: number): number {
+      const comentariosEstablecimiento = this.gastronomias.find(gastronomia => gastronomia.codEstablecimiento === establecimientoId)?.comentarios || [];
+    
+      if (comentariosEstablecimiento.length > 0) {
+        const sumaCalificaciones = comentariosEstablecimiento.reduce((suma:number, comentario: any) => suma + comentario.calificacion, 0);
+        const promedioCalificaciones = sumaCalificaciones / comentariosEstablecimiento.length;
+        
+        // Update the promedioCalificaciones property for the specific establishment
+        const index = this.gastronomias.findIndex(gastronomia => gastronomia.codEstablecimiento === establecimientoId);
+        if (index !== -1) {
+          this.gastronomias[index].promedioCalificaciones = promedioCalificaciones;
+        }
+    
+        return promedioCalificaciones;
+      } else {
+        return 0;
+      }
     }
   }

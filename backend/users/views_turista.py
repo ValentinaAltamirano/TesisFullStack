@@ -161,7 +161,6 @@ class ComentarioViewSet(viewsets.ModelViewSet):
             calificacion=calificacion,
             establecimiento=establecimiento,
             turista=turista)
-        
            
             return JsonResponse({'message': 'Turista creado exitosamente'}, status=201)
     
@@ -195,3 +194,5 @@ class ComentarioViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Comentario actualizado exitosamente'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Se requiere el parámetro pk para actualizar el comentario'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    

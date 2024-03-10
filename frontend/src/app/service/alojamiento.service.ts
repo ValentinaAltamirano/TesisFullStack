@@ -62,6 +62,8 @@ export class AlojamientoService {
     return this.http.get<any[]>(url);
 }
 
+
+
 obtenerAlojamiento(establecimientoId: number): Observable<any> {
   const url = `${this.url}alojamientos/${establecimientoId}/`;
   return this.http.get(url);

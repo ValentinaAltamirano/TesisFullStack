@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { ComercioService } from '../service/comercio.service';
+import { AuthService } from '../service/auth.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-comercios',
@@ -17,12 +19,13 @@ export class ComerciosComponent {
   establecimientoId: number = 0;
   baseUrl = 'http://127.0.0.1:8000';
   comercioForm: FormGroup = new FormGroup({});
+  promedioCalificaciones: number = 0;
   elementosMostrados = {
     tiposComercio: 5
   };
 
   constructor(
-    private comercioService: ComercioService, private fb: FormBuilder,
+    private comercioService: ComercioService, private fb: FormBuilder,private authService: AuthService,
   ) {
     this.comercioForm = this.fb.group({
       tiposComercioSeleccionados: this.fb.array([])
@@ -116,23 +119,35 @@ export class ComerciosComponent {
 
   obtenerComercios() {
     this.comercioService.getTodosComercios().subscribe(
-      (data) => {
-        this.comercios = data;
-        console.log(this.comercios);
-
-        const observables = this.comercios.map(comercios => {
-          const establecimientoId = comercios.codEstablecimiento;
-          return this.comercioService.obtenerImagenesComercio(establecimientoId);
+      (comercios) => {
+        this.comercios = comercios;
+        
+        // Crear un array de observables para las imágenes y comentarios de cada comercio
+        const observables = this.comercios.map((comercio) => {
+          const establecimientoId = comercio.codEstablecimiento;
+  
+          // Observable para obtener imágenes
+          const imagenesObservable = this.comercioService.obtenerImagenesComercio(establecimientoId);
+          
+          // Observable para obtener comentarios
+          const comentariosObservable = this.authService.obtenerComentariosPorIdEstablecimiento(establecimientoId);
+  
+          // Utilizar forkJoin para combinar las solicitudes de imágenes y comentarios
+          return forkJoin([imagenesObservable, comentariosObservable]).pipe(
+            map(([imagenes, comentarios]) => {
+              comercio.imagenesComercio = imagenes.length > 0 ? [imagenes[0]] : [];
+              comercio.comentarios = comentarios;
+            })
+          );
         });
-
+  
+        // Utilizar forkJoin para esperar a que todas las solicitudes se completen
         forkJoin(observables).subscribe(
-          (imagenesArrays) => {
-            imagenesArrays.forEach((imagenesArray, index) => {
-              this.comercios[index].imagenesComercio = imagenesArray.length > 0 ? [imagenesArray[0]] : [];
-            });
+          () => {
+            this.calcularPromedioCalificaciones(this.comercios[0]?.comentarios || []);
           },
           (error) => {
-            console.error('Error al obtener imágenes del comercio', error);
+            console.error('Error al obtener imágenes y comentarios de los comercios', error);
           }
         );
       },
@@ -149,4 +164,23 @@ export class ComerciosComponent {
   mostrarMenos(filtro: keyof typeof ComerciosComponent.prototype.elementosMostrados) {
     this.elementosMostrados[filtro] = 5; // Puedes ajustar a la cantidad que desees mostrar inicialmente
   }
-}
+
+  calcularPromedioCalificaciones(establecimientoId: number): number {
+    const comentariosEstablecimiento = this.comercios.find(comercio => comercio.codEstablecimiento === establecimientoId)?.comentarios || [];
+  
+    if (comentariosEstablecimiento.length > 0) {
+      const sumaCalificaciones = comentariosEstablecimiento.reduce((suma:number, comentario: any) => suma + comentario.calificacion, 0);
+      const promedioCalificaciones = sumaCalificaciones / comentariosEstablecimiento.length;
+      
+      // Update the promedioCalificaciones property for the specific establishment
+      const index = this.comercios.findIndex(comercio => comercio.codEstablecimiento === establecimientoId);
+      if (index !== -1) {
+        this.comercios[index].promedioCalificaciones = promedioCalificaciones;
+      }
+  
+      return promedioCalificaciones;
+    } else {
+      return 0;
+    }
+  }
+  }
