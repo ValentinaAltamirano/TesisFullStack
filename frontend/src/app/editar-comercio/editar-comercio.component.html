@@ -26,14 +26,14 @@
                         <div class="flex items-center ps-3">
                           <label [for]="'codTipoComercio-' + tipo.codTipoComercio" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             <input 
-                            type="checkbox" 
-                            [checked]="isTipoComercioSeleccionado(tipo)"
-                            [disabled]="!editando"
-                            (change)="toggleCheckbox(i, tipo, 'codTipoComercio')"
-                            [id]="'codTipoComercio-' + tipo.codTipoComercio"
-                            [name]="'codTipoComercio-' + tipo.codTipoComercio"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                          >
+                              type="checkbox" 
+                              [checked]="getTiposComercio(i)?.value || false"
+                              [disabled]="!editando"
+                              (change)="toggleCheckbox(i, tipo, 'codTipoComercio')"
+                              [id]="'codTipoComercio-' + tipo.codTipoComercio"
+                              [name]="'codTipoComercio-' + tipo.codTipoComercio"
+                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                            >
                             {{ tipo }}
                           </label>
                         </div>
@@ -66,29 +66,34 @@
                     <input formControlName="telefono" type="telefono" name="telefono" id="telefono" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Teléfono"  [readonly]="!editando">
                 </div>
                
-               <div class="p-2">
-                        <label for="metodoPago" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Métodos de Pago*</label>
-                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <li *ngFor="let metodoPago of tiposmetodosPago; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                            <div class="flex items-center ps-3">
-                                <label [for]="'metodoPago-' + metodoPago.codMetodoDePago" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+               <!-- Métodos de Pago -->
+              <div>
+                <label for="metodoPago" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Métodos de Pago*</label>
+                <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                  <li *ngFor="let metodoPago of tiposmetodosPago; let i = index" class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                    <div class="flex items-center ps-3">
+                      <label [for]="'metodoPago-' + metodoPago.codMetodoDePago" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
 
-                                 <input 
-                                 type="checkbox" 
-                                 [checked]="isMetodoDePagoSeleccionado(metodoPago)"
-                                 (change)="toggleCheckbox(i, metodoPago, 'metodos_de_pago')"
-                                 [id]="'metodoPago-' + metodoPago.codMetodoDePago"
-                                 [name]="'metodoPago-' + metodoPago.codMetodoDePago"
-                                 [disabled]="!editando"
-                                [disabled]="!editando"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                {{ metodoPago }}
+                        <input 
+                        type="checkbox" 
+                        [checked]="isMetodoDePagoSeleccionado(metodoPago)"
+                        (change)="toggleCheckbox(i, metodoPago, 'metodos_de_pago')"
+                        [id]="'metodoPago-' + metodoPago.codMetodoDePago"
+                        [name]="'metodoPago-' + metodoPago.codMetodoDePago"
+                        [disabled]="!editando"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                        >
+                        {{ metodoPago }}
 
-                                </label>
-                            </div>
-                            </li>
-                        </ul>
+                      </label>
+                    </div>
+                  </li>
+                </ul>
+
+                <div *ngIf="comercioForm.get('metodos_de_pago')?.hasError('required') && comercioForm.get('metodos_de_pago')?.touched" class="error-message" class="text-red-500 text-sm">
+                  Los métodos de pago son obligatorios.
                 </div>
+            </div>
 
 
               <div>

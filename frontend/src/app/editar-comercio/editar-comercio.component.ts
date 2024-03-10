@@ -26,7 +26,6 @@ export class EditarComercioComponent {
   editando = false;
   datosOriginales: any;
   nuevasImagenes: any[] = [];
-  arrayTipoComercio:any[] = [];
   arrayMetodosPago:any[] = [];
 
 
@@ -42,46 +41,50 @@ export class EditarComercioComponent {
   ngOnInit() {
     this.obtenerTiposComercio();
     this.obtenerMetodosDePago(); 
-
     this.initForm();
     this.route.params.subscribe(params => {
+      
       this.establecimientoId = params['id'];
       
+      // Llamar al servicio para obtener detalles según el ID del establecimiento
       this.cargarDatos()
       this.cargarImagenes();
+      
     });
   }
 
   initForm(): void {
     this.comercioForm = this.fb.group({
       // Campos del establecimiento
-      calle: ['', [Validators.required, Validators.maxLength(50)]],
-      altura: ['', [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.maxLength(50)]],
+      altura: ['', Validators.required],
+      calle: ['', Validators.required],
+      codCategoria: ['', Validators.required],
       codCiudad: ['', Validators.required],
       codProvincia: ['', Validators.required],
       codEstablecimiento: ['', Validators.required],
-      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+      descripcion: ['', Validators.required],
       idEmpresario: [''],
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9'.,_\-&()!@#$%^*+=<>?/\|[\]{}:;`~" \p{L}]+$/u), Validators.maxLength(50)]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9\s\-\+]+$/), Validators.minLength(10), Validators.maxLength(20)]],
+      nombre: ['', Validators.required],
+      telefono: ['', Validators.required],
       web: ['', Validators.required],
-      metodos_de_pago: this.fb.array([], [Validators.required]),
+      metodos_de_pago: this.fb.array([]),
       imagenesEliminadas: this.fb.array([]),
+      
 
       // Campos del gastronomia
-      codTipoComercio: this.fb.array([], [Validators.required]),
+      codTipoComercio: this.fb.array([]),
     });
 
-    this.initTiposComercioFormArray();
+    this.initTipoComercioFormArray();
     this.initMetodosPagoFormArray();
   }
 
-  initTiposComercioFormArray(): void {
-    const tiposComercioFormArray = this.comercioForm.get('codTipoComercio') as FormArray;
-
-    this.tiposComercio.forEach((tipo: { codTipoComercio: number }) => {
-      const isSelected = this.isTipoComercioSeleccionado(tipo);
-      tiposComercioFormArray.push(this.fb.control(isSelected));
+  initTipoComercioFormArray(): void {
+    const tipoComercioFormArray = this.comercioForm.get('codTipoComercio') as FormArray;
+  
+    this.tiposComercio.forEach((tipoComercio: { codTipoComercio: number }) => {
+      const isSelected = this.comercios.codTipoComercio.includes(tipoComercio.codTipoComercio);
+      tipoComercioFormArray.push(this.fb.control(isSelected));
     });
   }
 
@@ -93,7 +96,6 @@ export class EditarComercioComponent {
       metodosPagoFormArray.push(this.fb.control(isSelected));
     });
   }
-
 
   obtenerTiposComercio(): void {
     this.comercioService.obtenerTiposComercio().subscribe(
@@ -137,15 +139,12 @@ export class EditarComercioComponent {
     this.comercioService.obtenerComercio(this.establecimientoId).subscribe(
       (comercioInfo: any) => {
         this.comercioForm.patchValue(comercioInfo);
+        this.cargarMetodosDePago(comercioInfo.metodos_de_pago);
+        this.cargarTiposComercio(comercioInfo.codTipoComercio);
 
         // Cargar métodos de pago
         this.cargarMetodosDePago(comercioInfo.metodos_de_pago);
         this.arrayMetodosPago = comercioInfo.metodos_de_pago;
-  
-        // Cargar tipoComercio
-        this.cargarTiposComercio(comercioInfo.codTipoComercio);
-        this.arrayTipoComercio = comercioInfo.codTipoComercio;
-  
         
         console.log(comercioInfo)
         this.datosOriginales = { ...comercioInfo };
@@ -158,24 +157,33 @@ export class EditarComercioComponent {
 
   cargarMetodosDePago(metodos_de_pago: any[]): void {
     const metodosDePagoArray = this.comercioForm.get('metodos_de_pago') as FormArray;
-    metodosDePagoArray.clear();  // Limpiar el FormArray antes de agregar nuevos valores
+    metodosDePagoArray.clear();
   
     metodos_de_pago.forEach(metodo => {
       metodosDePagoArray.push(this.fb.control(metodo));
     });
   }
 
-  cargarTiposComercio(codTipoComercio: any[]): void {
-    const tiposComercioFormArray = this.comercioForm.get('codTipoComercio') as FormArray;
-    tiposComercioFormArray.clear();
-  
-    codTipoComercio.forEach(codigo => {
-      tiposComercioFormArray.push(this.fb.control(true));
+  cargarTiposComercio(comercioSeleccionados: any[]): void {
+    const comercioSeleccionadosArray = this.comercioForm.get('codTipoComercio') as FormArray;
+    comercioSeleccionadosArray.clear();
+    
+    comercioSeleccionados.forEach(codTipoComercio => {
+      comercioSeleccionadosArray.push(this.fb.control(codTipoComercio));
     });
   }
 
+  getMetodoPagoControl(index: number): FormControl | undefined {
+    const metodosDePagoArray = this.comercioForm.get('metodos_de_pago') as FormArray;
+    return metodosDePagoArray.at(index) as FormControl | undefined;
+  }
+
+  getTiposComercio(index: number): FormControl | undefined {
+    const comercioSeleccionadosArray = this.comercioForm.get('codTipoComercio') as FormArray;
+    return comercioSeleccionadosArray.at(index) as FormControl | undefined;
+  }
+
   toggleCheckbox(index: number, item: any, formControlName: string): void {
-    console.log(formControlName)
     const formArray = this.comercioForm.get(formControlName) as FormArray;
   
     if (!formArray) {
@@ -183,18 +191,17 @@ export class EditarComercioComponent {
       return;
     }
   
-    // Buscar el ítem específico en el FormArray
-    const control = formArray.controls[index] as FormControl;
+    // Ensure the FormArray has enough controls
+    while (formArray.length <= index) {
+      formArray.push(new FormControl(false)); // You can set the default value as needed
+    }
   
-    if (control) {
+    const control = formArray.at(index) as FormControl;
+  
+    if (control instanceof FormControl) {
       const isChecked = control.value;
-      console.log('isChecked', isChecked);
   
-      // Cambiar el valor del control usando el valor del ítem
       control.setValue(!isChecked);
-      console.log('index', index);
-      console.log('formControlName', formControlName);
-      console.log('item', item);
     } else {
       console.error(`Control at index ${index} in FormArray ${formControlName} is not a FormControl.`);
     }
@@ -212,10 +219,6 @@ export class EditarComercioComponent {
 
   isMetodoDePagoSeleccionado(metodoPago: any): boolean {
     return this.arrayMetodosPago.some((s: any) => s.nombre == metodoPago);
-  }
-
-  isTipoComercioSeleccionado(tipoComercio: any): boolean {
-    return this.comercios.codTipoComercio.includes(tipoComercio.codTipoComercio);
   }
 
   toggleEdicion() {
@@ -303,24 +306,24 @@ export class EditarComercioComponent {
     this.comercioForm.get('descripcion')?.setValue(descripcionConvertida);
 
     if (this.comercioForm.value) {
-      // Obtener servicios seleccionados
-      const tipoComercioSeleecionado = this.comercioForm.value.codTipoComercio
-      .map((valor: boolean, index: number) => valor ? this.tiposComercio[index] : null)
-        .filter((valor: any) => valor !== null);
-
-      // Obtener métodos de pago seleccionados
+      console.log(this.comercioForm.value.metodos_de_pago)
       const metodosDePagoSeleccionados = this.comercioForm.value.metodos_de_pago
-        .map((valor: boolean, index: number) => valor ? this.tiposmetodosPago[index] : null)
-        .filter((valor: any) => valor !== null);
+      .map((valor: boolean, index: number) => valor ? this.tiposmetodosPago[index] : null)
+      .filter((valor: any) => valor !== null);
 
-      // Crear el objeto datosEnviar con los valores mapeados
-      const datosEnviar = {
-        ...this.comercioForm.value,
-        codTipoComercio: tipoComercioSeleecionado,
-        metodos_de_pago: metodosDePagoSeleccionados
-      };
+      
+      console.log(this.comercioForm.value.codTipoComercio)
+      const tiposComercioSeleccionados = this.comercioForm.value.codTipoComercio
+      .map((valor: boolean, index: number) => valor ? this.tiposComercio[index] : null)
+      .filter((valor: any) => valor !== null);
 
-      console.log(datosEnviar);  
+
+    // Crear el objeto datosEnviar con los valores mapeados
+    const datosEnviar = {
+      ...this.comercioForm.value,
+      metodos_de_pago: metodosDePagoSeleccionados,
+      servicios: tiposComercioSeleccionados
+    };
 
       this.comercioService.actualizarDatos(datosEnviar).subscribe(
         (response: any) => { 
