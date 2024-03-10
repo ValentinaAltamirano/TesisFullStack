@@ -126,6 +126,15 @@ export class AuthService {
     return this.http.put(url, datos, { headers });
   }
 
+  cambiarContrasenaEmpresario(data: any): Observable<any> {
+    const url = `${this.url}empresarios/cambiarContrasena/`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getTokenFromCookie()}`
+  });  
+    return this.http.put(url, data, { headers });
+  }
+
   obtenerDatosTurista(): Observable<any> {
     const userInfoUrl = `${this.url}turistas/obtenerDatos`;
     const headers = new HttpHeaders({
@@ -149,6 +158,15 @@ export class AuthService {
     });
 
     return this.http.put(url, datos, { headers });
+  }
+
+  cambiarContrasenaTurista(data: any): Observable<any> {
+    const url = `${this.url}turistas/cambiarContrasena/`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getTokenFromCookie()}`
+  });  
+    return this.http.put(url, data, { headers });
   }
  
   obtenerIconoPerfil(): Observable<any> {

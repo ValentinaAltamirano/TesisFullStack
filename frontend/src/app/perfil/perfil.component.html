@@ -121,10 +121,102 @@
             <div class="mt-6 flex items-center justify-end gap-x-6">
               <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="volverAlInicio()">Volver</button>
               <button *ngIf="!editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="toggleEdicion()">Editar</button>
+              <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="mostrarFormulario()">Cambiar Contraseña</button>
               <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="guardarCambios()">Guardar</button>
               <button *ngIf="editando" type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="cancelarEdicion()">Cancelar</button>        
     </div>
           </form>
+
+          <div *ngIf="mostrarFormularioContrasena">
+
+            <!-- Nuevo formulario para editar la contraseña -->
+            <form [formGroup]="cambiarContrasenaForm">
+              <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-12">
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">Cambiar Contraseña</h2>
+          
+                  <!-- Contraseña Actual -->
+                    <div class="sm:col-span-4 pt-2">
+                      <label for="contrasenaActual" class="block text-sm font-medium leading-6 text-gray-900">Contraseña Actual</label>
+                      <div class="mt-2 relative">
+                          <input type="{{ showCurrentPassword ? 'text' : 'password' }}" name="contrasenaActual" id="contrasenaActual" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" formControlName="contrasenaActual">
+                          <div class="absolute bottom-0 right-0 pb-2 pr-3 flex items-center">
+                              <button type="button" (click)="togglePasswordVisibility('contrasenaActual')" class="focus:outline-none">
+                                  <!-- Ícono del ojo (abierto o cerrado) para el campo de Contraseña Actual -->
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                      <path [attr.d]="showCurrentPassword ? 'M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88' : 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'"
+                                      />
+                                  </svg>
+                              </button>
+                          </div>
+                      </div>
+                    </div>
+          
+                  <!-- Nueva Contraseña -->
+                    <div class="sm:col-span-4 pt-2">
+                      <label for="nuevaContrasena" class="block text-sm font-medium leading-6 text-gray-900">Nueva Contraseña</label>
+                      <div class="mt-2 relative">
+                          <input type="{{ showNewPassword ? 'text' : 'password' }}" name="nuevaContrasena" id="nuevaContrasena" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" formControlName="nuevaContrasena">
+                          <div class="absolute bottom-0 right-0 pb-2 pr-3 flex items-center">
+                              <button type="button" (click)="togglePasswordVisibility('nuevaContrasena')" class="focus:outline-none">
+                                  <!-- Ícono del ojo (abierto o cerrado) para el campo de Nueva Contraseña -->
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                      <path [attr.d]="showNewPassword ? 'M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88' : 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'"
+                                      />
+                                  </svg>
+                              </button>
+                          </div>
+                      </div>
+
+                      <div *ngIf="cambiarContrasenaForm.get('nuevaContrasena')?.hasError('required') && cambiarContrasenaForm.get('nuevaContrasena')?.touched" class="error-message" class="text-red-500 text-sm">
+                        La contraseña es obligatoria.
+                      </div>
+                      <div *ngIf="cambiarContrasenaForm.get('nuevaContrasena')?.hasError('minlength') && cambiarContrasenaForm.get('nuevaContrasena')?.touched" class="error-message" class="text-red-500 text-sm">
+                        La contraseña debe tener al menos 6 caracteres.
+                      </div>
+                      <div *ngIf="cambiarContrasenaForm.get('nuevaContrasena')?.hasError('passwordRequirements') && cambiarContrasenaForm.get('nuevaContrasena')?.touched" class="error-message" class="text-red-500 text-sm">
+                        La contraseña debe contener al menos una letra y un número.
+                      </div>
+                      <div *ngIf="cambiarContrasenaForm.get('nuevaContrasena')?.hasError('maxlength')" class="error-message text-red-500 text-sm">
+                        La contraseña no puede tener más de 50 caracteres.
+                     </div>
+                    
+                </div>
+          
+                  <!-- Confirmar Contraseña -->
+                  <div class="sm:col-span-4 pt-2">
+                    <label for="confirmarContrasena" class="block text-sm font-medium leading-6 text-gray-900">Confirmar Contraseña</label>
+                    <div class="mt-2 relative">
+                        <input type="{{ showConfirmPassword ? 'text' : 'password' }}" name="confirmarContrasena" id="confirmarContrasena" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-1" formControlName="confirmarContrasena">
+                        <div class="absolute bottom-0 right-0 pb-2 pr-3 flex items-center">
+                            <button type="button" (click)="togglePasswordVisibility('confirm_password')" class="focus:outline-none">
+                                <!-- Ícono del ojo (abierto o cerrado) para el campo de Confirmar Contraseña -->
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path [attr.d]="showConfirmPassword ? 'M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88' : 'M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="cambiarContrasenaForm.hasError('passwordMismatch') && cambiarContrasenaForm.get('confirmarContrasena')?.touched" class="error-message text-red-500 text-sm">
+                        Las contraseñas no coinciden.
+                    </div>
+                  </div>
+
+          
+                </div>
+              </div>
+              
+              <div *ngIf="errorMessage" class="text-red-500 w-full text-center p-1">{{ errorMessage }}</div>
+              <!-- Botones para el formulario de cambiar contraseña -->
+              <div class="mt-6 flex items-center justify-end gap-x-6">
+                <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="cancelarCambioContrasena()">Cancelar</button>
+                <button type="button" class="text-sm font-semibold leading-6 text-gray-900" (click)="guardarCambioContrasena()">Guardar Cambios</button>
+              </div>
+          
+            </form>
+          
+        </div>
   </div>
     
 </div>

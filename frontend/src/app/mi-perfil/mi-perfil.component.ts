@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,9 +24,57 @@ export class MiPerfilComponent {
   imagenId: number | null = null;
   editando = false;
   datosOriginales: any;
+  cambiarContrasenaForm: FormGroup;
+  mostrarFormularioContrasena = false;
+  showPassword = false;
+  showConfirmPassword = false;
+  showConfirmPasswordIcon: boolean = false;
+  showNewPassword: boolean = false;
+  showCurrentPassword: boolean = false;
+  errorMessage: any;
 
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    this.cambiarContrasenaForm = this.fb.group({
+      contrasenaActual: ['', Validators.required],
+      nuevaContrasena: ['', [Validators.required, Validators.minLength(6), this.validatePassword, Validators.maxLength(50)]],
+      confirmarContrasena: ['', [Validators.required, Validators.minLength(6), this.validatePassword, Validators.maxLength(50)]],
+    }, { validators: this.passwordsMatchValidator });
+  }
+  
+  validatePassword(control: AbstractControl): { [key: string]: boolean } | null {
+    const password = control.value;
+    const hasNumber = /\d/.test(password);
+    const hasLetter = /[a-zA-Z]/.test(password);
+    
+    if (!hasNumber || !hasLetter) {
+      return { 'passwordRequirements': true };
+    }
+  
+    return null;
+  }
+
+  passwordsMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
+    const password = group.get('nuevaContrasena')?.value;
+    const confirm_password = group.get('confirmarContrasena')?.value;
+  
+    if (password !== confirm_password) {
+      return { 'passwordMismatch': true };
+    }
+  
+    return null;
+  }
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'contrasenaActual') {
+      this.showCurrentPassword = !this.showCurrentPassword;
+    } else if (field === 'nuevaContrasena') {
+      this.showNewPassword = !this.showNewPassword;
+    } else if (field === 'confirm_password') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  }
+
 
   ngOnInit() {
     // Inicializar FormGroup y asignar FormControls
@@ -123,5 +171,46 @@ export class MiPerfilComponent {
     this.router.navigate(['/']).then(() => {
       location.reload();
     }); 
+  }
+
+  mostrarFormulario() {
+    this.mostrarFormularioContrasena = true;
+  }
+
+  cancelarCambioContrasena() {
+    this.mostrarFormularioContrasena = false;
+    // Puedes reiniciar los valores del formulario si es necesario
+    this.cambiarContrasenaForm.reset();
+  }
+
+  guardarCambioContrasena() {
+    const formValues = this.cambiarContrasenaForm.value;
+    if (this.cambiarContrasenaForm.valid) {
+
+    this.authService.cambiarContrasenaTurista(formValues)
+      .subscribe(
+        (response: any) => {
+          Swal.fire({
+            title: "Cambio de contraseña exitoso!",
+            icon: "success",
+            confirmButtonText: "OK"
+          }).then((result) => {
+            location.reload();
+          });
+        },
+        error => {
+          console.error('Error al cambiar la contraseña', error);
+          if (error.error && error.error.error === 'La contraseña actual es incorrecta') {
+            this.cambiarContrasenaForm.get('contrasenaActual')?.setErrors({ incorrectCurrentPassword: true });
+            // Puedes agregar un mensaje adicional si lo deseas
+            this.errorMessage = 'La contraseña actual es incorrecta. Por favor, inténtalo de nuevo.';
+          } else {
+            // Otros errores
+            this.errorMessage = 'Se produjo un error al cambiar la contraseña. Por favor, inténtalo de nuevo más tarde.';
+          }
+        }
+      );
+
+    }
   }
 }

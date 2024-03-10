@@ -8,11 +8,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from django.contrib.auth.models import Group
 from rest_framework.decorators import action
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.views import APIView
 from rest_framework import status
 from django.http import FileResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import update_session_auth_hash
 
 class ComentarioViewSet(viewsets.ModelViewSet):
     queryset = Comentario.objects.all()
@@ -122,6 +121,38 @@ class TuristaViewSet(viewsets.ModelViewSet):
 
         return JsonResponse({'message': 'Método no permitido'}, status=405)
     
+    @action(detail=False, methods=['PUT'])
+    @permission_classes([IsAuthenticated])
+    def cambiarContrasena(self, request, *args, **kwargs):
+        try:
+            usuario = request.user
+            data = request.data
+
+            contrasena_actual = data.get('contrasenaActual', '')
+            nueva_contrasena = data.get('nuevaContrasena', '')
+            confirmar_contrasena = data.get('confirmarContrasena', '')
+
+            # Verifica que la contraseña actual sea válida
+            if not usuario.check_password(contrasena_actual):
+                return JsonResponse({'error': 'La contraseña actual es incorrecta'}, status=400)
+
+            # Verifica que la nueva contraseña y la confirmación coincidan
+            if nueva_contrasena != confirmar_contrasena:
+                return JsonResponse({'error': 'La nueva contraseña y la confirmación no coinciden'}, status=400)
+
+            # Actualiza la contraseña del usuario
+            usuario.set_password(nueva_contrasena)
+            usuario.save()
+
+            # Actualiza la sesión del usuario para evitar cierre de sesión
+            update_session_auth_hash(request, usuario)
+
+            return JsonResponse({'message': 'Contraseña actualizada exitosamente'})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    
 class ImagenPerfilViewSet(viewsets.ModelViewSet):
     queryset = ImagenPerfil.objects.all()
     serializer_class = ImagenPerfilSerializer
@@ -195,4 +226,5 @@ class ComentarioViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message': 'Se requiere el parámetro pk para actualizar el comentario'}, status=status.HTTP_400_BAD_REQUEST)
     
+   
     
