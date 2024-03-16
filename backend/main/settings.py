@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-9(g=h2b(^_9v%wb)=qsof_2f_q2216$4)a__#adi)*b3_3-q_v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'tesisfullstack-django-angular-postgresql.onrender.com']
 
 
 # Application definition
